@@ -1,4 +1,4 @@
-package db_access;
+package db_mysqldao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
