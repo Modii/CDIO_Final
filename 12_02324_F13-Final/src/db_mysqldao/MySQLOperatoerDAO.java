@@ -15,21 +15,8 @@ public class MySQLOperatoerDAO implements IOperatoerDAO {
 	
 	
 	public OperatoerDTO getOperatoer(int oprId) throws DALException {
-		System.out.println("1");
-		
-		System.out.println("2");
-	
 	    try {
-			ResultSet rs = Connector.doQuery("SELECT * FROM Operatoer WHERE oprId = " + oprId);
-
-	    	System.out.println(rs.getInt(1));
-	    	System.out.println(rs.getString(2));
-	    	System.out.println(rs.getString(3));
-	    	System.out.println(rs.getString(4));
-	    	System.out.println(rs.getString(5));
-	    	System.out.println(rs.getInt(6));
-
-	    	
+			ResultSet rs = Connector.doQuery("SELECT * FROM Operatoer WHERE oprId = " + oprId);	    	
 	    	
 	    	if (!rs.first()) throw new DALException("Operatoeren " + oprId + " findes ikke");
 	    	return new OperatoerDTO (rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6));

@@ -106,18 +106,14 @@ public class Functionality implements IFunctionality{
 	 */
 	public boolean testId(int i) throws DALException {
 		try {
-			
-			System.out.println("oprid på opr 2: " + dataLaget.getOperatoer(i));
-			
-			
 			return (i == dataLaget.getOperatoer(i).getOprId());
 		}
 
 		catch (IndexOutOfBoundsException e) {
-			throw new DALException("ID findes ikke1");
+			throw new DALException("ID findes ikke");
 		}
 		catch (NullPointerException f) {
-			throw new DALException("ID findes ikke2");
+			throw new DALException("ID findes ikke");
 		}
 	}
 
