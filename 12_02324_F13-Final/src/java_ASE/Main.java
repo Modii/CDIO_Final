@@ -5,13 +5,15 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import db_connection.Connector;
+
 public class Main {
 
 
 
 
 	public static void main(String[] args) throws Exception { 
-
+		new Connector();
 		Sequences s = new Sequences();
 
 		Socket clientSocket = new Socket("localhost", 4567); 
@@ -24,7 +26,7 @@ public class Main {
 						InputStreamReader(clientSocket.getInputStream())); 
 		
 
-		s.sequence1(inFromServer, outToServer);
+		s.sequence3(inFromServer, outToServer);
 
 		clientSocket.close();
 	}
