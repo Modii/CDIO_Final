@@ -17,7 +17,8 @@
 	<form method="POST" action="">
 		Id: <input type="text" name="Id"><br>
 <!-- 		Password: <input type="text" name="Password"><br> -->
-		<input type="submit" value="Log ind">
+		<input type="submit" value="Log ind" name="login">
+		<input type="submit" value="blabla" name="blalbla">
 	</form>
 	${error}
 

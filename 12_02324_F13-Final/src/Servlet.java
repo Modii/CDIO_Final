@@ -41,19 +41,24 @@ public class Servlet extends HttpServlet {
 		catch (ClassNotFoundException e) { e.printStackTrace(); }
 		catch (SQLException e) { e.printStackTrace(); }
 		Functionality funktionalitetsLaget = new Functionality();
-		int id = Integer.parseInt(request.getParameter("Id"));
-		try {
-			if (funktionalitetsLaget.testId(id)) { // checker om ID findes i DB.
-				System.out.println("Succes!");
-				request.getRequestDispatcher("admin.jsp").forward(request, response);
+		if (request.getParameter("login") != null && request.getParameter("login").equals("Log ind")) {
+			int id = Integer.parseInt(request.getParameter("Id"));
+			try {
+				if (funktionalitetsLaget.testId(id)) { // checker om ID findes i DB.
+					System.out.println("Succes!");
+					request.getRequestDispatcher("admin.jsp").forward(request, response);
+				}
+				else {
+					request.setAttribute("error", "Unknown user, please try again");
+					request.getRequestDispatcher("/login.jsp").forward(request, response);
+				}
+			} catch (DALException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			else {
-				request.setAttribute("error", "Unknown user, please try again");
-				request.getRequestDispatcher("/login.jsp").forward(request, response);
-			}
-		} catch (DALException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		if (request.getParameter("blalbla") != null && request.getParameter("blalbla").equals("blabla")) {
+			request.getRequestDispatcher("/operator.jsp").forward(request, response);
 		}
 	}
 

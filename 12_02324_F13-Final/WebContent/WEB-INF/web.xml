@@ -8,6 +8,6 @@
 	</servlet>
 	<servlet-mapping>
 	   <servlet-name>Servlet</servlet-name>
-	   <url-pattern>/BongBongBong</url-pattern>
+	   <url-pattern>/login</url-pattern>
 	</servlet-mapping>
 </web-app>
