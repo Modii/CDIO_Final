@@ -4,15 +4,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Operatør</title>
+<title>Operatør iste</title>
 </head>
 <body>
-<h1>OPERATØR SIDE</h1>
-<h3>Du har kun mulighed for at foretage en afvejning!</h3>
-
-<form action="" method="POST">
-		<br> <br> <br> <br> <input type="submit" name="logoff"
-			value="Log af">
-	</form>
+<h1>HER VISES OPERATØRER</h1>
 </body>
 </html>

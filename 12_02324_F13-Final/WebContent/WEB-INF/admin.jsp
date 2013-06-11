@@ -12,17 +12,22 @@
 
 <h3>Du har nu følgende valgmuligheder:</h3>
 
-	<form method="POST" action="admin.jsp">
-		<input type="submit" value="Opret bruger"> <br>
+	<form method="POST" action="">
+		<input type="submit" value="Opret bruger" name="createopr"> <br>
+		<input type="submit" value="Vis brugere" name="showopr"> <br>
+		<input type="submit" value="Slet bruger" name="removeopr"> <br>
+		<input type="submit" value="Opdatér bruger" name="updateopr"> <br>
+	
 		<input type="submit" value="Administrere råvarer"> <br>
 		<input type="submit" value="Administrere recepter"> <br>
 		<input type="submit" value="Administrere råvarebatches"> <br>
 		<input type="submit" value="Administrere produktbatches"> <br>
+		
 		<input type="submit" value="Foretage afvejning">
 			</form>
 			
-	<form action="login.jsp">
-		<br> <br> <br> <br> <input type="submit"
+	<form action="" method="POST">
+		<br> <br> <br> <br> <input type="submit" name="logoff"
 			value="Log af">
 	</form>
 </body>

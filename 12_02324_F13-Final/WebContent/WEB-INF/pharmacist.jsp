@@ -19,8 +19,8 @@
 		<input type="submit" value="Foretage afvejning">
 			</form>
 			
-	<form action="login.jsp">
-		<br> <br> <br> <br> <input type="submit"
+	<form action="" method="POST">
+		<br> <br> <br> <br> <input type="submit" name="logoff"
 			value="Log af">
 	</form>
 </body>
