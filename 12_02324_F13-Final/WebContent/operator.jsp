@@ -8,5 +8,11 @@
 </head>
 <body>
 <h1>OPERATØR SIDE</h1>
+<h3>Du har kun mulighed for at foretage en afvejning!</h3>
+
+<form action="login.jsp">
+		<br> <br> <br> <br> <input type="submit"
+			value="Log af">
+	</form>
 </body>
 </html>
