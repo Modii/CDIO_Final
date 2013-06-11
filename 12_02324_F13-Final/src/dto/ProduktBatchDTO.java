@@ -6,11 +6,11 @@ public class ProduktBatchDTO
 	int status;					// 0: ikke paabegyndt, 1: under produktion, 2: afsluttet
 	int receptId;
 	
-	public ProduktBatchDTO(int pbId, int status, int receptId)
+	public ProduktBatchDTO(int pbId, int receptId, int status)
 	{
 		this.pbId = pbId;
-		this.status = status;
 		this.receptId = receptId;
+		this.status = status;
 	}
 	
 	public int getPbId() { return pbId; }
@@ -19,6 +19,6 @@ public class ProduktBatchDTO
 	public void setStatus(int status) { this.status = status; }
 	public int getReceptId() { return receptId; }
 	public void setReceptId(int receptId) { this.receptId = receptId; }
-	public String toString() { return pbId + "\t" + status + "\t" + receptId; }
+	public String toString() { return pbId + "\t" + receptId + "\t" + status ; }
 }
 

@@ -7,11 +7,13 @@ import businessLogic_layer.Functionality;
 import dao_interfaces.DALException;
 import db_mysqldao.MySQLOperatoerDAO;
 import db_mysqldao.MySQLProduktBatchDAO;
+import db_mysqldao.MySQLReceptDAO;
 
 public class Sequences {
 
 	Functionality f = new Functionality();
 	MySQLOperatoerDAO mOpr = new MySQLOperatoerDAO();
+	MySQLReceptDAO mRec = new MySQLReceptDAO();
 	MySQLProduktBatchDAO mPb = new MySQLProduktBatchDAO();
 	Data d = new Data();
 
@@ -47,10 +49,13 @@ public class Sequences {
 				outToServer.writeBytes("RM20 8 \"" + d.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 				outToServer.flush();
 				d.setServerInput(inFromServer.readLine());
+				d.setServerInput(inFromServer.readLine());
 				d.setServerInput(inFromServer.readLine()); //RM20 A + Brugerinput
+				System.out.println(d.getServerInput());
 
 				d.setSplittedInput(d.getServerInput().split(" "));
-				if (d.getSplittedInput()[2] == "1") {
+				System.out.println(d.getServerInput());
+				if (Integer.parseInt(d.getSplittedInput()[2]) == 1) {
 					this.sequence5(inFromServer, outToServer);
 				}
 				else 
@@ -63,10 +68,7 @@ public class Sequences {
 			e.printStackTrace();
 		}
 	}
-	boolean aborted()
-	{
-		return !d.getServerInput().startsWith("RM20 A");
-	}
+
 	//-----------------------------------------------------------------
 	// (5)	Operatør indtaster produktbatchnummer
 	//-----------------------------------------------------------------
@@ -77,7 +79,7 @@ public class Sequences {
 		outToServer.flush();
 		d.setServerInput(inFromServer.readLine());
 		d.setServerInput(inFromServer.readLine());
-		this.sequence4(inFromServer, outToServer);
+		this.sequence6(inFromServer, outToServer);
 	}
 
 	//-----------------------------------------------------------------
@@ -88,106 +90,22 @@ public class Sequences {
 		d.setSplittedInput(d.getServerInput().split(" "));
 		System.out.println(d.getSplittedInput()[2]);
 		try {
-	if(f.testPbId(Integer.parseInt(d.getSplittedInput()[2])))
-	{
-		
-	}
-			d.setWeightMsg(mPb.getPbId(Integer.parseInt(d.getSplittedInput()[2]))).());
+			if(f.testPbId(Integer.parseInt(d.getSplittedInput()[2])))
+			{
+				d.setWeightMsg(mRec.getRecept(mPb.getProduktBatch(Integer.parseInt(d.getSplittedInput()[2])).getReceptId()).getReceptNavn());
 				outToServer.writeBytes("RM20 8 \"" + d.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 				outToServer.flush();
 				d.setServerInput(inFromServer.readLine());
-			{
-				
-				
+				this.sequence7();
 			}
 		} catch (NumberFormatException | DALException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 }
 
 
-
-
-
-
-
-
-
-
-
-
-//
-//	//-----------------------------------------------------------------
-//	// (5)	Program sammenligner userinput med varenumre i store.txt
-//	// (6)	Når identisk varenummer er fundet spørger program bruger
-//	//		om det er korrekt varenavn. Hvis ja sendes videre til n�ste
-//	//		sekvens. Hvis nej køres sequence3()
-//	//-----------------------------------------------------------------
-//	public void sequence5_6(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
-//	{
-//
-//		BufferedReader inFromLocal = new BufferedReader(new FileReader(new File("store.txt")));
-//
-//		boolean notFound = true;
-//
-//		while(notFound){
-//			try{
-//				d.setSplittedInput(inFromLocal.readLine().split(","));
-//			}
-//			catch(NullPointerException e){
-//				notFound = true;
-//			}
-//			d.setItemNoStore(Integer.parseInt(d.getSplittedInput()[0]));
-//			System.out.println("store: " + d.getItemNoStore());
-//			System.out.println("input: " + d.getItemNoInput() + "\n");
-//
-//			if(d.getItemNoStore() == d.getItemNoInput()){ 
-//				inFromLocal.close();
-//				//Så snart at det indtastede nummer er lig et nummer i "databasen", 
-//				// sættes notFound = false og nedenstående kode eksekveres. 
-//				notFound = false;
-//				d.setItemName(d.getSplittedInput()[1]);
-//
-//				d.setWeightMsg("Vare: " + d.getItemName()); 
-//
-//				outToServer.writeBytes("RM20 4 \"" + d.getWeightMsg() + "\" \" \" \"&3\"\r\n");
-//
-//				d.setServerInput(inFromServer.readLine());
-//				//				d.setServerInput(inFromServer.readLine());
-//				//				d.setServerInput(inFromServer.readLine());
-//
-//				d.setSplittedInput(d.getServerInput().split(" "));
-//				if(d.getServerInput().equals("RM20 B"))
-//				{
-//					d.setServerInput(inFromServer.readLine());
-//					if(!aborted()){
-//						d.setSplittedInput(d.getServerInput().split(" "));
-//						d.setUserInput(d.getSplittedInput()[2]);		
-//
-//						//Hvis varen er korrekt fortsættes der til sekvens 7 ellers starter man forfra i sekvens 3.						
-//						if(d.getUserInput().equals("\"1\""))
-//						{
-//							this.sequence7(inFromServer, outToServer);
-//						}
-//						//Fejl: Kan annullere, men kan derefter ikke v�lge samme vare igen.
-//						else if(d.getUserInput().equals("\"0\""))
-//						{
-//							this.sequence3(inFromServer, outToServer);
-//						}
-//					}
-//					else
-//						this.sequence1(inFromServer, outToServer);
-//				}
-//			}
-//		}
-//		d.setWeightMsg("Varenummer ikke fundet");
-//		outToServer.writeBytes("RM20 4 \"" + d.getWeightMsg() + "\" \" \" \"&3\"\r\n");
-//		inFromServer.readLine();
-//		this.sequence3(inFromServer, outToServer);
-//
-//	}
-//
 //	//-----------------------------------------------------------------
 //	// (7)	Vægtdisplay beder om evt. tara og at brugeren bekræfter. 	
 //	//-----------------------------------------------------------------
