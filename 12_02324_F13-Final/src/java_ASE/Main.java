@@ -9,26 +9,20 @@ import db_connection.Connector;
 
 public class Main {
 
-
-
-
-	public static void main(String[] args) throws Exception { 
+	public static void main(String[] args) throws Exception {
 		new Connector();
 		Sequences s = new Sequences();
 
-		Socket clientSocket = new Socket("localhost", 4567); 
+		Socket clientSocket = new Socket("localhost", 4567);
 
-		DataOutputStream outToServer = 
-				new DataOutputStream(clientSocket.getOutputStream()); 
+		DataOutputStream outToServer = new DataOutputStream(
+				clientSocket.getOutputStream());
 
-		BufferedReader inFromServer = 
-				new BufferedReader(new
-						InputStreamReader(clientSocket.getInputStream())); 
-		
+		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(
+				clientSocket.getInputStream()));
 
 		s.sequence3(inFromServer, outToServer);
 
 		clientSocket.close();
 	}
-
 }

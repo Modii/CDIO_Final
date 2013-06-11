@@ -37,7 +37,6 @@ public class Sequences {
 	{
 		// Mangler muligvis exception ved forkert ID.
 		d.setSplittedInput(d.getServerInput().split(" "));
-		System.out.println(d.getSplittedInput()[2]);
 		try {
 			if (f.testId(Integer.parseInt(d.getSplittedInput()[2]))){
 				d.setWeightMsg(mOpr.getOperatoer(Integer.parseInt(d.getSplittedInput()[2])).getOprNavn());
@@ -51,17 +50,19 @@ public class Sequences {
 				d.setServerInput(inFromServer.readLine());
 				d.setServerInput(inFromServer.readLine());
 				d.setServerInput(inFromServer.readLine()); //RM20 A + Brugerinput
-				System.out.println(d.getServerInput());
 
 				d.setSplittedInput(d.getServerInput().split(" "));
-				System.out.println(d.getServerInput());
 				if (Integer.parseInt(d.getSplittedInput()[2]) == 1) {
 					this.sequence5(inFromServer, outToServer);
 				}
-				else 
+				else if (Integer.parseInt(d.getSplittedInput()[2]) == 0)
 					this.sequence3(inFromServer, outToServer);
+				else{
+					
+				}
 			}
-			else {this.sequence3(inFromServer, outToServer);
+			else {
+				this.sequence3(inFromServer, outToServer);
 			}
 
 		} catch (NumberFormatException | DALException e) {
@@ -88,7 +89,6 @@ public class Sequences {
 	public void sequence6(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
 		d.setSplittedInput(d.getServerInput().split(" "));
-		System.out.println(d.getSplittedInput()[2]);
 		try {
 			if(f.testPbId(Integer.parseInt(d.getSplittedInput()[2])))
 			{
@@ -96,7 +96,7 @@ public class Sequences {
 				outToServer.writeBytes("RM20 8 \"" + d.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 				outToServer.flush();
 				d.setServerInput(inFromServer.readLine());
-				this.sequence7();
+				//this.sequence7();
 			}
 		} catch (NumberFormatException | DALException e) {
 			// TODO Auto-generated catch block
