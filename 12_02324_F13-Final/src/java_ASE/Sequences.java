@@ -12,7 +12,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 
 public class Sequences {
-	
+
 	Data d = new Data();
 
 	//-----------------------------------------------------------------
@@ -32,8 +32,8 @@ public class Sequences {
 	public void sequence2(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
 		d.setServerInput(inFromServer.readLine());
-//		d.setServerInput(inFromServer.readLine());
-		d.setServerInput(inFromServer.readLine());
+		//		d.setServerInput(inFromServer.readLine());
+		//d.setServerInput(inFromServer.readLine());
 		if(d.getServerInput().equals("RM20 B")){
 			d.setServerInput(inFromServer.readLine());
 			if (!aborted()) {
@@ -70,14 +70,14 @@ public class Sequences {
 			d.setServerInput(inFromServer.readLine());
 			if(!aborted()){
 				d.setSplittedInput(d.getServerInput().split(" "));
-				
+
 				System.out.println("" + d.getServerInput());
 				System.out.println("" + d.getSplittedInput()[2]);
-				
+
 				String temp;
 				temp = d.getSplittedInput()[2].replaceAll("\"","");
 				System.out.println(temp);
-				
+
 				d.setItemNoInput(Integer.parseInt(temp));
 				this.sequence5_6(inFromServer, outToServer);
 			}
@@ -109,22 +109,22 @@ public class Sequences {
 			d.setItemNoStore(Integer.parseInt(d.getSplittedInput()[0]));
 			System.out.println("store: " + d.getItemNoStore());
 			System.out.println("input: " + d.getItemNoInput() + "\n");
-			
+
 			if(d.getItemNoStore() == d.getItemNoInput()){ 
 				inFromLocal.close();
 				//Så snart at det indtastede nummer er lig et nummer i "databasen", 
 				// sættes notFound = false og nedenstående kode eksekveres. 
 				notFound = false;
 				d.setItemName(d.getSplittedInput()[1]);
-				
+
 				d.setWeightMsg("Vare: " + d.getItemName()); 
-				
+
 				outToServer.writeBytes("RM20 4 \"" + d.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 
 				d.setServerInput(inFromServer.readLine());
-//				d.setServerInput(inFromServer.readLine());
-//				d.setServerInput(inFromServer.readLine());
-				
+				//				d.setServerInput(inFromServer.readLine());
+				//				d.setServerInput(inFromServer.readLine());
+
 				d.setSplittedInput(d.getServerInput().split(" "));
 				if(d.getServerInput().equals("RM20 B"))
 				{
@@ -274,7 +274,7 @@ public class Sequences {
 		}
 		else this.sequence14(inFromServer, outToServer);
 	}
-	
+
 	//-----------------------------------------------------------------
 	// (14) Bruttokontrol OK, hvis det er tilfældet.
 	//-----------------------------------------------------------------
