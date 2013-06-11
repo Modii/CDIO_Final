@@ -4,13 +4,15 @@ import java.util.Random;
 import java.util.Scanner;
 
 import dao_interfaces.IOperatoerDAO;
+import dao_interfaces.IProduktBatchDAO;
 import db_mysqldao.MySQLOperatoerDAO;
+import db_mysqldao.MySQLProduktBatchDAO;
 import dto.OperatoerDTO;
 import dao_interfaces.DALException;
 
 public class Functionality implements IFunctionality{
 
-
+	private IProduktBatchDAO produktbatchLag = new MySQLProduktBatchDAO();
 	private IOperatoerDAO dataLaget = new MySQLOperatoerDAO();
 
 	public Functionality(IOperatoerDAO d) {
@@ -100,7 +102,7 @@ public class Functionality implements IFunctionality{
 	}
 
 	/**
-	 * Her sammenlignes id fra brugerinput med eksisterende id'er i vores Array
+	 * Her sammenlignes operatør id fra brugerinput med eksisterende id'er i vores Array
 	 * Fra index {0;9} indeholder listen objekter med parametrerne null.
 	 * Derfor bruges catch p� NullPointerException, s� man ikke kan tilg� disse objekter.  
 	 */
@@ -116,8 +118,21 @@ public class Functionality implements IFunctionality{
 			throw new DALException("ID findes ikke");
 		}
 	}
+	/**
+	 * Her sammenlignes pb id fra brugerinput med eksisterende id'er i vores Array på samme måde som ovenover.
+	 */
+	public boolean testPbId(int i) throws DALException {
+		try {
+			return (i == produktbatchLag.getProduktBatch(i).getPbId());
+		}
 
-
+		catch (IndexOutOfBoundsException e) {
+			throw new DALException("ID findes ikke");
+		}
+		catch (NullPointerException f) {
+			throw new DALException("ID findes ikke");
+		}
+	}
 	/**
 	 * Her sammenlignes password fra brugerinput med eksisterende password i vores Array 
 	 * baseret p� det f�rstindtastede id (int i) som er unikt for operat�r til operat�r  
