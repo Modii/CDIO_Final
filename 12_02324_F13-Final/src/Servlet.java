@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -8,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import businessLogic_layer.Functionality;
+import dao_interfaces.DALException;
+import db_connection.Connector;
 
 public class Servlet extends HttpServlet {
 
@@ -26,12 +31,30 @@ public class Servlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		RequestDispatcher rd = request.getRequestDispatcher("login.jsp");
-		rd.forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse respons) throws ServletException, IOException{
-
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		try { new Connector(); } 
+		catch (InstantiationException e) { e.printStackTrace(); }
+		catch (IllegalAccessException e) { e.printStackTrace(); }
+		catch (ClassNotFoundException e) { e.printStackTrace(); }
+		catch (SQLException e) { e.printStackTrace(); }
+		Functionality funktionalitetsLaget = new Functionality();
+		int id = Integer.parseInt(request.getParameter("Id"));
+		try {
+			if (funktionalitetsLaget.testId(id)) { // checker om ID findes i DB.
+				System.out.println("Succes!");
+				request.getRequestDispatcher("admin.jsp").forward(request, response);
+			}
+			else {
+				request.setAttribute("error", "Unknown user, please try again");
+				request.getRequestDispatcher("/login.jsp").forward(request, response);
+			}
+		} catch (DALException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
