@@ -46,11 +46,11 @@ public class Servlet extends HttpServlet {
 			try {
 				if (funktionalitetsLaget.testId(id)) { // checker om ID findes i DB.
 					System.out.println("Succes!");
-					request.getRequestDispatcher("admin.jsp").forward(request, response);
+					request.getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
 				}
 				else {
 					request.setAttribute("error", "Unknown user, please try again");
-					request.getRequestDispatcher("/login.jsp").forward(request, response);
+					request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
 				}
 			} catch (DALException e) {
 				// TODO Auto-generated catch block
@@ -58,7 +58,7 @@ public class Servlet extends HttpServlet {
 			}
 		}
 		if (request.getParameter("blalbla") != null && request.getParameter("blalbla").equals("blabla")) {
-			request.getRequestDispatcher("/operator.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/operator.jsp").forward(request, response);
 		}
 	}
 
