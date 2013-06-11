@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import db_connection.Connector;
 import dao_interfaces.DALException;
-import dao_interfaces.ProduktBatchKompDAO;
+import dao_interfaces.IProduktBatchKompDAO;
 import dto.ProduktBatchKompDTO;
 
-public class MySQLProduktBatchKompDAO implements ProduktBatchKompDAO {
+public class MySQLProduktBatchKompDAO implements IProduktBatchKompDAO {
 
 	@Override
 	public ProduktBatchKompDTO getProduktBatchKomp(int pbId, int rbId)

@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import db_connection.Connector;
 import dao_interfaces.DALException;
-import dao_interfaces.ReceptKompDAO;
+import dao_interfaces.IReceptKompDAO;
 import dto.ReceptKompDTO;
 
-public class MySQLReceptKompDAO implements ReceptKompDAO {
+public class MySQLReceptKompDAO implements IReceptKompDAO {
 
 	@Override
 	public ReceptKompDTO getReceptKomp(int receptId, int raavareId)

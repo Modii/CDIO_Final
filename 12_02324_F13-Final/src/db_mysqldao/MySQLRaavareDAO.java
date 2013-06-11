@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 import db_connection.Connector;
 import dao_interfaces.DALException;
-import dao_interfaces.RaavareDAO;
+import dao_interfaces.IRaavareDAO;
 import dto.RaavareDTO;
 
-public class MySQLRaavareDAO implements RaavareDAO {
+public class MySQLRaavareDAO implements IRaavareDAO {
 
 	@Override
 	public RaavareDTO getRaavare(int raavareId) throws DALException {
 		ResultSet rs = Connector.doQuery("SELECT * FROM Raavare WHERE raavareId = " + raavareId);
 		try {
-			if (!rs.first()) throw new DALException("Råvaren " + raavareId + " findes ikke");
+			if (!rs.first()) throw new DALException("Rï¿½varen " + raavareId + " findes ikke");
 			return new RaavareDTO (rs.getInt(1), rs.getString(2), rs.getString(3));
 		}
 		catch (SQLException e) {throw new DALException(e); }

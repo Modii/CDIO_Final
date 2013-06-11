@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 import db_connection.Connector;
 import dao_interfaces.DALException;
-import dao_interfaces.RaavareBatchDAO;
+import dao_interfaces.IRaavareBatchDAO;
 import dto.RaavareBatchDTO;
 
-public class MySQLRaavareBatchDAO implements RaavareBatchDAO{
+public class MySQLRaavareBatchDAO implements IRaavareBatchDAO{
 
 	@Override
 	public RaavareBatchDTO getRaavareBatch(int rbId) throws DALException {
 		ResultSet rs = Connector.doQuery("SELECT * FROM Raavarebatch WHERE rbId = " + rbId);
 	    try {
-	    	if (!rs.first()) throw new DALException("Råvarebatchen " + rbId + " findes ikke");
+	    	if (!rs.first()) throw new DALException("Rï¿½varebatchen " + rbId + " findes ikke");
 	    	return new RaavareBatchDTO(rs.getInt(1), rs.getInt(2), rs.getDouble(3));
 	    }
 	    catch (SQLException e) {throw new DALException(e); }

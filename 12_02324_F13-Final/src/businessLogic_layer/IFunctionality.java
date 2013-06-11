@@ -1,7 +1,6 @@
 package businessLogic_layer;
 
-import data_layer.IOprDAO;
-import data_layer.IOprDAO.DALException;
+import dao_interfaces.DALException;
 
 public interface IFunctionality {
 	String generatePassword();
@@ -11,10 +10,8 @@ public interface IFunctionality {
 	boolean askForNewPassword(int i, String s) throws DALException;
 	boolean checkIfIdentical(String s, String k);
 	double calculateWeight(double tare, double brutto);
-	void createOperatoer(String oprNavn, String ini, String cpr) throws DALException;
-	void updateOperatoer(int updateID, String updateName, String updateIni, String updateCpr) throws DALException;
+	void createOperatoer(String oprNavn, String ini, String cpr, int aktoer) throws DALException;
+	void updateOperatoer(int updateID, String updateName, String updateIni, String updateCpr, int aktoer) throws DALException;
 	void removeOperatoer(int removeID) throws DALException;
 	String showOprList() throws DALException;
-	IOprDAO getDataLaget();
-	void setDataLaget(IOprDAO dataLaget);
 }

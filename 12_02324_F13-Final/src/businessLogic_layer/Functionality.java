@@ -3,7 +3,7 @@ package businessLogic_layer;
 import java.util.Random;
 import java.util.Scanner;
 
-import dao_interfaces.OperatoerDAO;
+import dao_interfaces.IOperatoerDAO;
 import db_mysqldao.MySQLOperatoerDAO;
 import dto.OperatoerDTO;
 import dao_interfaces.DALException;
@@ -11,9 +11,9 @@ import dao_interfaces.DALException;
 public class Functionality implements IFunctionality{
 
 
-	private OperatoerDAO dataLaget = new OperatoerDAO();
+	private IOperatoerDAO dataLaget = new MySQLOperatoerDAO();
 
-	public Functionality(OperatoerDAO d) {
+	public Functionality(IOperatoerDAO d) {
 		this.dataLaget = d;
 	}
 
@@ -102,11 +102,11 @@ public class Functionality implements IFunctionality{
 	/**
 	 * Her sammenlignes id fra brugerinput med eksisterende id'er i vores Array
 	 * Fra index {0;9} indeholder listen objekter med parametrerne null.
-	 * Derfor bruges catch på NullPointerException, så man ikke kan tilgå disse objekter.  
+	 * Derfor bruges catch pï¿½ NullPointerException, sï¿½ man ikke kan tilgï¿½ disse objekter.  
 	 */
 	public boolean testId(int i) throws DALException {
 		try {
-			return (i == dataLaget.getOperatoerList().get(i).getOprId());
+			return (i == dataLaget.getOperatoer(i).getOprId());
 		}
 
 		catch (IndexOutOfBoundsException e) {
@@ -120,10 +120,10 @@ public class Functionality implements IFunctionality{
 
 	/**
 	 * Her sammenlignes password fra brugerinput med eksisterende password i vores Array 
-	 * baseret på det førstindtastede id (int i) som er unikt for operatør til operatør  
+	 * baseret pï¿½ det fï¿½rstindtastede id (int i) som er unikt for operatï¿½r til operatï¿½r  
 	 */
 	public boolean testPassword(int i, String s) throws DALException {
-		if ((s.equals(dataLaget.getOperatoerList().get(i).getPassword())))
+		if ((s.equals(dataLaget.getOperatoer(i).getPassword())))
 			return true;
 		else
 			throw new DALException("Password invalid!");
@@ -164,7 +164,7 @@ public class Functionality implements IFunctionality{
 	}
 
 	/**
-	 * Her tjekkers om det først indtastede nye password er ens 
+	 * Her tjekkers om det fï¿½rst indtastede nye password er ens 
 	 * med det andet indtastede nye password  
 	 */
 	public boolean checkIfIdentical(String s, String k){
@@ -185,25 +185,25 @@ public class Functionality implements IFunctionality{
 	}
 
 	/**
-	 * Her udregnes netto-vægten ud fra brugerinputs, hvilket sker under menupunkt 3  
+	 * Her udregnes netto-vï¿½gten ud fra brugerinputs, hvilket sker under menupunkt 3  
 	 */
 	public double calculateWeight(double tare, double brutto) {
 		double netto = brutto - tare;
 		return netto;
 	}
 
-	public void createOperatoer(String oprNavn, String ini, String cpr)	throws DALException {
-		dataLaget.createOperatoer(new OprDTO(dataLaget.getOperatoerList().size(), oprNavn, ini, cpr, this.generatePassword()));
+	public void createOperatoer(String oprNavn, String ini, String cpr, int aktoer)	throws DALException {
+		dataLaget.createOperatoer(new OperatoerDTO(dataLaget.getOperatoerList().size(), oprNavn, ini, cpr, this.generatePassword(), aktoer));
 	}
-	public void updateOperatoer(int updateID, String updateName, String updateIni, String updateCpr) throws DALException {
-		dataLaget.updateOperatoer(new OprDTO(updateID, updateName, updateIni, updateCpr,dataLaget.getOperatoerList().get(updateID).getPassword()));
+	public void updateOperatoer(int updateID, String updateName, String updateIni, String updateCpr, int updateAktoer) throws DALException {
+		dataLaget.updateOperatoer(new OperatoerDTO(updateID, updateName, updateIni, updateCpr,dataLaget.getOperatoerList().get(updateID).getPassword(), updateAktoer));
 	}
 	public void removeOperatoer(int removeID) throws DALException {
 		dataLaget.removeOperatoer(dataLaget.getOperatoer(removeID));
 	}
 
 	/**
-	 * Her hentes alle operatører og deres informationer fra vores ArrayList
+	 * Her hentes alle operatï¿½rer og deres informationer fra vores ArrayList
 	 * og udskrives i en tabel 
 	 */
 	public String showOprList() throws DALException {
@@ -222,12 +222,13 @@ public class Functionality implements IFunctionality{
 		return oprListe;
 	}
 
-	public IOprDAO getDataLaget() {
+	public IOperatoerDAO getDataLaget() {
 		return dataLaget;
 	}
 
-	public void setDataLaget(IOprDAO dataLaget) {
+	public void setDataLaget(IOperatoerDAO dataLaget) {
 		this.dataLaget = dataLaget;
 	}
+
 
 }
