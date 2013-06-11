@@ -29,6 +29,7 @@
 		
 		if (request.getMethod().equals("POST")) { // brugeren har tastet på submit
 		
+			try{
 				id = Integer.parseInt(request.getParameter("Id"));
 				password = request.getParameter("Password");
 
@@ -45,6 +46,14 @@
 				}
 			}
 		}
+		catch (Exception e) {
+			fejlMsg = "ID og password stemmer ikke overens!";
+			response.sendRedirect("login.jsp?error_resultat="
+					+ fejlMsg);
+			return;
+		}
+	}
+		
 	%>
 
 
