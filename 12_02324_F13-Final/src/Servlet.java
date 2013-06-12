@@ -164,10 +164,10 @@ public class Servlet extends HttpServlet {
 		request.getRequestDispatcher("/WEB-INF/admin/raavare/createvare.jsp").forward(request, response);
 	}
 	private void handleShowVare(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/admin/raavare/adminivare.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/admin/raavare/showvare.jsp").forward(request, response);
 	}
 	private void handleUpdateVare(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/admin/raavare/adminivare.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/admin/raavare/updatevare.jsp").forward(request, response);
 	}
 
 	private void handleCreateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
@@ -194,6 +194,14 @@ public class Servlet extends HttpServlet {
 		int aktoer = Integer.parseInt(request.getParameter("aktoer"));
 		funktionalitetsLaget.getDataLaget().updateOperatoer(new OperatoerDTO(id, navn, init, cpr, newPw, aktoer));
 		request.setAttribute("password", "<br>Brugerens password er: " + newPw);
+	}
+	private void handleCreateVareSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		String navn = request.getParameter("navn");
+		String leverandoer = request.getParameter("leverandør");
+		funktionalitetsLaget.getDataLaget().createOperatoer(new RaavareDTO(id, navn, leverandoer));
+		request.setAttribute();
+
 	}
 
 }
