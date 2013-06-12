@@ -17,6 +17,7 @@ import businessLogic_layer.Functionality;
 import dao_interfaces.DALException;
 import db_connection.Connector;
 import dto.OperatoerDTO;
+import dto.RaavareDTO;
 
 public class Servlet extends HttpServlet {
 
@@ -98,6 +99,15 @@ public class Servlet extends HttpServlet {
 			request.setAttribute("succes", "Operatør opdateret!");
 			request.getRequestDispatcher("/WEB-INF/admin/bruger/updateopr.jsp").forward(request, response);
 		}
+		if (request.getParameter("createraavare_submit") != null && request.getParameter("createraavare_submit").equals("Opret råvare")){
+			try {
+				handleCreateVareSubmit(request, response, funktionalitetsLaget);
+			} catch (DALException e) {
+				e.getMessage();
+			}
+			request.setAttribute("succes", "Råvare oprettet!");
+			request.getRequestDispatcher("/WEB-INF/admin/raavare/createvare.jsp").forward(request, response);
+		}
 
 	}
 
@@ -107,11 +117,11 @@ public class Servlet extends HttpServlet {
 		try {
 			if (funktionalitetsLaget.testId(id)) { // checker om ID findes i DB.
 				if(funktionalitetsLaget.testPassword(id, pw)){
-					if(funktionalitetsLaget.getDataLaget().getOperatoer(id).getAktoer() == 1)
+					if(funktionalitetsLaget.getOprDAO().getOperatoer(id).getAktoer() == 1)
 						request.getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
-					else if(funktionalitetsLaget.getDataLaget().getOperatoer(id).getAktoer() == 2)
+					else if(funktionalitetsLaget.getOprDAO().getOperatoer(id).getAktoer() == 2)
 						request.getRequestDispatcher("/WEB-INF/pharmacist.jsp").forward(request, response);
-					else if(funktionalitetsLaget.getDataLaget().getOperatoer(id).getAktoer() == 3)
+					else if(funktionalitetsLaget.getOprDAO().getOperatoer(id).getAktoer() == 3)
 						request.getRequestDispatcher("/WEB-INF/supervisor.jsp").forward(request, response);
 					else
 						request.getRequestDispatcher("/WEB-INF/operator.jsp").forward(request, response);
@@ -137,7 +147,7 @@ public class Servlet extends HttpServlet {
 		html += "<tr><td>ID</td><td>Navn</td><td>Initialer</td><td>CPR</td><td>Password</td><td>Aktør</td></tr>";
 		int id,aktoer;
 		String cpr,navn,ini,pass;
-		List<OperatoerDTO> temp = funktionalitetsLaget.getDataLaget().getOperatoerList(); 
+		List<OperatoerDTO> temp = funktionalitetsLaget.getOprDAO().getOperatoerList(); 
 		for (int i=0; i < temp.size(); i++) {
 			id = temp.get(i).getOprId();
 			navn = temp.get(i).getOprNavn();
@@ -177,13 +187,13 @@ public class Servlet extends HttpServlet {
 		String cpr = request.getParameter("cpr");
 		String newPw = funktionalitetsLaget.generatePassword();
 		int aktoer = Integer.parseInt(request.getParameter("aktoer"));
-		funktionalitetsLaget.getDataLaget().createOperatoer(new OperatoerDTO(id, navn, init, cpr, newPw, aktoer));
+		funktionalitetsLaget.getOprDAO().createOperatoer(new OperatoerDTO(id, navn, init, cpr, newPw, aktoer));
 		request.setAttribute("password", "<br>Brugerens password er: " + newPw);
 
 	}
 	private void handleRemoveOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
-		funktionalitetsLaget.getDataLaget().removeOperatoer(funktionalitetsLaget.getDataLaget().getOperatoer(id));
+		funktionalitetsLaget.getOprDAO().removeOperatoer(funktionalitetsLaget.getOprDAO().getOperatoer(id));
 	}
 	private void handleUpdateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
@@ -192,16 +202,14 @@ public class Servlet extends HttpServlet {
 		String cpr = request.getParameter("cpr");
 		String newPw = funktionalitetsLaget.generatePassword();
 		int aktoer = Integer.parseInt(request.getParameter("aktoer"));
-		funktionalitetsLaget.getDataLaget().updateOperatoer(new OperatoerDTO(id, navn, init, cpr, newPw, aktoer));
+		funktionalitetsLaget.getOprDAO().updateOperatoer(new OperatoerDTO(id, navn, init, cpr, newPw, aktoer));
 		request.setAttribute("password", "<br>Brugerens password er: " + newPw);
 	}
 	private void handleCreateVareSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		String navn = request.getParameter("navn");
-		String leverandoer = request.getParameter("leverandør");
-		funktionalitetsLaget.getDataLaget().createOperatoer(new RaavareDTO(id, navn, leverandoer));
-		request.setAttribute();
-
+		String leverandoer = request.getParameter("leverandoer");
+		funktionalitetsLaget.getRaavareDAO().createRaavare(new RaavareDTO(id, navn, leverandoer));
 	}
 
 }

@@ -6,24 +6,26 @@ import java.util.Scanner;
 import dao_interfaces.IOperatoerDAO;
 import dao_interfaces.IProduktBatchDAO;
 import dao_interfaces.IRaavareBatchDAO;
+import dao_interfaces.IRaavareDAO;
 import db_mysqldao.MySQLOperatoerDAO;
 import db_mysqldao.MySQLProduktBatchDAO;
 import db_mysqldao.MySQLRaavareBatchDAO;
-import dto.OperatoerDTO;
+import db_mysqldao.MySQLRaavareDAO;
 import dao_interfaces.DALException;
 
 public class Functionality implements IFunctionality{
 
-	private IProduktBatchDAO produktbatchLaget = new MySQLProduktBatchDAO();
-	private IOperatoerDAO dataLaget = new MySQLOperatoerDAO();
-	private IRaavareBatchDAO raavarebatchLaget = new MySQLRaavareBatchDAO();
+	private IProduktBatchDAO produktbatchDAO = new MySQLProduktBatchDAO();
+	private IOperatoerDAO oprDAO = new MySQLOperatoerDAO();
+	private IRaavareDAO raavareDAO = new MySQLRaavareDAO();
+	private IRaavareBatchDAO raavarebatchDAO = new MySQLRaavareBatchDAO();
 
-	public Functionality(IProduktBatchDAO produktbatchLaget,
-			IOperatoerDAO dataLaget, IRaavareBatchDAO raavarebatchLaget) {
+	public Functionality(IProduktBatchDAO produktbatchDAO, IOperatoerDAO oprDAO, IRaavareDAO raavareDAO, IRaavareBatchDAO raavarebatchDAO) {
 		super();
-		this.produktbatchLaget = produktbatchLaget;
-		this.dataLaget = dataLaget;
-		this.raavarebatchLaget = raavarebatchLaget;
+		this.produktbatchDAO = produktbatchDAO;
+		this.oprDAO = oprDAO;
+		this.raavareDAO = raavareDAO;
+		this.raavarebatchDAO = raavarebatchDAO;
 	}
 
 	public Functionality(){
@@ -115,7 +117,7 @@ public class Functionality implements IFunctionality{
 	 */
 	public boolean testId(int i) throws DALException {
 		try {
-			return (i == dataLaget.getOperatoer(i).getOprId());
+			return (i == oprDAO.getOperatoer(i).getOprId());
 		}
 
 		catch (IndexOutOfBoundsException e) {
@@ -133,7 +135,7 @@ public class Functionality implements IFunctionality{
 	 */
 	public boolean testPbId(int i) throws DALException {
 		try {
-			return (i == produktbatchLaget.getProduktBatch(i).getPbId());
+			return (i == produktbatchDAO.getProduktBatch(i).getPbId());
 		}
 
 		catch (IndexOutOfBoundsException e) {
@@ -146,7 +148,7 @@ public class Functionality implements IFunctionality{
 
 	public boolean testRaavareId(int i) throws DALException {
 		try {
-			return (i == raavarebatchLaget.getRaavareBatch(i).getRaavareId());
+			return (i == raavarebatchDAO.getRaavareBatch(i).getRaavareId());
 		}
 		catch (IndexOutOfBoundsException e) {
 			throw new DALException("ID findes ikke");
@@ -160,7 +162,7 @@ public class Functionality implements IFunctionality{
 	 * baseret p� det f�rstindtastede id (int i) som er unikt for operat�r til operat�r  
 	 */
 	public boolean testPassword(int i, String s) throws DALException {
-		if ((s.equals(dataLaget.getOperatoer(i).getPassword())))
+		if ((s.equals(oprDAO.getOperatoer(i).getPassword())))
 			return true;
 		else
 			throw new DALException("Password invalid!");
@@ -193,7 +195,7 @@ public class Functionality implements IFunctionality{
 			}
 		}
 		if (newPassword.length() >= 6 && differentTypes >= 3) {
-			dataLaget.getOperatoer(oprId).setPassword(newPassword);
+			oprDAO.getOperatoer(oprId).setPassword(newPassword);
 			return true;
 		}
 
@@ -229,42 +231,16 @@ public class Functionality implements IFunctionality{
 		return netto;
 	}
 
-	public void createOperatoer(String oprNavn, String ini, String cpr, int aktoer)	throws DALException {
-		dataLaget.createOperatoer(new OperatoerDTO(dataLaget.getOperatoerList().size(), oprNavn, ini, cpr, this.generatePassword(), aktoer));
-	}
-	public void updateOperatoer(int updateID, String updateName, String updateIni, String updateCpr, int updateAktoer) throws DALException {
-		dataLaget.updateOperatoer(new OperatoerDTO(updateID, updateName, updateIni, updateCpr,dataLaget.getOperatoerList().get(updateID).getPassword(), updateAktoer));
-	}
-	public void removeOperatoer(int removeID) throws DALException {
-		dataLaget.removeOperatoer(dataLaget.getOperatoer(removeID));
+	public IRaavareDAO getRaavareDAO() {
+		return raavareDAO;
 	}
 
-	/**
-	 * Her hentes alle operat�rer og deres informationer fra vores ArrayList
-	 * og udskrives i en tabel 
-	 */
-	public String showOprList() throws DALException {
-		String oprListe;
-		oprListe="<table border=1>";
-		oprListe+=("<tr>"+ "<td>ID</td><td>Navn</td><td>Initialer</td><td>CPR</td><td>Password</td>" + "</tr>") + "<br>";
-		for (int i = 10; i < dataLaget.getOperatoerList().size(); i++)
-			if (dataLaget.getOperatoerList().get(i) != null) 
-				oprListe += (""			
-						+ "<tr>"+ "<td>" + dataLaget.getOperatoerList().get(i).getOprId() +"</td>"
-						+ "<td>" + dataLaget.getOperatoerList().get(i).getOprNavn() +"</td>"
-						+ "<td>" + dataLaget.getOperatoerList().get(i).getIni() + "</td>"
-						+ "<td>" + dataLaget.getOperatoerList().get(i).getCpr() + "</td>"
-						+ "<td>" + dataLaget.getOperatoerList().get(i).getPassword()) + "</td>" + "</tr>";
-		oprListe+="</table>";
-		return oprListe;
+	public IOperatoerDAO getOprDAO() {
+		return oprDAO;
 	}
 
-	public IOperatoerDAO getDataLaget() {
-		return dataLaget;
-	}
-
-	public void setDataLaget(IOperatoerDAO dataLaget) {
-		this.dataLaget = dataLaget;
+	public void setOprDAO(IOperatoerDAO oprDAO) {
+		this.oprDAO = oprDAO;
 	}
 
 
