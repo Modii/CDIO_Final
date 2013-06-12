@@ -7,6 +7,7 @@
 <title>Operatør liste</title>
 </head>
 <body>
-<h1>HER VISES OPERATØRER</h1>
+<h1>Operatørliste</h1>
+${list}
 </body>
 </html>
