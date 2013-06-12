@@ -66,6 +66,16 @@ public class Servlet extends HttpServlet {
 			request.getRequestDispatcher("/WEB-INF/admin/createopr.jsp").forward(request, response);
 		}
 
+		if (request.getParameter("removeopr_submit") != null && request.getParameter("removeopr_submit").equals("Slet Operatør")){
+			try {
+				handleCreateOprSubmit(request, response, funktionalitetsLaget);
+			} catch (DALException e) {
+				e.getMessage();
+			}
+			request.setAttribute("succes", "Operatør slettet!");
+			request.getRequestDispatcher("/WEB-INF/admin/removeopr.jsp").forward(request, response);	
+		}
+
 	}
 
 	private void handleLogIn(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException{
@@ -110,6 +120,27 @@ public class Servlet extends HttpServlet {
 	}
 
 	private void handleCreateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		String navn = request.getParameter("navn");
+		String init = request.getParameter("init");
+		String cpr = request.getParameter("cpr");
+		String newPw = funktionalitetsLaget.generatePassword();
+		int aktoer = Integer.parseInt(request.getParameter("aktoer"));
+		funktionalitetsLaget.getDataLaget().createOperatoer(new OperatoerDTO(id, navn, init, cpr, newPw, aktoer));
+		request.setAttribute("password", "<br>Brugerens password er: " + newPw);
+
+	}
+
+	private void handleShowOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+
+	}
+
+	private void handleRemoveOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		// funktionalitetsLaget.getDataLaget().removeOperatoer(operatoer(id));
+	}
+
+	private void handleUpdateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		String navn = request.getParameter("navn");
 		String init = request.getParameter("init");
