@@ -7,6 +7,19 @@
 <title>Fjern operatør</title>
 </head>
 <body>
-<h1>HER FJERNES OPERATØRER</h1>
+
+<form method="POST" action="">
+		<input type="hidden" value="Slet Operatør" name="removeopr_submit">
+		<h1>Slet operatør</h1>
+		Id: <input type="text" name="id"><br>
+		
+		<input type="submit" value="OK">
+	</form>
+	${succes}
+	
+	<form action="" method="POST">
+		<br> <br> <br> <br> <input type="submit" name="logoff"
+			value="Log af">
+	</form>
 </body>
 </html>

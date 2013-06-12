@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Operatør iste</title>
+<title>Operatør liste</title>
 </head>
 <body>
 <h1>HER VISES OPERATØRER</h1>
