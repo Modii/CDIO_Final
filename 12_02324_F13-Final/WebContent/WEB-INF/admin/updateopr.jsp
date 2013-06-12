@@ -7,6 +7,30 @@
 <title>Opdater operatør</title>
 </head>
 <body>
-<h1>HER OPDATERES OPERATØRER</h1>
+
+<form method="POST" action="">
+		<input type="hidden" value="Opdater Operatør" name="updateopr_submit">
+		<h1>Opdater operatør</h1>
+		Id: <input type="text" name="id"><br>
+		Navn: <input type="text" name="navn"><br> 
+		Initialer: <input type="text" name="init"><br> 
+		CPR-nummer: <input type="text" name="cpr"><br>
+		Aktør: <select name="aktoer">
+		<option value="1">Administrator</option>
+		<option value="2">Farmaceut</option>
+		<option value="3">Værkfører</option>
+		<option value="4">Operatør</option>
+		</select>
+		
+		<input type="submit" value="OK">
+	</form>
+	${succes}
+	${password}
+
+	<form action="" method="POST">
+		<br> <br> <br> <br> <input type="submit" name="logoff"
+			value="Log af">
+	</form>
+
 </body>
 </html>

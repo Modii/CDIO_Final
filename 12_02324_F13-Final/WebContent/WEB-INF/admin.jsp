@@ -8,7 +8,7 @@
 <title>Admin</title>
 </head>
 <body>
-<h1>ADMIN SIDE</h1>
+<h1>Bruger administration</h1>
 
 <h3>Du har nu følgende valgmuligheder:</h3>
 
@@ -18,7 +18,7 @@
 		<input type="submit" value="Slet bruger" name="removeopr"> <br>
 		<input type="submit" value="Opdatér bruger" name="updateopr"> <br>
 	
-		<input type="submit" value="Administrere råvarer"> <br>
+		<input type="submit" value="Administrere råvarer" name="adminivare"> <br>
 		<input type="submit" value="Administrere recepter"> <br>
 		<input type="submit" value="Administrere råvarebatches"> <br>
 		<input type="submit" value="Administrere produktbatches"> <br>

@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<h5>LOGIN</h5>
+<h3>LOGIN</h3>
 
 	<form method="POST" action="">
 		Id: <input type="text" name="Id"><br>

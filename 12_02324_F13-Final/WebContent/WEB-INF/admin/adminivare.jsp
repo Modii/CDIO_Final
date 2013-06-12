@@ -4,19 +4,20 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Fjern operatør</title>
+<title>Administering af råvarer</title>
 </head>
 <body>
 
-<form method="POST" action="">
-		<input type="hidden" value="Slet Operatør" name="removeopr_submit">
-		<h1>Slet operatør</h1>
-		Id: <input type="text" name="id"><br>
-		
-		<input type="submit" value="OK">
+<h1>Råvare administration</h1>
+
+<h3>Du har nu følgende valgmuligheder:</h3>
+
+	<form method="POST" action="">
+		<input type="submit" value="Opret råvare" name="createvare"> <br>
+		<input type="submit" value="Vis råvare" name="showvare"> <br>
+		<input type="submit" value="Opdater råvare" name="updatevare">
 	</form>
-	${succes}
-	
+			
 	<form action="" method="POST">
 		<br> <br> <br> <br> <input type="submit" name="logoff"
 			value="Log af">
