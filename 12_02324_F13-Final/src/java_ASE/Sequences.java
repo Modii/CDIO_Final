@@ -31,8 +31,13 @@ public class Sequences {
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
-		data.setServerInput(inFromServer.readLine());
-		this.sequence4(inFromServer, outToServer);
+		if(data.getServerInput().equals("RM20 B"))
+		{
+			data.setServerInput(inFromServer.readLine());
+			this.sequence4(inFromServer, outToServer);
+		}
+		else
+			this.sequence3(inFromServer, outToServer);
 	}
 
 	//-----------------------------------------------------------------
@@ -180,31 +185,34 @@ public class Sequences {
 	}
 
 	//-----------------------------------------------------------------
-	// (13) Vægten beder om raavarebatch nummer på første råvare.
+	// (13) Vægten beder om raavarebatch nummer på råvare.
 	//-----------------------------------------------------------------
 	public void sequence13(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 		data.setWeightMsg("Indtast raavarebatch nr.");
 		outToServer.writeBytes("RM20 4 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
-
+		
+		System.out.println("Før if:" + data.getServerInput());
 		if(data.getServerInput().equals("RM20 B"))
+		{
 			data.setServerInput(inFromServer.readLine());
-
-		data.setSplittedInput(data.getServerInput().split(" "));
-		try {
-			if(func.testRaavareId(Integer.parseInt(data.getSplittedInput()[2])))
-			{
-				data.setWeightMsg(mRaa.getRaavare(mRaaB.getRaavareBatch(Integer.parseInt(data.getSplittedInput()[2])).getRaavareId()).getRaavareNavn());
-				outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
-				outToServer.flush();
-				data.setServerInput(inFromServer.readLine());
-				this.sequence14(inFromServer, outToServer);
+			data.setSplittedInput(data.getServerInput().split(" "));
+			try {
+				System.out.println("Før anden if:" + data.getServerInput());
+				if(func.testRaavareId(Integer.parseInt(data.getSplittedInput()[2])))
+				{
+					data.setWeightMsg(mRaa.getRaavare(mRaaB.getRaavareBatch(Integer.parseInt(data.getSplittedInput()[2])).getRaavareId()).getRaavareNavn());
+					outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
+					outToServer.flush();
+					data.setServerInput(inFromServer.readLine());
+					this.sequence14(inFromServer, outToServer);
+				}
+				else
+					this.sequence13(inFromServer, outToServer);
+			} catch (NumberFormatException | DALException e) {
+				e.printStackTrace();
 			}
-			else
-				this.sequence13(inFromServer, outToServer);
-		} catch (NumberFormatException | DALException e) {
-			e.printStackTrace();
 		}
 	}
 
