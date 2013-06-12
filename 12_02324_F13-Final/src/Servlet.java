@@ -68,10 +68,16 @@ public class Servlet extends HttpServlet {
 			handleAdminiVare(request, response, funktionalitetsLaget);
 		if (request.getParameter("createvare") != null && request.getParameter("createvare").equals("Opret råvare"))
 			handleCreateVare(request, response, funktionalitetsLaget);
-		if (request.getParameter("showvare") != null && request.getParameter("showvare").equals("Vis råvarer"))
-			handleShowVare(request, response, funktionalitetsLaget);
+		if (request.getParameter("showvare") != null && request.getParameter("showvare").equals("Vis råvare")){
+			try{
+				handleShowVare(request, response, funktionalitetsLaget);
+			} catch (DALException e){
+				e.getMessage();
+			}
+		}
 		if (request.getParameter("updatevare") != null && request.getParameter("updatevare").equals("Opdater råvare"))
 			handleUpdateVare(request, response, funktionalitetsLaget);
+		
 		if (request.getParameter("createopr_submit") != null && request.getParameter("createopr_submit").equals("Opret Operatør")){
 			try {
 				handleCreateOprSubmit(request, response, funktionalitetsLaget);
@@ -107,6 +113,15 @@ public class Servlet extends HttpServlet {
 			}
 			request.setAttribute("succes", "Råvare oprettet!");
 			request.getRequestDispatcher("/WEB-INF/admin/raavare/createvare.jsp").forward(request, response);
+		}
+		if (request.getParameter("updateraavare_submit") != null && request.getParameter("updateraavare_submit").equals("Opdater råvare")){
+			try {
+				handleUpdateVareSubmit(request, response, funktionalitetsLaget);
+			} catch (DALException e) {
+				e.getMessage();
+			}
+			request.setAttribute("succes", "Råvare opdateret!");
+			request.getRequestDispatcher("/WEB-INF/admin/bruger/updatevare.jsp").forward(request, response);
 		}
 
 	}
@@ -161,6 +176,7 @@ public class Servlet extends HttpServlet {
 		request.setAttribute("list", html);
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/showopr.jsp").forward(request, response);
 	}
+
 	private void handleRemoveOpr(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/removeopr.jsp").forward(request, response);
 	}
@@ -173,13 +189,27 @@ public class Servlet extends HttpServlet {
 	private void handleCreateVare(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/raavare/createvare.jsp").forward(request, response);
 	}
-	private void handleShowVare(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+	private void handleShowVare(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		String html = "<table border=1>";
+		html += "<tr><td>ID</td><td>Navn</td><td>Leverandør</td></tr>";
+		int id;
+		String navn,leverandoer;
+		List<RaavareDTO> temp = funktionalitetsLaget.getRaavareDAO().getRaavareList(); 
+		for (int i=0; i < temp.size(); i++) {
+			id = temp.get(i).getRaavareId();
+			navn = temp.get(i).getRaavareNavn();
+			leverandoer = temp.get(i).getLeverandoer();
+			html += "<tr><td>"+id+"</td><td>"+navn+"</td><td>"+leverandoer+"</td></tr>";
+		}
+		html +="</table>";
+		request.setAttribute("list", html);
 		request.getRequestDispatcher("/WEB-INF/admin/raavare/showvare.jsp").forward(request, response);
 	}
+	
 	private void handleUpdateVare(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/raavare/updatevare.jsp").forward(request, response);
 	}
-
+	
 	private void handleCreateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		String navn = request.getParameter("navn");
@@ -210,6 +240,12 @@ public class Servlet extends HttpServlet {
 		String navn = request.getParameter("navn");
 		String leverandoer = request.getParameter("leverandoer");
 		funktionalitetsLaget.getRaavareDAO().createRaavare(new RaavareDTO(id, navn, leverandoer));
+	}
+	private void handleUpdateVareSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		String navn = request.getParameter("navn");
+		String leverandoer = request.getParameter("leverandoer");
+		funktionalitetsLaget.getRaavareDAO().updateRaavare(new RaavareDTO(id, navn, leverandoer));
 	}
 
 }
