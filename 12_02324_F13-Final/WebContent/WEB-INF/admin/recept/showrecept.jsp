@@ -4,9 +4,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Recept liste</title>
 </head>
 <body>
-
+	<h1>Receptliste</h1>
+	${list}
+	<form action="" method="POST">
+		<br> <br> <br> <br> <input type="submit" name="logoff" value="Log af">
+	</form>
 </body>
 </html>
