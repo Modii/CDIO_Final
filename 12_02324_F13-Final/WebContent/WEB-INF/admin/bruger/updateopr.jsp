@@ -8,8 +8,7 @@
 </head>
 <body>
 
-<form method="POST" action="">
-		<input type="hidden" value="Opdater Operatør" name="updateopr_submit">
+	<form method="POST" action="">
 		<h1>Opdater operatør</h1>
 		Id: <input type="text" name="id"><br>
 		Navn: <input type="text" name="navn"><br> 
@@ -22,7 +21,7 @@
 		<option value="4">Operatør</option>
 		</select>
 		
-		<input type="submit" value="OK">
+		<input type="submit" value="Opdater operatør" name="updateopr_submit">
 	</form>
 	${succes}
 	${password}

@@ -117,6 +117,9 @@ public class Functionality implements IFunctionality{
 		catch (NullPointerException f) {
 			throw new DALException("ID findes ikke");
 		}
+		catch (DALException g) {
+			return false;
+		}
 	}
 	/**
 	 * Her sammenlignes pb id fra brugerinput med eksisterende id'er i vores Array på samme måde som ovenover.
