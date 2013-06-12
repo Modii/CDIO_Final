@@ -9,5 +9,9 @@
 <body>
 <h1>Operatørliste</h1>
 ${list}
+<form action="" method="POST">
+	<br> <br> <br> <br> <input type="submit" name="logoff"
+		value="Log af">
+</form>
 </body>
 </html>

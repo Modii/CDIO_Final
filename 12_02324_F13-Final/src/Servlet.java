@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -77,17 +78,25 @@ public class Servlet extends HttpServlet {
 				e.getMessage();
 			}
 			request.setAttribute("succes", "Operatør oprettet!");
-			request.getRequestDispatcher("/WEB-INF/admin/createopr.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/admin/bruger/createopr.jsp").forward(request, response);
 		}
-		
 		if (request.getParameter("removeopr_submit") != null && request.getParameter("removeopr_submit").equals("Slet Operatør")){
 			try {
-				handleCreateOprSubmit(request, response, funktionalitetsLaget);
+				handleRemoveOprSubmit(request, response, funktionalitetsLaget);
 			} catch (DALException e) {
 				e.getMessage();
 			}
 			request.setAttribute("succes", "Operatør slettet!");
-			request.getRequestDispatcher("/WEB-INF/admin/removeopr.jsp").forward(request, response);	
+			request.getRequestDispatcher("/WEB-INF/admin/bruger/removeopr.jsp").forward(request, response);	
+		}
+		if (request.getParameter("updateopr_submit") != null && request.getParameter("updateopr_submit").equals("Opdater operatør")){
+			try {
+				handleUpdateOprSubmit(request, response, funktionalitetsLaget);
+			} catch (DALException e) {
+				e.getMessage();
+			}
+			request.setAttribute("succes", "Operatør opdateret!");
+			request.getRequestDispatcher("/WEB-INF/admin/bruger/updateopr.jsp").forward(request, response);
 		}
 
 	}
@@ -121,29 +130,44 @@ public class Servlet extends HttpServlet {
 		request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
 	}
 	private void handleCreateOpr(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/admin/createopr.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/admin/bruger/createopr.jsp").forward(request, response);
 	}
 	private void handleShowOpr(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
-		request.setAttribute("list", funktionalitetsLaget.getDataLaget().getOperatoerList());
-		request.getRequestDispatcher("/WEB-INF/admin/showopr.jsp").forward(request, response);
+		String html = "<table border=1>";
+		html += "<tr><td>ID</td><td>Navn</td><td>Initialer</td><td>CPR</td><td>Password</td><td>Aktør</td></tr>";
+		int id,aktoer;
+		String cpr,navn,ini,pass;
+		List<OperatoerDTO> temp = funktionalitetsLaget.getDataLaget().getOperatoerList(); 
+		for (int i=0; i < temp.size(); i++) {
+			id = temp.get(i).getOprId();
+			navn = temp.get(i).getOprNavn();
+			ini = temp.get(i).getIni();
+			cpr = temp.get(i).getCpr();
+			pass = temp.get(i).getPassword();
+			aktoer = temp.get(i).getAktoer();
+			html += "<tr><td>"+id+"</td><td>"+navn+"</td><td>"+ini+"</td><td>"+cpr+"</td><td>"+pass+"</td><td>"+aktoer+"</td></tr>";
+		}
+		html +="</table>";
+		request.setAttribute("list", html);
+		request.getRequestDispatcher("/WEB-INF/admin/bruger/showopr.jsp").forward(request, response);
 	}
 	private void handleRemoveOpr(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/admin/removeopr.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/admin/bruger/removeopr.jsp").forward(request, response);
 	}
 	private void handleUpdateOpr(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/admin/updateopr.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/admin/bruger/updateopr.jsp").forward(request, response);
 	}
 	private void handleAdminiVare(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/admin/adminivare.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/admin/raavare/adminivare.jsp").forward(request, response);
 	}
 	private void handleCreateVare(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/admin/adminivare.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/admin/raavare/createvare.jsp").forward(request, response);
 	}
 	private void handleShowVare(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/admin/adminivare.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/admin/raavare/showvare.jsp").forward(request, response);
 	}
 	private void handleUpdateVare(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/admin/adminivare.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/admin/raavare/updatevare.jsp").forward(request, response);
 	}
 
 	private void handleCreateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
@@ -159,7 +183,7 @@ public class Servlet extends HttpServlet {
 	}
 	private void handleRemoveOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
-		// funktionalitetsLaget.getDataLaget().removeOperatoer(operatoer(id));
+		funktionalitetsLaget.getDataLaget().removeOperatoer(funktionalitetsLaget.getDataLaget().getOperatoer(id));
 	}
 	private void handleUpdateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
@@ -168,8 +192,15 @@ public class Servlet extends HttpServlet {
 		String cpr = request.getParameter("cpr");
 		String newPw = funktionalitetsLaget.generatePassword();
 		int aktoer = Integer.parseInt(request.getParameter("aktoer"));
-		funktionalitetsLaget.getDataLaget().createOperatoer(new OperatoerDTO(id, navn, init, cpr, newPw, aktoer));
+		funktionalitetsLaget.getDataLaget().updateOperatoer(new OperatoerDTO(id, navn, init, cpr, newPw, aktoer));
 		request.setAttribute("password", "<br>Brugerens password er: " + newPw);
+	}
+	private void handleCreateVareSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		String navn = request.getParameter("navn");
+		String leverandoer = request.getParameter("leverandør");
+		funktionalitetsLaget.getDataLaget().createOperatoer(new RaavareDTO(id, navn, leverandoer));
+		request.setAttribute();
 
 	}
 

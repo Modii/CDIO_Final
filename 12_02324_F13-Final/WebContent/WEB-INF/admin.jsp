@@ -8,7 +8,7 @@
 <title>Admin</title>
 </head>
 <body>
-<h1>Bruger administration</h1>
+<h1>ADMIN SIDE</h1>
 
 <h3>Du har nu følgende valgmuligheder:</h3>
 
