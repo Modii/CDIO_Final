@@ -7,6 +7,7 @@ public interface IFunctionality {
 	void askForOprName();
 	boolean testId(int i) throws DALException;
 	boolean testPbId(int i) throws DALException;
+	boolean testRaavareId(int i) throws DALException;
 	boolean testPassword(int i, String s) throws DALException;
 	boolean askForNewPassword(int i, String s) throws DALException;
 	boolean checkIfIdentical(String s, String k);

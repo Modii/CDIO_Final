@@ -5,18 +5,25 @@ import java.util.Scanner;
 
 import dao_interfaces.IOperatoerDAO;
 import dao_interfaces.IProduktBatchDAO;
+import dao_interfaces.IRaavareBatchDAO;
 import db_mysqldao.MySQLOperatoerDAO;
 import db_mysqldao.MySQLProduktBatchDAO;
+import db_mysqldao.MySQLRaavareBatchDAO;
 import dto.OperatoerDTO;
 import dao_interfaces.DALException;
 
 public class Functionality implements IFunctionality{
 
-	private IProduktBatchDAO produktbatchLag = new MySQLProduktBatchDAO();
+	private IProduktBatchDAO produktbatchLaget = new MySQLProduktBatchDAO();
 	private IOperatoerDAO dataLaget = new MySQLOperatoerDAO();
+	private IRaavareBatchDAO raavarebatchLaget = new MySQLRaavareBatchDAO();
 
-	public Functionality(IOperatoerDAO d) {
-		this.dataLaget = d;
+	public Functionality(IProduktBatchDAO produktbatchLaget,
+			IOperatoerDAO dataLaget, IRaavareBatchDAO raavarebatchLaget) {
+		super();
+		this.produktbatchLaget = produktbatchLaget;
+		this.dataLaget = dataLaget;
+		this.raavarebatchLaget = raavarebatchLaget;
 	}
 
 	public Functionality(){
@@ -123,9 +130,21 @@ public class Functionality implements IFunctionality{
 	 */
 	public boolean testPbId(int i) throws DALException {
 		try {
-			return (i == produktbatchLag.getProduktBatch(i).getPbId());
+			return (i == produktbatchLaget.getProduktBatch(i).getPbId());
 		}
 
+		catch (IndexOutOfBoundsException e) {
+			throw new DALException("ID findes ikke");
+		}
+		catch (NullPointerException f) {
+			throw new DALException("ID findes ikke");
+		}
+	}
+
+	public boolean testRaavareId(int i) throws DALException {
+		try {
+			return (i == raavarebatchLaget.getRaavareBatch(i).getRaavareId());
+		}
 		catch (IndexOutOfBoundsException e) {
 			throw new DALException("ID findes ikke");
 		}
@@ -175,7 +194,7 @@ public class Functionality implements IFunctionality{
 			return true;
 		}
 
-	return false;
+		return false;
 	}
 
 	/**
