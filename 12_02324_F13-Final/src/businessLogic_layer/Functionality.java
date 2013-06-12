@@ -150,9 +150,9 @@ public class Functionality implements IFunctionality{
 		}
 	}
 
-	public boolean testRaavareId(int i) throws DALException {
+	public boolean testRaavareBatchId(int i) throws DALException {
 		try {
-			return (i == raavarebatchDAO.getRaavareBatch(i).getRaavareId());
+			return (i == raavarebatchDAO.getRaavareBatch(i).getRbId());
 		}
 		catch (IndexOutOfBoundsException e) {
 			throw new DALException("ID findes ikke");

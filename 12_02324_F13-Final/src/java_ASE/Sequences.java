@@ -90,7 +90,7 @@ public class Sequences {
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
 		data.setServerInput(inFromServer.readLine());
-		
+
 		this.sequence6(inFromServer, outToServer);
 	}
 
@@ -109,7 +109,15 @@ public class Sequences {
 				outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 				outToServer.flush();
 				data.setServerInput(inFromServer.readLine());
-				this.sequence7(inFromServer, outToServer);
+				System.out.println("Vægten svarer tilbage første readline: " + data.getServerInput());
+				if(data.getServerInput().equals("RM20 B")){
+					this.sequence7(inFromServer, outToServer);
+				}
+				else
+				{
+					System.out.println("Herp");
+					this.sequence6(inFromServer, outToServer);
+				}
 			}
 		} catch (NumberFormatException | DALException e) {
 			e.printStackTrace();
@@ -122,17 +130,22 @@ public class Sequences {
 	public void sequence7(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
 		data.setWeightMsg("Aflast. Tryk OK for tarer");
-		outToServer.writeBytes("RM20 4 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
+		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
+		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
-
-		if(data.getServerInput().equals("RM20 B"))
-			data.setServerInput(inFromServer.readLine());
+		System.out.println("Tryk ok for tarer første readline: " + data.getServerInput());
+		data.setServerInput(inFromServer.readLine());
+		System.out.println("Tryk ok for tarer anden readline: " + data.getServerInput());
+		System.out.println(data.getServerInput());
+		
+		if(data.getServerInput().equals("RM20 B")){
+			this.sequence8(inFromServer, outToServer);
+		}
 		else
 		{
+			System.out.println("derp");
 			this.sequence7(inFromServer, outToServer);
 		}
-
-		this.sequence8(inFromServer, outToServer);
 	}
 
 	//-----------------------------------------------------------------
@@ -142,7 +155,11 @@ public class Sequences {
 	public void sequence8(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 
 		outToServer.writeBytes("T\r\n");
-		this.sequence9_10(inFromServer, outToServer);
+		data.setServerInput(inFromServer.readLine());
+		if(data.getServerInput().startsWith("T S")){
+			this.sequence9_10(inFromServer, outToServer);
+		}
+		else this.sequence8(inFromServer, outToServer);
 	}
 
 	//-----------------------------------------------------------------
@@ -151,7 +168,7 @@ public class Sequences {
 
 	public void sequence9_10(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 		data.setWeightMsg("Anbring tarabeholder");
-		outToServer.writeBytes("RM20 4 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
+		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		data.setServerInput(inFromServer.readLine());
 
 		if(data.getServerInput().equals("RM20 B"))
@@ -191,18 +208,16 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	public void sequence13(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 		data.setWeightMsg("Indtast raavarebatch nr.");
-		outToServer.writeBytes("RM20 4 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
+		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
-		
-		System.out.println("Før if:" + data.getServerInput());
+
 		if(data.getServerInput().equals("RM20 B"))
 		{
 			data.setServerInput(inFromServer.readLine());
 			data.setSplittedInput(data.getServerInput().split(" "));
 			try {
-				System.out.println("Før anden if:" + data.getServerInput());
-				if(func.testRaavareId(Integer.parseInt(data.getSplittedInput()[2])))
+				if(func.testRaavareBatchId(Integer.parseInt(data.getSplittedInput()[2])))
 				{
 					data.setWeightMsg(mRaa.getRaavare(mRaaB.getRaavareBatch(Integer.parseInt(data.getSplittedInput()[2])).getRaavareId()).getRaavareNavn());
 					outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
@@ -216,8 +231,10 @@ public class Sequences {
 				e.printStackTrace();
 			}
 		}
-	}
 
+		else
+			this.sequence13(inFromServer, outToServer);
+	}
 	//-----------------------------------------------------------------
 	// (14) Bruger afvejer og trykker ok.
 	//-----------------------------------------------------------------
@@ -227,21 +244,25 @@ public class Sequences {
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
+		System.out.println("1: " + data.getServerInput());
 		data.setServerInput(inFromServer.readLine());
+		System.out.println("2: " + data.getServerInput());
 		this.sequence15(inFromServer, outToServer);
 	}
 
 	//-----------------------------------------------------------------
-	// (15) Vægt spørger om der er flere afvejninger.
+	// (15) Vægt spørger om der er flere afvejninger. PROBLEM
 	//-----------------------------------------------------------------
 	public void sequence15(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 		data.setWeightMsg("Flere raavare?Ja=1,Nej=0");
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
+		System.out.println("4: " + data.getServerInput());
 		if(data.getServerInput().equals("RM20 B"))
 		{
 			data.setServerInput(inFromServer.readLine());
+			System.out.println("5: " + data.getServerInput());
 			data.setSplittedInput(data.getServerInput().split(" "));
 			if (Integer.parseInt(data.getSplittedInput()[2]) == 1) {
 				this.sequence16_17(inFromServer, outToServer);
