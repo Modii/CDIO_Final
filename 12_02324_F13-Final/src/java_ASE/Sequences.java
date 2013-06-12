@@ -20,7 +20,7 @@ public class Sequences {
 	private MySQLRaavareDAO mRaa = new MySQLRaavareDAO();
 	private MySQLRaavareBatchDAO mRaaB = new MySQLRaavareBatchDAO();
 	private Data data = new Data();
-	private int akuteltPb;
+	private int aktueltPb;
 
 	//-----------------------------------------------------------------
 	// (3)	Operatør indtaster operatørnummer
@@ -90,6 +90,7 @@ public class Sequences {
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
 		data.setServerInput(inFromServer.readLine());
+		
 		this.sequence6(inFromServer, outToServer);
 	}
 
@@ -99,11 +100,12 @@ public class Sequences {
 	public void sequence6(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
 		data.setSplittedInput(data.getServerInput().split(" "));
-		akuteltPb = Integer.parseInt(data.getSplittedInput()[2]);
+		aktueltPb = Integer.parseInt(data.getSplittedInput()[2]);
 		try {
-			if(func.testPbId(akuteltPb))
+			mPb.getProduktBatch(aktueltPb).setStatus(1);
+			if(func.testPbId(aktueltPb))
 			{
-				data.setWeightMsg(mRec.getRecept(mPb.getProduktBatch(akuteltPb).getReceptId()).getReceptNavn());
+				data.setWeightMsg(mRec.getRecept(mPb.getProduktBatch(aktueltPb).getReceptId()).getReceptNavn());
 				outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 				outToServer.flush();
 				data.setServerInput(inFromServer.readLine());
@@ -233,7 +235,7 @@ public class Sequences {
 	// (15) Vægt spørger om der er flere afvejninger.
 	//-----------------------------------------------------------------
 	public void sequence15(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
-		data.setWeightMsg("Færdig? Ja 1 / Nej 0");
+		data.setWeightMsg("Flere raavare?Ja=1,Nej=0");
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
@@ -258,11 +260,11 @@ public class Sequences {
 	public void sequence16_17(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 
 		try {
-			mPb.getProduktBatch(akuteltPb).setStatus(2);
+			mPb.getProduktBatch(aktueltPb).setStatus(2);
 		} catch (NumberFormatException | DALException e) {
 			e.printStackTrace();
 		}
-		data.setWeightMsg("Forfra? Ja 1 / Nej 0");
+		data.setWeightMsg("Ny vejning?Ja=1/Nej=0");
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
