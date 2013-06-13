@@ -26,7 +26,7 @@
 	</form>
 	${succes}
 	${password}
-
+	
 	<form action="" method="POST">
 		<br> <br> <br> <br> <input type="submit" name="logoff"
 			value="Log af">
