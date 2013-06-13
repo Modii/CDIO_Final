@@ -51,11 +51,15 @@ public class Servlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		Functionality funktionalitetsLaget = new Functionality();
-
+		
+		// Lav session hvis den ikke findes
+		
 		if (request.getParameter("login") != null && request.getParameter("login").equals("Log ind")) 
 			handleLogIn(request, response, funktionalitetsLaget);
 		if (request.getParameter("logoff") != null && request.getParameter("logoff").equals("Log af"))
 			handleLogOff(request, response);
+		if (request.getParameter("hovedmenu") != null && request.getParameter("hovedmenu").equals("Tilbage til hovedmenu"))
+			handleGoToHovedmenu(request, response);
 		if (request.getParameter("adminibruger") != null && request.getParameter("adminibruger").equals("Administrere brugere"))
 			handleAdminiBruger(request, response, funktionalitetsLaget);
 		if (request.getParameter("createopr") != null && request.getParameter("createopr").equals("Opret bruger")) {
@@ -205,12 +209,17 @@ public class Servlet extends HttpServlet {
 		}
 	}
 
-	private void handleLogIn(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException{
+	private void handleLogIn(HttpServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException{
+		HttpSession session = request.getSession(true);
+	
+		
 		int id = Integer.parseInt(request.getParameter("Id"));
 		String pw = request.getParameter("Password");
 		try {
 			if (funktionalitetsLaget.testId(id)) { // checker om ID findes i DB.
 				if(funktionalitetsLaget.testPassword(id, pw)){
+					session.setAttribute("operatoerNavn", funktionalitetsLaget.getOprDAO().getOperatoer(id).getOprNavn());
+					session.setAttribute("operatoerAktoer", funktionalitetsLaget.getOprDAO().getOperatoer(id).getAktoer());
 					if(funktionalitetsLaget.getOprDAO().getOperatoer(id).getAktoer() == 1)
 						request.getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
 					else if(funktionalitetsLaget.getOprDAO().getOperatoer(id).getAktoer() == 2)
@@ -219,6 +228,8 @@ public class Servlet extends HttpServlet {
 						request.getRequestDispatcher("/WEB-INF/supervisor.jsp").forward(request, response);
 					else
 						request.getRequestDispatcher("/WEB-INF/operator.jsp").forward(request, response);
+					
+
 				}
 			}
 			else {
@@ -232,6 +243,19 @@ public class Servlet extends HttpServlet {
 	}
 	private void handleLogOff(ServletRequest request, ServletResponse response) throws ServletException, IOException{
 		request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+	}
+	private void handleGoToHovedmenu(HttpServletRequest request, ServletResponse response) throws ServletException, IOException{
+		HttpSession session = request.getSession(true);
+		int aktoer = Integer.parseInt(String.valueOf(session.getAttribute("operatoerAktoer")));
+		if (aktoer == 1)
+			request.getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
+		else if (aktoer == 2)
+			request.getRequestDispatcher("/WEB-INF/pharmacist.jsp").forward(request, response);
+		else if (aktoer == 3)
+			request.getRequestDispatcher("/WEB-INF/supervisor.jsp").forward(request, response);
+		else
+			request.getRequestDispatcher("/WEB-INF/operator.jsp").forward(request, response);
+		
 	}
 	private void handleAdminiBruger(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/adminibruger.jsp").forward(request, response);

@@ -17,7 +17,11 @@
 	${succes}
 
 	<form action="" method="POST">
-		<br> <br> <br> <br> <input type="submit" name="logoff"
+		<br> <br> <br> <br> <input type="submit" name="hovedmenu"
+			value="Tilbage til hovedmenu">
+	</form>
+	<form action="" method="POST">
+		<br><input type="submit" name="logoff"
 			value="Log af">
 	</form>
 </body>
