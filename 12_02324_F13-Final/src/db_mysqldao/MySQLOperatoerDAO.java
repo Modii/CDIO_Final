@@ -61,7 +61,7 @@ public class MySQLOperatoerDAO implements IOperatoerDAO {
 	
 	public List<OperatoerDTO> getOperatoerList() throws DALException {
 		List<OperatoerDTO> list = new ArrayList<OperatoerDTO>();
-		ResultSet rs = Connector.doQuery("SELECT * FROM Operatoer");
+		ResultSet rs = Connector.doQuery("SELECT * FROM Operatoer ORDER BY oprId ASC");
 		try
 		{
 			while (rs.next()) 

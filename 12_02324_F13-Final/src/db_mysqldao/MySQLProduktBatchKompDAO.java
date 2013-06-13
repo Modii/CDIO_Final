@@ -46,7 +46,7 @@ public class MySQLProduktBatchKompDAO implements IProduktBatchKompDAO {
 	public List<ProduktBatchKompDTO> getProduktBatchKompList()
 			throws DALException {
 		List<ProduktBatchKompDTO> list = new ArrayList<ProduktBatchKompDTO>();
-		ResultSet rs = Connector.doQuery("SELECT * FROM ProduktbatchKomp");
+		ResultSet rs = Connector.doQuery("SELECT * FROM ProduktbatchKomp ORDER BY pbId");
 		try
 		{
 			while (rs.next()) 

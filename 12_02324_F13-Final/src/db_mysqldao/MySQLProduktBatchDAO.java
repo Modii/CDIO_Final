@@ -26,7 +26,7 @@ public class MySQLProduktBatchDAO implements IProduktBatchDAO{
 	@Override
 	public List<ProduktBatchDTO> getProduktBatchList() throws DALException {
 		List<ProduktBatchDTO> list = new ArrayList<ProduktBatchDTO>();
-		ResultSet rs = Connector.doQuery("SELECT * FROM Produktbatch");
+		ResultSet rs = Connector.doQuery("SELECT * FROM Produktbatch ORDER BY pbId");
 		try
 		{
 			while (rs.next()) 
