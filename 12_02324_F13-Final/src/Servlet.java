@@ -56,6 +56,8 @@ public class Servlet extends HttpServlet {
 			handleLogIn(request, response, funktionalitetsLaget);
 		if (request.getParameter("logoff") != null && request.getParameter("logoff").equals("Log af"))
 			handleLogOff(request, response);
+		if (request.getParameter("adminibruger") != null && request.getParameter("adminibruger").equals("Administrere brugere"))
+			handleAdminiBruger(request, response, funktionalitetsLaget);
 		if (request.getParameter("createopr") != null && request.getParameter("createopr").equals("Opret bruger")) {
 			int oprID = 0;
 			try {
@@ -225,6 +227,9 @@ public class Servlet extends HttpServlet {
 	}
 	private void handleLogOff(ServletRequest request, ServletResponse response) throws ServletException, IOException{
 		request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+	}
+	private void handleAdminiBruger(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+		request.getRequestDispatcher("/WEB-INF/admin/bruger/adminibruger.jsp").forward(request, response);
 	}
 	private void handleCreateOpr(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/createopr.jsp").forward(request, response);
