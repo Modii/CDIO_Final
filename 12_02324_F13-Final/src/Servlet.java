@@ -109,6 +109,13 @@ public class Servlet extends HttpServlet {
 			handleAdminiProduktBatch(request, response, funktionalitetsLaget);
 		if (request.getParameter("createproduktbatch") != null && request.getParameter("createproduktbatch").equals("Opret produktbatch"))
 			handleCreateProduktBatch(request, response, funktionalitetsLaget);
+		if (request.getParameter("showproduktbatch") != null && request.getParameter("showproduktbatch").equals("Vis produktbatch")){
+			try{
+				handleShowProduktBatch(request, response, funktionalitetsLaget);
+			} catch (DALException e){
+				e.getMessage();
+			}
+		}
 		if (request.getParameter("createopr_submit") != null && request.getParameter("createopr_submit").equals("Opret Operatør")){
 			try {
 				handleCreateOprSubmit(request, response, funktionalitetsLaget);
@@ -327,6 +334,23 @@ public class Servlet extends HttpServlet {
 	}
 	private void handleCreateProduktBatch(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/produktbatch/createproduktbatch.jsp").forward(request, response);
+	}
+	private void handleShowProduktBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		String html = "<table border=1>";
+		html += "<tr><td>Produktbatch ID</td><td>Recept ID</td><td>Dato</td><td>Status</td></tr>";
+		int produktbatchid, receptid, status;
+		String dato;
+		List<ProduktBatchDTO> produktbatch = funktionalitetsLaget.getProduktBatchDAO().getProduktBatchList(); 
+		for (int i=0; i < produktbatch.size(); i++) {
+			produktbatchid = produktbatch.get(i).getPbId();
+			receptid = produktbatch.get(i).getReceptId();
+			dato = produktbatch.get(i).getDato();
+			status = produktbatch.get(i).getStatus();
+			html += "<tr><td>"+produktbatchid+"</td><td>"+receptid+"</td><td>"+dato+"</td><td>"+status+"</td></tr>";
+		}
+		html +="</table>";
+		request.setAttribute("list", html);
+		request.getRequestDispatcher("/WEB-INF/admin/produktbatch/showproduktbatch.jsp").forward(request, response);
 	}
 	private void handleCreateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
