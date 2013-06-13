@@ -13,23 +13,23 @@
 		ReceptId: <input type="text" name="receptid"><br>
 		Navn: <input type="text" name="receptnavn"><br> 
 		<h2>Receptkomponenter</h2>
-		RåvareId:<input type="text" name="raavareid1"><br>
+		Råvare: <select name="raavareid1">${raavarer}</select><br>
 		Nominel netto vægt (kg): <input type="text" name="nomnetto1"><br>
 		Tolerance (0.1-10%): <input type="text" name="tolerance1"><br><br>
 		
-		RåvareId:<input type="text" name="raavareid2"><br>
+		Råvare: <select name="raavareid2">${raavarer}</select><br>
 		Nominel netto vægt (kg): <input type="text" name="nomnetto2"><br>
 		Tolerance (0.1-10%): <input type="text" name="tolerance2"><br><br>
 		
-		RåvareId:<input type="text" name="raavareid3"><br>
+		Råvare: <select name="raavareid3">${raavarer}</select><br>
 		Nominel netto vægt (kg): <input type="text" name="nomnetto3"><br>
 		Tolerance (0.1-10%): <input type="text" name="tolerance3"><br><br>
 		
-		RåvareId:<input type="text" name="raavareid4"><br>
+		Råvare: <select name="raavareid4">${raavarer}</select><br>
 		Nominel netto vægt (kg): <input type="text" name="nomnetto4"><br>
 		Tolerance (0.1-10%): <input type="text" name="tolerance4"><br><br>
 		
-		RåvareId:<input type="text" name="raavareid5"><br>
+		Råvare: <select name="raavareid5">${raavarer}</select><br>
 		Nominel netto vægt (kg): <input type="text" name="nomnetto5"><br>
 		Tolerance (0.1-10%): <input type="text" name="tolerance5"><br>
 		<input type="submit" value="Opret recept" name="createrecept_submit">

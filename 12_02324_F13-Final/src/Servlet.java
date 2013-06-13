@@ -96,7 +96,12 @@ public class Servlet extends HttpServlet {
 		if (request.getParameter("adminirecept") != null && request.getParameter("adminirecept").equals("Administrere recepter"))
 			handleAdminiRecept(request, response, funktionalitetsLaget);
 		if (request.getParameter("createrecept") != null && request.getParameter("createrecept").equals("Opret recept"))
-			handleCreateRecept(request, response, funktionalitetsLaget);
+			try {
+				handleCreateRecept(request, response, funktionalitetsLaget);
+			} catch (DALException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		if (request.getParameter("showrecept") != null && request.getParameter("showrecept").equals("Vis recepter")){
 			try{
 				handleShowRecept(request, response, funktionalitetsLaget);
@@ -308,7 +313,16 @@ public class Servlet extends HttpServlet {
 	private void handleAdminiRecept(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/recept/adminirecept.jsp").forward(request, response);
 	}
-	private void handleCreateRecept(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+	private void handleCreateRecept(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int raavareid;
+		String raavareNavn,html = "";
+		List<RaavareDTO> raavare = funktionalitetsLaget.getRaavareDAO().getRaavareList();
+		for (int i=0; i < raavare.size(); i++) {
+			raavareid = raavare.get(i).getRaavareId();
+			raavareNavn = raavare.get(i).getRaavareNavn();
+			html += "<option value='"+raavareid+"'>"+raavareNavn+"</option>";
+		}
+		request.setAttribute("raavarer", html);
 		request.getRequestDispatcher("/WEB-INF/admin/recept/createrecept.jsp").forward(request, response);
 	}
 	private void handleShowRecept(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
@@ -426,6 +440,14 @@ public class Servlet extends HttpServlet {
 			}
 			x++;
 		}
+		String raavareNavn,html = "";
+		List<RaavareDTO> raavare = funktionalitetsLaget.getRaavareDAO().getRaavareList();
+		for (int i=0; i < raavare.size(); i++) {
+			raavareid = raavare.get(i).getRaavareId();
+			raavareNavn = raavare.get(i).getRaavareNavn();
+			html += "<option value='"+raavareid+"'>"+raavareNavn+"</option>";
+		}
+		request.setAttribute("raavarer", html);
 	}
 	private void handleCreateRaavareBatchSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int raavarebatchid = Integer.parseInt(request.getParameter("raavarebatchid"));
