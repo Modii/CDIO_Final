@@ -13,7 +13,7 @@ public class Main {
 		new Connector();
 		Sequences s = new Sequences();
 
-		Socket clientSocket = new Socket("localhost", 4567);
+		Socket clientSocket = new Socket("169.254.2.3", 8000);
 
 		DataOutputStream outToServer = new DataOutputStream(
 				clientSocket.getOutputStream());
@@ -21,7 +21,8 @@ public class Main {
 		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(
 				clientSocket.getInputStream()));
 
-		s.sequence3(inFromServer, outToServer);
+		
+		s.sequence2(inFromServer, outToServer);
 
 		clientSocket.close();
 	}
