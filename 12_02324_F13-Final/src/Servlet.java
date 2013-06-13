@@ -56,8 +56,16 @@ public class Servlet extends HttpServlet {
 			handleLogIn(request, response, funktionalitetsLaget);
 		if (request.getParameter("logoff") != null && request.getParameter("logoff").equals("Log af"))
 			handleLogOff(request, response);
-		if (request.getParameter("createopr") != null && request.getParameter("createopr").equals("Opret bruger"))
+		if (request.getParameter("createopr") != null && request.getParameter("createopr").equals("Opret bruger")) {
+			int oprID = 0;
+			try {
+				oprID = funktionalitetsLaget.getOprDAO().getHighestOprID().getOprId()+1;
+			} catch (DALException e) {
+				e.printStackTrace();
+			}
+			request.setAttribute("autoid", oprID);
 			handleCreateOpr(request, response, funktionalitetsLaget);
+		}
 		if (request.getParameter("showopr") != null && request.getParameter("showopr").equals("Vis brugere")){
 			try{
 				handleShowOpr(request, response, funktionalitetsLaget);
@@ -361,6 +369,13 @@ public class Servlet extends HttpServlet {
 		int aktoer = Integer.parseInt(request.getParameter("aktoer"));
 		funktionalitetsLaget.getOprDAO().createOperatoer(new OperatoerDTO(id, navn, init, cpr, newPw, aktoer));
 		request.setAttribute("password", "<br>Brugerens password er: " + newPw);
+		int oprID = 0;
+		try {
+			oprID = funktionalitetsLaget.getOprDAO().getHighestOprID().getOprId()+1;
+		} catch (DALException e) {
+			e.printStackTrace();
+		}
+		request.setAttribute("autoid", oprID);
 
 	}
 
