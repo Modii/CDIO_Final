@@ -1,28 +1,31 @@
 package java_ASE;
 
 public class Data {
-	
-	String weightMsg, oprID, serverInput, itemName, userInput;
+
+	String weightMsg, serverInput, itemName, userInput;
+	int oprID;
 	int itemNoInput, itemNoStore;
 	String[] splittedInput = new String[10];
 	double tara, netto, bruttoCheck;
-	
+
 	String getWeightMsg() {
 		return weightMsg;
 	}
 	void setWeightMsg(String weightMsg) {
+		System.out.println("setWeightMsg: " + weightMsg);
 		this.weightMsg = weightMsg;
 	}
-	String getOprID() {
+	int getOprID() {
 		return oprID;
 	}
-	void setOprID(String oprID) {
+	void setOprID(int oprID) {
 		this.oprID = oprID;
 	}
 	String getServerInput() {
 		return serverInput;
 	}
 	void setServerInput(String serverInput) {
+		System.out.println("setServerInput: " + serverInput);
 		this.serverInput = serverInput;
 	}
 	String getItemName() {
@@ -73,7 +76,4 @@ public class Data {
 	void setBruttoCheck(double bruttoCheck) {
 		this.bruttoCheck = bruttoCheck;
 	}
-
-	
-
 }

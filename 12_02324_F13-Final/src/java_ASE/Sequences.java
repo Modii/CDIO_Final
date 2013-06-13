@@ -23,6 +23,16 @@ public class Sequences {
 	private int aktueltPb;
 
 	//-----------------------------------------------------------------
+	// (2)	Opstart
+	//-----------------------------------------------------------------
+	public void sequence2(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
+
+	{
+		data.setServerInput(inFromServer.readLine());
+		this.sequence3(inFromServer, outToServer);
+	}
+	
+	//-----------------------------------------------------------------
 	// (3)	Operatør indtaster operatørnummer
 	//-----------------------------------------------------------------
 	public void sequence3(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
@@ -37,7 +47,8 @@ public class Sequences {
 			this.sequence4(inFromServer, outToServer);
 		}
 		else
-			this.sequence3(inFromServer, outToServer);
+			System.out.println("Derp");
+		this.sequence3(inFromServer, outToServer);
 	}
 
 	//-----------------------------------------------------------------
@@ -48,30 +59,44 @@ public class Sequences {
 		// Mangler muligvis exception ved forkert ID.
 		data.setSplittedInput(data.getServerInput().split(" "));
 		try {
-			if (func.testId(Integer.parseInt(data.getSplittedInput()[2]))){
-				data.setWeightMsg(mOpr.getOperatoer(Integer.parseInt(data.getSplittedInput()[2])).getOprNavn());
+			String temp;
+			temp = data.getSplittedInput()[2].replaceAll("\"","");
+			data.setOprID(Integer.parseInt(temp));
+
+			if (func.testId(data.getOprID())){
+				data.setWeightMsg(mOpr.getOperatoer(data.getOprID()).getOprNavn());
 				outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 				outToServer.flush();
 				data.setServerInput(inFromServer.readLine());
+				data.setServerInput(inFromServer.readLine()); // Læser brugerinput
+
 
 				data.setWeightMsg("Korrekt ID? Ja 1 / Nej 0");
 				outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 				outToServer.flush();
 				data.setServerInput(inFromServer.readLine());
 				data.setServerInput(inFromServer.readLine());
-				data.setServerInput(inFromServer.readLine()); //RM20 A + Brugerinput
 
+				//	data.InputHandling(data.getServerInput());
 				data.setSplittedInput(data.getServerInput().split(" "));
-				if (Integer.parseInt(data.getSplittedInput()[2]) == 1) {
+				temp = data.getSplittedInput()[2].replaceAll("\"","");
+				data.setServerInput((temp));
+
+				if (Integer.parseInt(temp) == 1) {
 					this.sequence5(inFromServer, outToServer);
 				}
-				else if (Integer.parseInt(data.getSplittedInput()[2]) == 0)
+				else if (Integer.parseInt(temp) == 0)
+				{
+					System.out.println("Print: " + data.getSplittedInput()[2]);
 					this.sequence3(inFromServer, outToServer);
+				}
 				else{
+					System.out.println("Else");
 					this.sequence4(inFromServer, outToServer);
 				}
 			}
 			else {
+				System.out.println("Print2: " + data.getSplittedInput()[2]);
 				this.sequence3(inFromServer, outToServer);
 			}
 
@@ -85,7 +110,7 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	public void sequence5(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
-		data.setWeightMsg("Indtast produktbatchnummer");
+		data.setWeightMsg("Indtast produktbatchnr.");
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
@@ -100,6 +125,9 @@ public class Sequences {
 	public void sequence6(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
 		data.setSplittedInput(data.getServerInput().split(" "));
+		String temp = data.getSplittedInput()[2].replaceAll("\"","");
+		data.setServerInput((temp));
+
 		aktueltPb = Integer.parseInt(data.getSplittedInput()[2]);
 		try {
 			mPb.getProduktBatch(aktueltPb).setStatus(1);
@@ -137,7 +165,7 @@ public class Sequences {
 		data.setServerInput(inFromServer.readLine());
 		System.out.println("Tryk ok for tarer anden readline: " + data.getServerInput());
 		System.out.println(data.getServerInput());
-		
+
 		if(data.getServerInput().equals("RM20 B")){
 			this.sequence8(inFromServer, outToServer);
 		}
@@ -254,7 +282,7 @@ public class Sequences {
 	// (15) Vægt spørger om der er flere afvejninger. PROBLEM
 	//-----------------------------------------------------------------
 	public void sequence15(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
-		data.setWeightMsg("Flere raavare?Ja=1,Nej=0");
+		data.setWeightMsg("Flere raavarer?Ja 1,Nej 0");
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
