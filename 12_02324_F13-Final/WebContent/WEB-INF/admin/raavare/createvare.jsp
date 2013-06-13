@@ -9,7 +9,7 @@
 <body>
 	<form method="POST" action="">
 		<h1>Opret råvare</h1>
-		Nummer: <input type="text" name="id"><br>
+		Id: <input type="text" name="id"><br>
 		Navn: <input type="text" name="navn"><br> 
 		Leverandør: <input type="text" name="leverandoer"><br> 
 		<input type="submit" value="Opret råvare" name="createraavare_submit">

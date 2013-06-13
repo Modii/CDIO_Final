@@ -11,11 +11,11 @@
 
 <h3>Du har nu følgende valgmuligheder:</h3>
 
-	<form method="POST" action="pharmacist.jsp">
-		<input type="submit" value="Administrere råvarer"> <br>
-		<input type="submit" value="Administrere recepter"> <br>
-		<input type="submit" value="Administrere råvarebatches"> <br>
-		<input type="submit" value="Administrere produktbatches"> <br>
+	<form method="POST" action="">
+		<input type="submit" value="Administrere råvarer" name="adminivare"> <br>
+		<input type="submit" value="Administrere recepter" name="adminirecept"> <br>
+		<input type="submit" value="Administrere råvarebatches" name="adminiraavarebatch"> <br>
+		<input type="submit" value="Administrere produktbatches" name="adminiproduktbatch"> <br>
 		<input type="submit" value="Foretage afvejning">
 			</form>
 			

@@ -45,7 +45,7 @@ public class MySQLReceptKompDAO implements IReceptKompDAO {
 	@Override
 	public List<ReceptKompDTO> getReceptKompList() throws DALException {
 		List<ReceptKompDTO> list = new ArrayList<ReceptKompDTO>();
-		ResultSet rs = Connector.doQuery("SELECT * FROM ReceptKomp");
+		ResultSet rs = Connector.doQuery("SELECT * FROM ReceptKomp ORDER BY receptId");
 		try
 		{
 			while (rs.next()) 

@@ -24,8 +24,16 @@ public class MySQLOperatoerDAO implements IOperatoerDAO {
 	    }
 	    catch (SQLException e) {e.printStackTrace(); throw new DALException(e); }
 	    catch (Exception e) {e.printStackTrace(); throw new DALException(e); }
-	
-		
+	}
+	public OperatoerDTO getHighestOprID() throws DALException {
+		try {
+			ResultSet rs = Connector.doQuery("SELECT * FROM Operatoer ORDER BY Operatoer.oprId DESC LIMIT 0,1");
+			if (!rs.first()) throw new DALException("Der findes ingen operatør");
+	    	return new OperatoerDTO (rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6));
+	    	
+	    }
+	    catch (SQLException e) {e.printStackTrace(); throw new DALException(e); }
+	    catch (Exception e) {e.printStackTrace(); throw new DALException(e); }
 	}
 	
 	public void createOperatoer(OperatoerDTO opr) throws DALException {		
@@ -50,9 +58,10 @@ public class MySQLOperatoerDAO implements IOperatoerDAO {
 				"DELETE FROM Operatoer WHERE oprId = " + opr.getOprId());
 	}
 	
+	
 	public List<OperatoerDTO> getOperatoerList() throws DALException {
 		List<OperatoerDTO> list = new ArrayList<OperatoerDTO>();
-		ResultSet rs = Connector.doQuery("SELECT * FROM Operatoer");
+		ResultSet rs = Connector.doQuery("SELECT * FROM Operatoer ORDER BY oprId ASC");
 		try
 		{
 			while (rs.next()) 

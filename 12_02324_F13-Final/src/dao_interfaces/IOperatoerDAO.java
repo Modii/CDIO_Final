@@ -6,6 +6,7 @@ import dto.OperatoerDTO;
 
 public interface IOperatoerDAO {
 	OperatoerDTO getOperatoer(int oprId) throws DALException;
+	OperatoerDTO getHighestOprID() throws DALException;
 	List<OperatoerDTO> getOperatoerList() throws DALException;
 	void createOperatoer(OperatoerDTO opr) throws DALException;
 	void updateOperatoer(OperatoerDTO opr) throws DALException;

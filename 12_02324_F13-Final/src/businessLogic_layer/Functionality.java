@@ -8,28 +8,31 @@ import dao_interfaces.IProduktBatchDAO;
 import dao_interfaces.IRaavareBatchDAO;
 import dao_interfaces.IRaavareDAO;
 import dao_interfaces.IReceptDAO;
+import dao_interfaces.IReceptKompDAO;
 import db_mysqldao.MySQLOperatoerDAO;
 import db_mysqldao.MySQLProduktBatchDAO;
 import db_mysqldao.MySQLRaavareBatchDAO;
 import db_mysqldao.MySQLRaavareDAO;
 import db_mysqldao.MySQLReceptDAO;
+import db_mysqldao.MySQLReceptKompDAO;
 import dao_interfaces.DALException;
 
 public class Functionality implements IFunctionality{
 
-	private IProduktBatchDAO produktbatchDAO = new MySQLProduktBatchDAO();
+	private IProduktBatchDAO produktBatchDAO = new MySQLProduktBatchDAO();
 	private IOperatoerDAO oprDAO = new MySQLOperatoerDAO();
 	private IRaavareDAO raavareDAO = new MySQLRaavareDAO();
 	private IReceptDAO receptDAO = new MySQLReceptDAO();
-	private IRaavareBatchDAO raavarebatchDAO = new MySQLRaavareBatchDAO();
+	private IReceptKompDAO receptKompDAO = new MySQLReceptKompDAO();
+	private IRaavareBatchDAO raavareBatchDAO = new MySQLRaavareBatchDAO();
 
-	public Functionality(IProduktBatchDAO produktbatchDAO, IOperatoerDAO oprDAO, IRaavareDAO raavareDAO, IReceptDAO receptDAO, IRaavareBatchDAO raavarebatchDAO) {
+	public Functionality(IProduktBatchDAO produktBatchDAO, IOperatoerDAO oprDAO, IRaavareDAO raavareDAO, IReceptDAO receptDAO, IReceptKompDAO receptKompDAO, IRaavareBatchDAO raavareBatchDAO) {
 		super();
-		this.produktbatchDAO = produktbatchDAO;
+		this.produktBatchDAO = produktBatchDAO;
 		this.oprDAO = oprDAO;
 		this.raavareDAO = raavareDAO;
 		this.receptDAO = receptDAO;
-		this.raavarebatchDAO = raavarebatchDAO;
+		this.raavareBatchDAO = raavareBatchDAO;
 	}
 
 	public Functionality(){
@@ -139,7 +142,7 @@ public class Functionality implements IFunctionality{
 	 */
 	public boolean testPbId(int i) throws DALException {
 		try {
-			return (i == produktbatchDAO.getProduktBatch(i).getPbId());
+			return (i == produktBatchDAO.getProduktBatch(i).getPbId());
 		}
 
 		catch (IndexOutOfBoundsException e) {
@@ -152,7 +155,7 @@ public class Functionality implements IFunctionality{
 
 	public boolean testRaavareBatchId(int i) throws DALException {
 		try {
-			return (i == raavarebatchDAO.getRaavareBatch(i).getRbId());
+			return (i == raavareBatchDAO.getRaavareBatch(i).getRbId());
 		}
 		catch (IndexOutOfBoundsException e) {
 			throw new DALException("ID findes ikke");
@@ -238,10 +241,18 @@ public class Functionality implements IFunctionality{
 	public IRaavareDAO getRaavareDAO() {
 		return raavareDAO;
 	}
+	public IRaavareBatchDAO getRaavareBatchDAO() {
+		return raavareBatchDAO;
+	}
+	public IProduktBatchDAO getProduktBatchDAO() {
+		return produktBatchDAO;
+	}
 	public IReceptDAO getReceptDAO() {
 		return receptDAO;
 	}
-
+	public IReceptKompDAO getReceptKompDAO() {
+		return receptKompDAO;
+	}
 	public IOperatoerDAO getOprDAO() {
 		return oprDAO;
 	}

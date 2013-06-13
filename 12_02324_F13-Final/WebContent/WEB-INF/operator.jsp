@@ -10,6 +10,10 @@
 <h1>OPERATØR SIDE</h1>
 <h3>Du har kun mulighed for at foretage en afvejning!</h3>
 
+<form method="POST" action="">
+<input type="submit" value="Foretage afvejning">
+			</form>
+			
 <form action="" method="POST">
 		<br> <br> <br> <br> <input type="submit" name="logoff"
 			value="Log af">

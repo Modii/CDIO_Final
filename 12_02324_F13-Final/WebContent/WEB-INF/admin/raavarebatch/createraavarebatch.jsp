@@ -4,9 +4,21 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Opret råvarebatch</title>
 </head>
 <body>
+	<form method="POST" action="">
+		<h1>Opret råvarebatch</h1>
+		Råvarebatch ID: <input type="text" name="raavarebatchid"><br>
+		Råvare ID: <input type="text" name="raavareid"><br> 
+		Mængde (kg): <input type="text" name="maengde"><br> 
+		<input type="submit" value="Opret råvarebatch" name="createraavarebatch_submit">
+	</form>
+	${succes}
 
+	<form action="" method="POST">
+		<br> <br> <br> <br> <input type="submit" name="logoff"
+			value="Log af">
+	</form>
 </body>
 </html>

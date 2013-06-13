@@ -13,11 +13,7 @@
 <h3>Du har nu følgende valgmuligheder:</h3>
 
 	<form method="POST" action="">
-		<input type="submit" value="Opret bruger" name="createopr"> <br>
-		<input type="submit" value="Vis brugere" name="showopr"> <br>
-		<input type="submit" value="Slet bruger" name="removeopr"> <br>
-		<input type="submit" value="Opdatér bruger" name="updateopr"> <br>
-	
+		<input type="submit" value="Administrere brugere" name="adminibruger"> <br>
 		<input type="submit" value="Administrere råvarer" name="adminivare"> <br>
 		<input type="submit" value="Administrere recepter" name="adminirecept"> <br>
 		<input type="submit" value="Administrere råvarebatches" name="adminiraavarebatch"> <br>

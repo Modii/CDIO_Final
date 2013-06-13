@@ -24,7 +24,7 @@ public class MySQLRaavareDAO implements IRaavareDAO {
 	@Override
 	public List<RaavareDTO> getRaavareList() throws DALException {
 		List<RaavareDTO> list = new ArrayList<RaavareDTO>();
-		ResultSet rs = Connector.doQuery("SELECT * FROM Raavare");
+		ResultSet rs = Connector.doQuery("SELECT * FROM Raavare ORDER BY raavareId");
 		try
 		{
 			while (rs.next()) 

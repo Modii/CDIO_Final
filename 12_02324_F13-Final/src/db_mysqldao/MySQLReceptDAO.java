@@ -25,7 +25,7 @@ public class MySQLReceptDAO implements IReceptDAO {
 	@Override
 	public List<ReceptDTO> getReceptList() throws DALException {
 		List<ReceptDTO> list = new ArrayList<ReceptDTO>();
-		ResultSet rs = Connector.doQuery("SELECT * FROM Recept");
+		ResultSet rs = Connector.doQuery("SELECT * FROM Recept ORDER BY receptId");
 		try
 		{
 			while (rs.next()) 
