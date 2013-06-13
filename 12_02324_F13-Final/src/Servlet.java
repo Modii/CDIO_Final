@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -17,6 +19,8 @@ import businessLogic_layer.Functionality;
 import dao_interfaces.DALException;
 import db_connection.Connector;
 import dto.OperatoerDTO;
+import dto.ProduktBatchDTO;
+import dto.RaavareBatchDTO;
 import dto.RaavareDTO;
 import dto.ReceptDTO;
 import dto.ReceptKompDTO;
@@ -90,6 +94,21 @@ public class Servlet extends HttpServlet {
 				e.getMessage();
 			}
 		}
+		if (request.getParameter("adminiraavarebatch") != null && request.getParameter("adminiraavarebatch").equals("Administrere råvarebatches"))
+			handleAdminiRaavareBatch(request, response, funktionalitetsLaget);
+		if (request.getParameter("createraavarebatch") != null && request.getParameter("createraavarebatch").equals("Opret råvarebatch"))
+			handleCreateRaavareBatch(request, response, funktionalitetsLaget);
+		if (request.getParameter("showraavarebatch") != null && request.getParameter("showraavarebatch").equals("Vis råvarebatch")){
+			try{
+				handleShowRaavareBatch(request, response, funktionalitetsLaget);
+			} catch (DALException e){
+				e.getMessage();
+			}
+		}
+		if (request.getParameter("adminiproduktbatch") != null && request.getParameter("adminiproduktbatch").equals("Administrere produktbatches"))
+			handleAdminiProduktBatch(request, response, funktionalitetsLaget);
+		if (request.getParameter("createproduktbatch") != null && request.getParameter("createproduktbatch").equals("Opret produktbatch"))
+			handleCreateProduktBatch(request, response, funktionalitetsLaget);
 		if (request.getParameter("createopr_submit") != null && request.getParameter("createopr_submit").equals("Opret Operatør")){
 			try {
 				handleCreateOprSubmit(request, response, funktionalitetsLaget);
@@ -144,7 +163,24 @@ public class Servlet extends HttpServlet {
 			request.setAttribute("succes", "Recept oprettet!");
 			request.getRequestDispatcher("/WEB-INF/admin/recept/createrecept.jsp").forward(request, response);
 		}
-
+		if (request.getParameter("createraavarebatch_submit") != null && request.getParameter("createraavarebatch_submit").equals("Opret råvarebatch")){
+			try {
+				handleCreateRaavareBatchSubmit(request, response, funktionalitetsLaget);
+			} catch (DALException e) {
+				e.getMessage();
+			}
+			request.setAttribute("succes", "Råvarebatch oprettet!");
+			request.getRequestDispatcher("/WEB-INF/admin/raavarebatch/createraavarebatch.jsp").forward(request, response);
+		}
+		if (request.getParameter("createproduktbatch_submit") != null && request.getParameter("createproduktbatch_submit").equals("Opret produktbatch")){
+			try {
+				handleCreateProduktBatchSubmit(request, response, funktionalitetsLaget);
+			} catch (DALException e) {
+				e.getMessage();
+			}
+			request.setAttribute("succes", "Produktbatch oprettet!");
+			request.getRequestDispatcher("/WEB-INF/admin/produktbatch/createproduktbatch.jsp").forward(request, response);
+		}
 	}
 
 	private void handleLogIn(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException{
@@ -226,6 +262,29 @@ public class Servlet extends HttpServlet {
 		request.setAttribute("list", html);
 		request.getRequestDispatcher("/WEB-INF/admin/raavare/showvare.jsp").forward(request, response);
 	}
+	private void handleAdminiRaavareBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+		request.getRequestDispatcher("/WEB-INF/admin/raavarebatch/adminiraavarebatch.jsp").forward(request, response);
+	}
+	private void handleCreateRaavareBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+		request.getRequestDispatcher("/WEB-INF/admin/raavarebatch/createraavarebatch.jsp").forward(request, response);
+	}
+	private void handleShowRaavareBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		String html = "<table border=1>";
+		html += "<tr><td>Råvarebatch ID</td><td>Råvare ID</td><td>Mængde</td></tr>";
+		int raavarebatchid, raavareid;
+		double maengde;
+		List<RaavareBatchDTO> raavarebatch = funktionalitetsLaget.getRaavareBatchDAO().getRaavareBatchList(); 
+		for (int i=0; i < raavarebatch.size(); i++) {
+			raavarebatchid = raavarebatch.get(i).getRbId();
+			raavareid = raavarebatch.get(i).getRaavareId();
+			maengde = raavarebatch.get(i).getMaengde();
+			html += "<tr><td>"+raavarebatchid+"</td><td>"+raavareid+"</td><td>"+maengde+"</td></tr>";
+		}
+		html +="</table>";
+		request.setAttribute("list", html);
+		request.getRequestDispatcher("/WEB-INF/admin/raavarebatch/showraavarebatch.jsp").forward(request, response);
+	}
+	
 	private void handleAdminiRecept(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/recept/adminirecept.jsp").forward(request, response);
 	}
@@ -263,7 +322,12 @@ public class Servlet extends HttpServlet {
 	private void handleUpdateVare(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/raavare/updatevare.jsp").forward(request, response);
 	}
-	
+	private void handleAdminiProduktBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+		request.getRequestDispatcher("/WEB-INF/admin/produktbatch/adminiproduktbatch.jsp").forward(request, response);
+	}
+	private void handleCreateProduktBatch(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+		request.getRequestDispatcher("/WEB-INF/admin/produktbatch/createproduktbatch.jsp").forward(request, response);
+	}
 	private void handleCreateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		String navn = request.getParameter("navn");
@@ -318,5 +382,25 @@ public class Servlet extends HttpServlet {
 			}
 			x++;
 		}
+	}
+	private void handleCreateRaavareBatchSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int raavarebatchid = Integer.parseInt(request.getParameter("raavarebatchid"));
+		int raavareid = Integer.parseInt(request.getParameter("raavareid"));
+		double maengde = Double.parseDouble(request.getParameter("maengde"));
+		funktionalitetsLaget.getRaavareBatchDAO().createRaavareBatch(new RaavareBatchDTO(raavarebatchid, raavareid, maengde));
+	}
+	private void handleCreateProduktBatchSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int produktbatchid = Integer.parseInt(request.getParameter("produktbatchid"));
+		int receptid = Integer.parseInt(request.getParameter("receptid"));
+		int status = Integer.parseInt(request.getParameter("status"));
+		Calendar d = Calendar.getInstance();
+		DecimalFormat df = new DecimalFormat("00");
+		String dato = d.get(Calendar.YEAR) + "-"
+		+ df.format(d.get(Calendar.MONTH) + 1) + "-"
+		+ df.format(d.get(Calendar.DATE)) + " "
+		+ df.format(d.get(Calendar.HOUR_OF_DAY)) + ":"
+		+ df.format(d.get(Calendar.MINUTE)) + ":"
+		+ df.format(d.get(Calendar.SECOND));
+		funktionalitetsLaget.getProduktBatchDAO().createProduktBatch(new ProduktBatchDTO(produktbatchid,receptid,dato,status));
 	}
 }

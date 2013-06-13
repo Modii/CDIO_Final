@@ -4,22 +4,19 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Opret produktbatch</title>
+<title>Administering af produktbatch</title>
 </head>
 <body>
-	<form method="POST" action="">
-		<h1>Opret produktbatch</h1>
-		Produktbatch ID: <input type="text" name="produktbatchid"><br>
-		Recept ID: <input type="text" name="receptid"><br> 
-		Status: <select name="status">
-		<option value="0">Startet</option>
-		<option value="1">Under produktion</option>
-		<option value="2">Afsluttet</option>
-		</select><br> 
-		<input type="submit" value="Opret produktbatch" name="createproduktbatch_submit">
-	</form>
-	${succes}
 
+<h1>Produktbatch administration</h1>
+
+<h3>Du har nu følgende valgmuligheder:</h3>
+
+	<form method="POST" action="">
+		<input type="submit" value="Opret produktbatch" name="createproduktbatch"> <br>
+		<input type="submit" value="Vis produktbatch" name="showproduktbatch">
+	</form>
+			
 	<form action="" method="POST">
 		<br> <br> <br> <br> <input type="submit" name="logoff"
 			value="Log af">
