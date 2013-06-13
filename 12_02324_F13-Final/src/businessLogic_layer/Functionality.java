@@ -8,11 +8,13 @@ import dao_interfaces.IProduktBatchDAO;
 import dao_interfaces.IRaavareBatchDAO;
 import dao_interfaces.IRaavareDAO;
 import dao_interfaces.IReceptDAO;
+import dao_interfaces.IReceptKompDAO;
 import db_mysqldao.MySQLOperatoerDAO;
 import db_mysqldao.MySQLProduktBatchDAO;
 import db_mysqldao.MySQLRaavareBatchDAO;
 import db_mysqldao.MySQLRaavareDAO;
 import db_mysqldao.MySQLReceptDAO;
+import db_mysqldao.MySQLReceptKompDAO;
 import dao_interfaces.DALException;
 
 public class Functionality implements IFunctionality{
@@ -21,9 +23,10 @@ public class Functionality implements IFunctionality{
 	private IOperatoerDAO oprDAO = new MySQLOperatoerDAO();
 	private IRaavareDAO raavareDAO = new MySQLRaavareDAO();
 	private IReceptDAO receptDAO = new MySQLReceptDAO();
+	private IReceptKompDAO receptKompDAO = new MySQLReceptKompDAO();
 	private IRaavareBatchDAO raavarebatchDAO = new MySQLRaavareBatchDAO();
 
-	public Functionality(IProduktBatchDAO produktbatchDAO, IOperatoerDAO oprDAO, IRaavareDAO raavareDAO, IReceptDAO receptDAO, IRaavareBatchDAO raavarebatchDAO) {
+	public Functionality(IProduktBatchDAO produktbatchDAO, IOperatoerDAO oprDAO, IRaavareDAO raavareDAO, IReceptDAO receptDAO, IReceptKompDAO receptKompDAO, IRaavareBatchDAO raavarebatchDAO) {
 		super();
 		this.produktbatchDAO = produktbatchDAO;
 		this.oprDAO = oprDAO;
@@ -241,7 +244,9 @@ public class Functionality implements IFunctionality{
 	public IReceptDAO getReceptDAO() {
 		return receptDAO;
 	}
-
+	public IReceptKompDAO getReceptKompDAO() {
+		return receptKompDAO;
+	}
 	public IOperatoerDAO getOprDAO() {
 		return oprDAO;
 	}
