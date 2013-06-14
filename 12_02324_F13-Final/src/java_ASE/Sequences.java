@@ -31,7 +31,7 @@ public class Sequences {
 		data.setServerInput(inFromServer.readLine());
 		this.sequence3(inFromServer, outToServer);
 	}
-	
+
 	//-----------------------------------------------------------------
 	// (3)	Operatør indtaster operatørnummer
 	//-----------------------------------------------------------------
@@ -114,9 +114,18 @@ public class Sequences {
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
-		data.setServerInput(inFromServer.readLine());
 
-		this.sequence6(inFromServer, outToServer);
+		if(data.getServerInput().equals("RM20 B"))
+		{
+			data.setServerInput(inFromServer.readLine());
+			data.setSplittedInput(data.getServerInput().split(" "));
+			String temp = data.getSplittedInput()[2].replaceAll("\"","");
+			data.setServerInput((temp));
+			aktueltPb = Integer.parseInt(temp);
+			this.sequence6(inFromServer, outToServer);
+		}
+		else
+			this.sequence5(inFromServer, outToServer);
 	}
 
 	//-----------------------------------------------------------------
@@ -124,11 +133,6 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	public void sequence6(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
-		data.setSplittedInput(data.getServerInput().split(" "));
-		String temp = data.getSplittedInput()[2].replaceAll("\"","");
-		data.setServerInput((temp));
-
-		aktueltPb = Integer.parseInt(data.getSplittedInput()[2]);
 		try {
 			mPb.getProduktBatch(aktueltPb).setStatus(1);
 			if(func.testPbId(aktueltPb))
@@ -137,13 +141,12 @@ public class Sequences {
 				outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 				outToServer.flush();
 				data.setServerInput(inFromServer.readLine());
-				System.out.println("Vægten svarer tilbage første readline: " + data.getServerInput());
 				if(data.getServerInput().equals("RM20 B")){
+					data.setServerInput(inFromServer.readLine());
 					this.sequence7(inFromServer, outToServer);
 				}
 				else
 				{
-					System.out.println("Herp");
 					this.sequence6(inFromServer, outToServer);
 				}
 			}
@@ -157,21 +160,17 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	public void sequence7(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
-		data.setWeightMsg("Aflast. Tryk OK for tarer");
+		data.setWeightMsg("Aflast og OK for tarer");
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
-		System.out.println("Tryk ok for tarer første readline: " + data.getServerInput());
-		data.setServerInput(inFromServer.readLine());
-		System.out.println("Tryk ok for tarer anden readline: " + data.getServerInput());
-		System.out.println(data.getServerInput());
 
 		if(data.getServerInput().equals("RM20 B")){
+			data.setServerInput(inFromServer.readLine());
 			this.sequence8(inFromServer, outToServer);
 		}
 		else
 		{
-			System.out.println("derp");
 			this.sequence7(inFromServer, outToServer);
 		}
 	}
@@ -195,7 +194,7 @@ public class Sequences {
 	//-----------------------------------------------------------------	
 
 	public void sequence9_10(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
-		data.setWeightMsg("Anbring tarabeholder");
+		data.setWeightMsg("Anbring holder. Tryk OK.");
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		data.setServerInput(inFromServer.readLine());
 
@@ -223,7 +222,6 @@ public class Sequences {
 	public void sequence12(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
 		outToServer.writeBytes("T\r\n");
-
 		data.setServerInput(inFromServer.readLine());
 		if(data.getServerInput().startsWith("T S")){
 			this.sequence13(inFromServer, outToServer);
@@ -244,10 +242,12 @@ public class Sequences {
 		{
 			data.setServerInput(inFromServer.readLine());
 			data.setSplittedInput(data.getServerInput().split(" "));
+			String temp;
+			temp = data.getSplittedInput()[2].replaceAll("\"","");
 			try {
-				if(func.testRaavareBatchId(Integer.parseInt(data.getSplittedInput()[2])))
+				if(func.testRaavareBatchId(Integer.parseInt(temp)))
 				{
-					data.setWeightMsg(mRaa.getRaavare(mRaaB.getRaavareBatch(Integer.parseInt(data.getSplittedInput()[2])).getRaavareId()).getRaavareNavn());
+					data.setWeightMsg("Du har valgt: " + mRaa.getRaavare(mRaaB.getRaavareBatch(Integer.parseInt(temp)).getRaavareId()).getRaavareNavn());
 					outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 					outToServer.flush();
 					data.setServerInput(inFromServer.readLine());
