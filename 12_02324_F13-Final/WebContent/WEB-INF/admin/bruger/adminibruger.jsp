@@ -4,19 +4,20 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Administering af recepter</title>
+<title>Administering af brugere</title>
 </head>
 <body>
 
-	<h1>Recept administration</h1>
+	<h1>Bruger administration</h1>
 
 	<h3>Du har nu følgende valgmuligheder:</h3>
 
 	<form method="POST" action="">
 		<input type="submit" value="Opret bruger" name="createopr"> <br>
 		<input type="submit" value="Vis brugere" name="showopr"> <br>
-		<input type="submit" value="Slet bruger" name="removeopr"> <br>
-		<input type="submit" value="Opdatér bruger" name="updateopr">
+		<input type="submit" value="Opdatér bruger" name="updateopr"><br>
+		<input type="submit" value="Slet bruger" name="removeopr">
+
 		<br>
 	</form>
 
