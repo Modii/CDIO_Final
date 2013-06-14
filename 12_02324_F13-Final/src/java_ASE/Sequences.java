@@ -20,7 +20,6 @@ public class Sequences {
 	private MySQLRaavareDAO mRaa = new MySQLRaavareDAO();
 	private MySQLRaavareBatchDAO mRaaB = new MySQLRaavareBatchDAO();
 	private Data data = new Data();
-	private int aktueltPb;
 
 	//-----------------------------------------------------------------
 	// (2)	Opstart
@@ -56,51 +55,31 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	public void sequence4(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
-		// Mangler muligvis exception ved forkert ID.
 		data.setSplittedInput(data.getServerInput().split(" "));
+		String temp;
+		temp = data.getSplittedInput()[2].replaceAll("\"","");
+		data.setOprID(Integer.parseInt(temp));
+
 		try {
-			String temp;
-			temp = data.getSplittedInput()[2].replaceAll("\"","");
-			data.setOprID(Integer.parseInt(temp));
-
 			if (func.testId(data.getOprID())){
-				data.setWeightMsg(mOpr.getOperatoer(data.getOprID()).getOprNavn());
-				outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
+				data.setWeightMsg("Operatoer: " + mOpr.getOperatoer(data.getOprID()).getOprNavn() + ". Tryk OK for at bruge det valgte ID eller CANCEL for at vaelge et andet.");
+				outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
 				outToServer.flush();
 				data.setServerInput(inFromServer.readLine());
-				data.setServerInput(inFromServer.readLine()); // Læser brugerinput
 
-
-				data.setWeightMsg("Korrekt ID? Ja 1 / Nej 0");
-				outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
-				outToServer.flush();
-				data.setServerInput(inFromServer.readLine());
-				data.setServerInput(inFromServer.readLine());
-
-				//	data.InputHandling(data.getServerInput());
-				data.setSplittedInput(data.getServerInput().split(" "));
-				temp = data.getSplittedInput()[2].replaceAll("\"","");
-				data.setServerInput((temp));
-
-				if (Integer.parseInt(temp) == 1) {
-					this.sequence5(inFromServer, outToServer);
-				}
-				else if (Integer.parseInt(temp) == 0)
+				if(data.getServerInput().equals("RM49 B"))
 				{
-					System.out.println("Print: " + data.getSplittedInput()[2]);
-					this.sequence3(inFromServer, outToServer);
+					data.setServerInput(inFromServer.readLine());
+					if(data.getServerInput().equals("RM49 A 1")){
+						this.sequence5(inFromServer, outToServer);
+					}
+					else if(data.getServerInput().equals("RM49 A 2")){
+						this.sequence3(inFromServer, outToServer);
+					}
 				}
-				else{
-					System.out.println("Else");
-					this.sequence4(inFromServer, outToServer);
-				}
+				else this.sequence4(inFromServer, outToServer);
 			}
-			else {
-				System.out.println("Print2: " + data.getSplittedInput()[2]);
-				this.sequence3(inFromServer, outToServer);
-			}
-
-		} catch (NumberFormatException | DALException e) {
+		} catch (DALException e) {
 			e.printStackTrace();
 		}
 	}
@@ -121,7 +100,7 @@ public class Sequences {
 			data.setSplittedInput(data.getServerInput().split(" "));
 			String temp = data.getSplittedInput()[2].replaceAll("\"","");
 			data.setServerInput((temp));
-			aktueltPb = Integer.parseInt(temp);
+			data.setPbID(Integer.parseInt(temp));
 			this.sequence6(inFromServer, outToServer);
 		}
 		else
@@ -134,23 +113,25 @@ public class Sequences {
 	public void sequence6(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
 		try {
-			mPb.getProduktBatch(aktueltPb).setStatus(1);
-			if(func.testPbId(aktueltPb))
+			if(func.testPbId(data.getPbID()))
 			{
-				data.setWeightMsg(mRec.getRecept(mPb.getProduktBatch(aktueltPb).getReceptId()).getReceptNavn());
-				outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
+				mPb.getProduktBatch(data.getPbID()).setStatus(1);
+				data.setWeightMsg("Recept: " + mRec.getRecept(mPb.getProduktBatch(data.getPbID()).getReceptId()).getReceptNavn() + ". Tryk OK for at bruge den valgte recept eller CANCEL for at vaelge en anden.");
+				outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
 				outToServer.flush();
 				data.setServerInput(inFromServer.readLine());
-				if(data.getServerInput().equals("RM20 B")){
+				if(data.getServerInput().equals("RM49 B")){
 					data.setServerInput(inFromServer.readLine());
 					this.sequence7(inFromServer, outToServer);
 				}
-				else
-				{
+				else {
 					this.sequence6(inFromServer, outToServer);
 				}
 			}
-		} catch (NumberFormatException | DALException e) {
+			else{ 
+				this.sequence5(inFromServer, outToServer);
+			}
+		} catch (DALException e) {
 			e.printStackTrace();
 		}
 	}
@@ -251,6 +232,7 @@ public class Sequences {
 					outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 					outToServer.flush();
 					data.setServerInput(inFromServer.readLine());
+					data.setServerInput(inFromServer.readLine());
 					this.sequence14(inFromServer, outToServer);
 				}
 				else
@@ -268,67 +250,74 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	public void sequence14(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 
-		data.setWeightMsg("Afvej mængde. Dernæst OK.");
-		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
+		data.setWeightMsg("Tryk OK for at paabegynde afvejning. Naar den oenskede maengde er afvejet, tryk da paa [->");
+		outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
+		//outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
-		System.out.println("1: " + data.getServerInput());
 		data.setServerInput(inFromServer.readLine());
-		System.out.println("2: " + data.getServerInput());
-		this.sequence15(inFromServer, outToServer);
+
+		outToServer.writeBytes("K 3");
+		outToServer.writeBytes("DW");
+		data.setServerInput(inFromServer.readLine());
+		data.setServerInput(inFromServer.readLine());
+		System.out.println("syso: " + data.getServerInput());
+		if(inFromServer.readLine().equals("K C 4")){
+			System.out.println("Inde i if");
+			outToServer.writeBytes("S\r\n");
+			this.sequence15_16(inFromServer, outToServer);
+
+		}
+		else this.sequence14(inFromServer, outToServer);
 	}
 
 	//-----------------------------------------------------------------
-	// (15) Vægt spørger om der er flere afvejninger. PROBLEM
+	// (15) Vægt spørger om der er flere afvejninger.
 	//-----------------------------------------------------------------
-	public void sequence15(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
-		data.setWeightMsg("Flere raavarer?Ja 1,Nej 0");
-		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
+	public void sequence15_16(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
+		data.setWeightMsg("Afvejning af varen er gennefoert. Tryk OK for at afveje flere raavarer eller cancel for at markere produktbatchet som afsluttet.");
+		outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
-		System.out.println("4: " + data.getServerInput());
-		if(data.getServerInput().equals("RM20 B"))
+		if(data.getServerInput().equals("RM49 B"))
 		{
 			data.setServerInput(inFromServer.readLine());
-			System.out.println("5: " + data.getServerInput());
-			data.setSplittedInput(data.getServerInput().split(" "));
-			if (Integer.parseInt(data.getSplittedInput()[2]) == 1) {
-				this.sequence16_17(inFromServer, outToServer);
-			}
-			else if (Integer.parseInt(data.getSplittedInput()[2]) == 0)
+			if(data.getServerInput().equals("RM49 A 1")){
 				this.sequence7(inFromServer, outToServer);
-			else{
-				this.sequence15(inFromServer, outToServer);
 			}
+			else if(data.getServerInput().equals("RM49 A 2"))
+			{
+				try {
+					mPb.getProduktBatch(data.getPbID()).setStatus(2);
+				} catch (DALException e) {
+					e.printStackTrace();
+				}
+				this.sequence17(inFromServer, outToServer);
+			}
+			else sequence15_16(inFromServer, outToServer);
 		}
-		else this.sequence15(inFromServer, outToServer);
+		else this.sequence15_16(inFromServer, outToServer);
 	}
 	//-----------------------------------------------------------------
 	// (16_17) Systemet sætter produktbatch nummerets status til ”Afsluttet” (status = 2).
 	//-----------------------------------------------------------------	
-	public void sequence16_17(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
+	public void sequence17(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 
-		try {
-			mPb.getProduktBatch(aktueltPb).setStatus(2);
-		} catch (NumberFormatException | DALException e) {
-			e.printStackTrace();
-		}
-		data.setWeightMsg("Ny vejning?Ja=1/Nej=0");
-		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
+		data.setWeightMsg("Produktionsforskrift gennemfoert. Tryk OK for at påbegynde en ny afvejningsprocedure eller CANCEL for at afslutte programmet.");
+		outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
-		if(data.getServerInput().equals("RM20 B"))
+		if(data.getServerInput().equals("RM49 B"))
+		{
 			data.setServerInput(inFromServer.readLine());
-
-		data.setSplittedInput(data.getServerInput().split(" "));
-		if (Integer.parseInt(data.getSplittedInput()[2]) == 1) {
-			this.sequence3(inFromServer, outToServer);
+			if(data.getServerInput().equals("RM49 A 1")){
+				this.sequence3(inFromServer, outToServer);
+			}
+			else if(data.getServerInput().equals("RM49 A 2")){
+				// Afslut.
+			}
+			else this.sequence17(inFromServer, outToServer);
 		}
-		else if (Integer.parseInt(data.getSplittedInput()[2]) == 0){
-			// Mangler kommando til at afslutte
-		}
-		else{
-			this.sequence15(inFromServer, outToServer);
-		}
+		else this.sequence17(inFromServer, outToServer);
 	}
 }

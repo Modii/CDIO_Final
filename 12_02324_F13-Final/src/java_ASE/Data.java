@@ -3,7 +3,7 @@ package java_ASE;
 public class Data {
 
 	String weightMsg, serverInput, itemName, userInput;
-	int oprID;
+	int oprID, pbID;
 	int itemNoInput, itemNoStore;
 	String[] splittedInput = new String[10];
 	double tara, netto, bruttoCheck;
@@ -75,5 +75,11 @@ public class Data {
 	}
 	void setBruttoCheck(double bruttoCheck) {
 		this.bruttoCheck = bruttoCheck;
+	}
+	public int getPbID() {
+		return pbID;
+	}
+	public void setPbID(int pbID) {
+		this.pbID = pbID;
 	}
 }
