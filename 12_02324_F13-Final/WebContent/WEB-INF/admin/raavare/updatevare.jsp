@@ -10,7 +10,7 @@
 
 	<form method="POST" action="">
 		<h1>Opdater råvare</h1>
-		Id: <input type="text" name="id"><br> Navn: <input
+		Id: ${vareList}<br> Navn: <input
 			type="text" name="navn"><br> Leverandør: <input
 			type="text" name="leverandoer"><br> <input type="submit"
 			value="Opdater råvare" name="updateraavare_submit">

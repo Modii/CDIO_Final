@@ -10,7 +10,7 @@
 
 	<form method="POST" action="">
 		<h1>Opdater operatør</h1>
-		Id: <input type="text" name="id"><br> Navn: <input
+		Id: ${oprList}<br> Navn: <input
 			type="text" name="navn"><br> Initialer: <input
 			type="text" name="init"><br> CPR-nummer: <input
 			type="text" name="cpr"><br> Aktør: <select name="aktoer">
@@ -18,7 +18,9 @@
 			<option value="2">Farmaceut</option>
 			<option value="3">Værkfører</option>
 			<option value="4">Operatør</option>
-		</select> <input type="submit" value="Opdater operatør" name="updateopr_submit">
+		</select>
+		<br>
+		<input type="submit" value="Opdater operatør" name="updateopr_submit">
 	</form>
 	${succes} ${password}
 

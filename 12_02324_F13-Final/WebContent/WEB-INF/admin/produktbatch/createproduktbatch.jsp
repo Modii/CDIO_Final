@@ -10,7 +10,7 @@
 	<form method="POST" action="">
 		<h1>Opret produktbatch</h1>
 		Produktbatch ID: <input type="text" name="produktbatchid"><br>
-		Recept ID: <input type="text" name="receptid"><br>
+		Recept ID: ${receptList}<br>
 		Status: <select name="status">
 			<option value="0">Startet</option>
 			<option value="1">Under produktion</option>

@@ -9,11 +9,8 @@
 <body>
 	<h1>OPERATØR SIDE</h1>
 	<h3>Hej ${sessionScope.operatoerNavn}, du har kun mulighed for at
-		foretage en afvejning!</h3>
+		foretage en afvejning via vægten!</h3>
 
-	<form method="POST" action="">
-		<input type="submit" value="Foretage afvejning">
-	</form>
 
 	<form action="" method="POST">
 		<br> <br> <br> <br> <input type="submit"

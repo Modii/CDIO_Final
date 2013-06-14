@@ -21,7 +21,6 @@
 		<input type="submit" value="Administrere råvarebatches"
 			name="adminiraavarebatch"> <br> <input type="submit"
 			value="Administrere produktbatches" name="adminiproduktbatch">
-		<br> <input type="submit" value="Foretage afvejning">
 	</form>
 
 	<form action="" method="POST">
