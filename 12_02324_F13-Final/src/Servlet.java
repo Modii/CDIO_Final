@@ -477,7 +477,7 @@ public class Servlet extends HttpServlet {
 			receptid = produktbatch.get(i).getReceptId();
 			dato = produktbatch.get(i).getDato();
 			status = produktbatch.get(i).getStatus();
-			html += "<tr><td>"+produktbatchid+"</td><td>"+receptid+"</td><td>"+dato+"</td><td>"+status+"</td></tr>";
+			html += "<tr><td>"+produktbatchid+"</td><td>"+receptid+"</td><td>"+dato+"</td><td>"+statusToString(status)+"</td></tr>";
 		}
 		html +="</table>";
 		request.setAttribute("list", html);
@@ -636,5 +636,23 @@ public class Servlet extends HttpServlet {
 		}
 		html +="</select>";
 		request.setAttribute("receptList", html);
+	}
+	private String statusToString(int id) {
+		String status;
+		switch(id) {
+			case 0:
+				status = "Startet";
+				break;
+			case 1:
+				status = "Under produktion";
+				break;
+			case 2:
+				status = "Afsluttet";
+				break;
+			default:
+				status = "Invalid status";
+				break;
+		}
+		return status;
 	}
 }
