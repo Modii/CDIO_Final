@@ -129,7 +129,12 @@ public class Servlet extends HttpServlet {
 		if (request.getParameter("adminiraavarebatch") != null && request.getParameter("adminiraavarebatch").equals("Administrere råvarebatches"))
 			handleAdminiRaavareBatch(request, response, funktionalitetsLaget);
 		if (request.getParameter("createraavarebatch") != null && request.getParameter("createraavarebatch").equals("Opret råvarebatch"))
-			handleCreateRaavareBatch(request, response, funktionalitetsLaget);
+			try {
+				handleCreateRaavareBatch(request, response, funktionalitetsLaget);
+			} catch (DALException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		if (request.getParameter("showraavarebatch") != null && request.getParameter("showraavarebatch").equals("Vis råvarebatch")){
 			try{
 				handleShowRaavareBatch(request, response, funktionalitetsLaget);
@@ -140,7 +145,12 @@ public class Servlet extends HttpServlet {
 		if (request.getParameter("adminiproduktbatch") != null && request.getParameter("adminiproduktbatch").equals("Administrere produktbatches"))
 			handleAdminiProduktBatch(request, response, funktionalitetsLaget);
 		if (request.getParameter("createproduktbatch") != null && request.getParameter("createproduktbatch").equals("Opret produktbatch"))
-			handleCreateProduktBatch(request, response, funktionalitetsLaget);
+			try {
+				handleCreateProduktBatch(request, response, funktionalitetsLaget);
+			} catch (DALException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		if (request.getParameter("showproduktbatch") != null && request.getParameter("showproduktbatch").equals("Vis produktbatch")){
 			try{
 				handleShowProduktBatch(request, response, funktionalitetsLaget);
@@ -351,7 +361,18 @@ public class Servlet extends HttpServlet {
 	private void handleAdminiRaavareBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/raavarebatch/adminiraavarebatch.jsp").forward(request, response);
 	}
-	private void handleCreateRaavareBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+	private void handleCreateRaavareBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int vareId;
+		String vareNavn;
+		List<RaavareDTO> oprList = funktionalitetsLaget.getRaavareDAO().getRaavareList();
+		String html = "<select name='raavareid'>";
+		for (int i=0; i < oprList.size(); i++) {
+			vareId = oprList.get(i).getRaavareId();
+			vareNavn = oprList.get(i).getRaavareNavn();
+			html += "<option value='"+vareId+"'>"+vareId+" - "+vareNavn+"</option>";
+		}
+		html +="</select>";
+		request.setAttribute("vareList", html);
 		request.getRequestDispatcher("/WEB-INF/admin/raavarebatch/createraavarebatch.jsp").forward(request, response);
 	}
 	private void handleShowRaavareBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
@@ -431,7 +452,18 @@ public class Servlet extends HttpServlet {
 	private void handleAdminiProduktBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/produktbatch/adminiproduktbatch.jsp").forward(request, response);
 	}
-	private void handleCreateProduktBatch(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+	private void handleCreateProduktBatch(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int receptId;
+		String receptNavn;
+		List<ReceptDTO> receptList = funktionalitetsLaget.getReceptDAO().getReceptList();
+		String html = "<select name='receptid'>";
+		for (int i=0; i < receptList.size(); i++) {
+			receptId = receptList.get(i).getReceptId();
+			receptNavn = receptList.get(i).getReceptNavn();
+			html += "<option value='"+receptId+"'>"+receptId+" - "+receptNavn+"</option>";
+		}
+		html +="</select>";
+		request.setAttribute("receptList", html);
 		request.getRequestDispatcher("/WEB-INF/admin/produktbatch/createproduktbatch.jsp").forward(request, response);
 	}
 	private void handleShowProduktBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
@@ -471,6 +503,9 @@ public class Servlet extends HttpServlet {
 	}
 
 	private void handleRemoveOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		funktionalitetsLaget.getOprDAO().removeOperatoer(funktionalitetsLaget.getOprDAO().getOperatoer(id));
+		
 		int oprId, oprAktoer;
 		String oprNavn;
 		List<OperatoerDTO> oprList = funktionalitetsLaget.getOprDAO().getOperatoerList();
@@ -484,8 +519,6 @@ public class Servlet extends HttpServlet {
 		}
 		html +="</select>";
 		request.setAttribute("oprList", html);
-		int id = Integer.parseInt(request.getParameter("id"));
-		funktionalitetsLaget.getOprDAO().removeOperatoer(funktionalitetsLaget.getOprDAO().getOperatoer(id));
 	}
 	private void handleUpdateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
@@ -565,6 +598,18 @@ public class Servlet extends HttpServlet {
 		int raavareid = Integer.parseInt(request.getParameter("raavareid"));
 		double maengde = Double.parseDouble(request.getParameter("maengde"));
 		funktionalitetsLaget.getRaavareBatchDAO().createRaavareBatch(new RaavareBatchDTO(raavarebatchid, raavareid, maengde));
+		
+		int vareId;
+		String vareNavn;
+		List<RaavareDTO> oprList = funktionalitetsLaget.getRaavareDAO().getRaavareList();
+		String html = "<select name='raavareid'>";
+		for (int i=0; i < oprList.size(); i++) {
+			vareId = oprList.get(i).getRaavareId();
+			vareNavn = oprList.get(i).getRaavareNavn();
+			html += "<option value='"+vareId+"'>"+vareId+" - "+vareNavn+"</option>";
+		}
+		html +="</select>";
+		request.setAttribute("vareList", html);
 	}
 	private void handleCreateProduktBatchSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int produktbatchid = Integer.parseInt(request.getParameter("produktbatchid"));
@@ -579,5 +624,17 @@ public class Servlet extends HttpServlet {
 		+ df.format(d.get(Calendar.MINUTE)) + ":"
 		+ df.format(d.get(Calendar.SECOND));
 		funktionalitetsLaget.getProduktBatchDAO().createProduktBatch(new ProduktBatchDTO(produktbatchid,receptid,dato,status));
+		
+		int receptId;
+		String receptNavn;
+		List<ReceptDTO> receptList = funktionalitetsLaget.getReceptDAO().getReceptList();
+		String html = "<select name='receptid'>";
+		for (int i=0; i < receptList.size(); i++) {
+			receptId = receptList.get(i).getReceptId();
+			receptNavn = receptList.get(i).getReceptNavn();
+			html += "<option value='"+receptId+"'>"+receptId+" - "+receptNavn+"</option>";
+		}
+		html +="</select>";
+		request.setAttribute("receptList", html);
 	}
 }

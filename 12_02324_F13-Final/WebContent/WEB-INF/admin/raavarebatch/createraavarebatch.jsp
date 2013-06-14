@@ -10,7 +10,7 @@
 	<form method="POST" action="">
 		<h1>Opret råvarebatch</h1>
 		Råvarebatch ID: <input type="text" name="raavarebatchid"><br>
-		Råvare ID: <input type="text" name="raavareid"><br>
+		Råvare ID: ${vareList}<br>
 		Mængde (kg): <input type="text" name="maengde"><br> <input
 			type="submit" value="Opret råvarebatch"
 			name="createraavarebatch_submit">
