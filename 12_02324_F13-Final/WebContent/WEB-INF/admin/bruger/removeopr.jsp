@@ -9,10 +9,9 @@
 <body>
 
 	<form method="POST" action="">
-		<input type="hidden" value="Slet Operatør" name="removeopr_submit">
 		<h1>Slet operatør</h1>
-		Id: <input type="text" name="id"><br> <input
-			type="submit" value="OK">
+		Id: ${oprList}<br> <input
+			type="submit" value="Slet Operatør" name="removeopr_submit">
 	</form>
 	${succes}
 

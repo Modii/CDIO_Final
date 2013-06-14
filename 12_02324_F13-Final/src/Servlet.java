@@ -4,9 +4,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -81,7 +79,12 @@ public class Servlet extends HttpServlet {
 		}
 			
 		if (request.getParameter("removeopr") != null && request.getParameter("removeopr").equals("Slet bruger"))
-			handleRemoveOpr(request, response, funktionalitetsLaget);
+			try {
+				handleRemoveOpr(request, response, funktionalitetsLaget);
+			} catch (DALException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 		if (request.getParameter("updateopr") != null && request.getParameter("updateopr").equals("Opdatér bruger"))
 			handleUpdateOpr(request, response, funktionalitetsLaget);
 		if (request.getParameter("adminivare") != null && request.getParameter("adminivare").equals("Administrere råvarer"))
@@ -283,7 +286,20 @@ public class Servlet extends HttpServlet {
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/showopr.jsp").forward(request, response);
 	}
 
-	private void handleRemoveOpr(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+	private void handleRemoveOpr(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int oprId, oprAktoer;
+		String oprNavn;
+		List<OperatoerDTO> oprList = funktionalitetsLaget.getOprDAO().getOperatoerList();
+		String html = "<select name='id'>";
+		for (int i=0; i < oprList.size(); i++) {
+			oprId = oprList.get(i).getOprId();
+			oprNavn = oprList.get(i).getOprNavn();
+			oprAktoer = oprList.get(i).getAktoer();
+			if (oprAktoer != 1)
+				html += "<option value='"+oprId+"'>"+oprId+" - "+oprNavn+"</option>";
+		}
+		html +="</select>";
+		request.setAttribute("oprList", html);
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/removeopr.jsp").forward(request, response);
 	}
 	private void handleUpdateOpr(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
@@ -423,6 +439,19 @@ public class Servlet extends HttpServlet {
 	}
 
 	private void handleRemoveOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int oprId, oprAktoer;
+		String oprNavn;
+		List<OperatoerDTO> oprList = funktionalitetsLaget.getOprDAO().getOperatoerList();
+		String html = "<select name='id'>";
+		for (int i=0; i < oprList.size(); i++) {
+			oprId = oprList.get(i).getOprId();
+			oprNavn = oprList.get(i).getOprNavn();
+			oprAktoer = oprList.get(i).getAktoer();
+			if (oprAktoer != 1)
+				html += "<option value='"+oprId+"'>"+oprId+" - "+oprNavn+"</option>";
+		}
+		html +="</select>";
+		request.setAttribute("oprList", html);
 		int id = Integer.parseInt(request.getParameter("id"));
 		funktionalitetsLaget.getOprDAO().removeOperatoer(funktionalitetsLaget.getOprDAO().getOperatoer(id));
 	}
