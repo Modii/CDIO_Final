@@ -44,11 +44,17 @@ public class Sequences {
 		if(data.getServerInput().equals("RM20 B"))
 		{
 			data.setServerInput(inFromServer.readLine());
+			data.setSplittedInput(data.getServerInput().split(" "));
+			String temp;
+			temp = data.getSplittedInput()[2].replaceAll("\"","");
+			data.setOprID(Integer.parseInt(temp));
 			this.sequence4(inFromServer, outToServer);
 		}
 		else
+		{
 			System.out.println("Derp");
-		this.sequence3(inFromServer, outToServer);
+			this.sequence3(inFromServer, outToServer);
+		}
 	}
 
 	//-----------------------------------------------------------------
@@ -56,11 +62,6 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	public void sequence4(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
-		data.setSplittedInput(data.getServerInput().split(" "));
-		String temp;
-		temp = data.getSplittedInput()[2].replaceAll("\"","");
-		data.setOprID(Integer.parseInt(temp));
-
 		try {
 			if (func.testId(data.getOprID())){
 				data.setWeightMsg("Operatoer: " + mOpr.getOperatoer(data.getOprID()).getOprNavn() + ". Tryk OK for at bruge det valgte ID eller CANCEL for at vaelge et andet.");
@@ -75,11 +76,12 @@ public class Sequences {
 						this.sequence5(inFromServer, outToServer);
 					}
 					else if(data.getServerInput().equals("RM49 A 2")){
-						this.sequence3(inFromServer, outToServer);
+						this.sequence4(inFromServer, outToServer);
 					}
 				}
 				else this.sequence4(inFromServer, outToServer);
 			}
+			else this.sequence3(inFromServer, outToServer);
 		} catch (DALException e) {
 			e.printStackTrace();
 		}
