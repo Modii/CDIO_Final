@@ -120,6 +120,7 @@ public class Sequences {
 			{
 				ProduktBatchDTO produktBatch = mPb.getProduktBatch(data.getPbID());
 				produktBatch.setStatus(2);
+				mPb.updateProduktBatch(produktBatch);
 				data.setWeightMsg("Recept: " + mRec.getRecept(mPb.getProduktBatch(data.getPbID()).getReceptId()).getReceptNavn() + ". Tryk OK for at bruge den valgte recept eller CANCEL for at vaelge en anden.");
 				outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
 				outToServer.flush();
@@ -191,7 +192,7 @@ public class Sequences {
 	//-----------------------------------------------------------------	
 
 	public void sequence9_10(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
-		data.setWeightMsg("Anbring taraholder. Tryk dernæst OK.");
+		data.setWeightMsg("Anbring taraholder. Tryk dernaest OK.");
 		outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
 		data.setServerInput(inFromServer.readLine());
 
@@ -324,7 +325,7 @@ public class Sequences {
 	//-----------------------------------------------------------------	
 	public void sequence17(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 
-		data.setWeightMsg("Produktionsforskrift gennemfoert. Tryk OK for at påbegynde en ny afvejningsprocedure eller CANCEL for at afslutte programmet.");
+		data.setWeightMsg("Produktionsforskrift gennemfoert. Tryk OK for at paabegynde en ny afvejningsprocedure eller CANCEL for at afslutte programmet.");
 		outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
