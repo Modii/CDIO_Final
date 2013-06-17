@@ -66,7 +66,7 @@ public class Sequences {
 	public void sequence4(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
 		try {
-			if (func.testId(data.getOprID())){
+			if (func.testId("" + data.getOprID())){
 				data.setWeightMsg("Operatoer: " + mOpr.getOperatoer(data.getOprID()).getOprNavn() + ". Tryk OK for at bruge det valgte ID eller CANCEL for at vaelge et andet.");
 				outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
 				outToServer.flush();
@@ -352,7 +352,7 @@ public class Sequences {
 				}
 				else
 				{
-					data.setWeightMsg("Ugyldig vejning. Maengden skal være mellem " + totNegTol + " kg og " + totPosTol + " kg.");
+					data.setWeightMsg("Ugyldig vejning. Maengden skal være mellem " + totNegTol + " kg og " + totPosTol + " kg ifoelge databasens veardier.");
 					outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
 					data.setServerInput(inFromServer.readLine());
 					if(data.getServerInput().equals("RM49 B"))
