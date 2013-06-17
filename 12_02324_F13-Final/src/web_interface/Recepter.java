@@ -86,5 +86,7 @@ public class Recepter {
 			html += "<option value='"+raavareid2+"'>"+raavareNavn+"</option>";
 		}
 		request.setAttribute("raavarer", html);
+		request.setAttribute("succes", "Recept oprettet!");
+		request.getRequestDispatcher("/WEB-INF/admin/recept/createrecept.jsp").forward(request, response);
 	}
 }

@@ -95,6 +95,8 @@ public class ProduktBatches {
 		}
 		html +="</select>";
 		request.setAttribute("receptList", html);
+		request.setAttribute("succes", "Produktbatch oprettet!");
+		request.getRequestDispatcher("/WEB-INF/admin/produktbatch/createproduktbatch.jsp").forward(request, response);
 	}
 	
 }

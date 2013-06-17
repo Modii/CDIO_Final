@@ -4,7 +4,7 @@
     <description></description>
     <display-name>Servlet</display-name>
     <servlet-name>Servlet</servlet-name>
-    <servlet-class>Servlet</servlet-class>
+    <servlet-class>web_interface.Servlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Servlet</servlet-name>

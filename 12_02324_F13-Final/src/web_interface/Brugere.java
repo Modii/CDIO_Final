@@ -87,7 +87,8 @@ public class Brugere {
 			e.printStackTrace();
 		}
 		request.setAttribute("autoid", oprID);
-
+		request.setAttribute("succes", "Operatør oprettet!");
+		request.getRequestDispatcher("/WEB-INF/admin/bruger/createopr.jsp").forward(request, response);
 	}
 
 	public void handleRemoveOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
@@ -107,6 +108,8 @@ public class Brugere {
 		}
 		html +="</select>";
 		request.setAttribute("oprList", html);
+		request.setAttribute("succes", "Operatør slettet!");
+		request.getRequestDispatcher("/WEB-INF/admin/bruger/removeopr.jsp").forward(request, response);
 	}
 	public void handleUpdateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
@@ -130,6 +133,9 @@ public class Brugere {
 		request.setAttribute("oprList", html);
 		
 		request.setAttribute("password", "<br>Brugerens password er: " + newPw);
+		
+		request.setAttribute("succes", "Operatør opdateret!");
+		request.getRequestDispatcher("/WEB-INF/admin/bruger/updateopr.jsp").forward(request, response);
 	}
 
 }

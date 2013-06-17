@@ -88,38 +88,22 @@ public class Servlet extends HttpServlet {
 				produktBatchMetoder.handleCreateProduktBatch(request, response, funktionalitetsLaget);
 			if (request.getParameter("showproduktbatch") != null && request.getParameter("showproduktbatch").equals("Vis produktbatch"))
 				produktBatchMetoder.handleShowProduktBatch(request, response, funktionalitetsLaget);
-			if (request.getParameter("createopr_submit") != null && request.getParameter("createopr_submit").equals("Opret Operatør")){
+			if (request.getParameter("createopr_submit") != null && request.getParameter("createopr_submit").equals("Opret Operatør"))
 				brugerMetoder.handleCreateOprSubmit(request, response, funktionalitetsLaget);
-				request.setAttribute("succes", "Operatør oprettet!");
-				request.getRequestDispatcher("/WEB-INF/admin/bruger/createopr.jsp").forward(request, response);}
-			if (request.getParameter("removeopr_submit") != null && request.getParameter("removeopr_submit").equals("Slet Operatør")){
+			if (request.getParameter("removeopr_submit") != null && request.getParameter("removeopr_submit").equals("Slet Operatør"))
 				brugerMetoder.handleRemoveOprSubmit(request, response, funktionalitetsLaget);
-				request.setAttribute("succes", "Operatør slettet!");
-				request.getRequestDispatcher("/WEB-INF/admin/bruger/removeopr.jsp").forward(request, response);}
-			if (request.getParameter("updateopr_submit") != null && request.getParameter("updateopr_submit").equals("Opdater operatør")){
+			if (request.getParameter("updateopr_submit") != null && request.getParameter("updateopr_submit").equals("Opdater operatør"))
 				brugerMetoder.handleUpdateOprSubmit(request, response, funktionalitetsLaget);
-				request.setAttribute("succes", "Operatør opdateret!");
-				request.getRequestDispatcher("/WEB-INF/admin/bruger/updateopr.jsp").forward(request, response);}
-			if (request.getParameter("createraavare_submit") != null && request.getParameter("createraavare_submit").equals("Opret råvare")){
+			if (request.getParameter("createraavare_submit") != null && request.getParameter("createraavare_submit").equals("Opret råvare"))
 				raavareMetoder.handleCreateVareSubmit(request, response, funktionalitetsLaget);
-				request.setAttribute("succes", "Råvare oprettet!");
-				request.getRequestDispatcher("/WEB-INF/admin/raavare/createvare.jsp").forward(request, response);}
-			if (request.getParameter("updateraavare_submit") != null && request.getParameter("updateraavare_submit").equals("Opdater råvare")){
+			if (request.getParameter("updateraavare_submit") != null && request.getParameter("updateraavare_submit").equals("Opdater råvare"))
 				raavareMetoder.handleUpdateVareSubmit(request, response, funktionalitetsLaget);
-				request.setAttribute("succes", "Råvare opdateret!");
-				request.getRequestDispatcher("/WEB-INF/admin/raavare/updatevare.jsp").forward(request, response);}
-			if (request.getParameter("createrecept_submit") != null && request.getParameter("createrecept_submit").equals("Opret recept")){
+			if (request.getParameter("createrecept_submit") != null && request.getParameter("createrecept_submit").equals("Opret recept"))
 				receptMetoder.handleCreateReceptSubmit(request, response, funktionalitetsLaget);
-				request.setAttribute("succes", "Recept oprettet!");
-				request.getRequestDispatcher("/WEB-INF/admin/recept/createrecept.jsp").forward(request, response);}
-			if (request.getParameter("createraavarebatch_submit") != null && request.getParameter("createraavarebatch_submit").equals("Opret råvarebatch")){
+			if (request.getParameter("createraavarebatch_submit") != null && request.getParameter("createraavarebatch_submit").equals("Opret råvarebatch"))
 				raavareBatchMetoder.handleCreateRaavareBatchSubmit(request, response, funktionalitetsLaget);
-				request.setAttribute("succes", "Råvarebatch oprettet!");
-				request.getRequestDispatcher("/WEB-INF/admin/raavarebatch/createraavarebatch.jsp").forward(request, response);}
-			if (request.getParameter("createproduktbatch_submit") != null && request.getParameter("createproduktbatch_submit").equals("Opret produktbatch")){
+			if (request.getParameter("createproduktbatch_submit") != null && request.getParameter("createproduktbatch_submit").equals("Opret produktbatch"))
 				produktBatchMetoder.handleCreateProduktBatchSubmit(request, response, funktionalitetsLaget);
-				request.setAttribute("succes", "Produktbatch oprettet!");
-				request.getRequestDispatcher("/WEB-INF/admin/produktbatch/createproduktbatch.jsp").forward(request, response);}
 			if (request.getParameter("changepw") != null && request.getParameter("changepw").equals("Ændr password"))
 				request.getRequestDispatcher("/WEB-INF/admin/changepw.jsp").forward(request, response);
 			if (request.getParameter("changepw_submit") != null && request.getParameter("changepw_submit").equals("Ændr password"))

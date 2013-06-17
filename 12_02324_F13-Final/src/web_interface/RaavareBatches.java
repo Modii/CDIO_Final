@@ -65,6 +65,8 @@ public class RaavareBatches {
 		}
 		html +="</select>";
 		request.setAttribute("vareList", html);
+		request.setAttribute("succes", "Råvarebatch oprettet!");
+		request.getRequestDispatcher("/WEB-INF/admin/raavarebatch/createraavarebatch.jsp").forward(request, response);
 	}
 
 }

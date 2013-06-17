@@ -55,6 +55,8 @@ public class Raavarer {
 		String navn = request.getParameter("navn");
 		String leverandoer = request.getParameter("leverandoer");
 		funktionalitetsLaget.getRaavareDAO().createRaavare(new RaavareDTO(id, navn, leverandoer));
+		request.setAttribute("succes", "Råvare oprettet!");
+		request.getRequestDispatcher("/WEB-INF/admin/raavare/createvare.jsp").forward(request, response);
 	}
 	public void handleUpdateVareSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
@@ -73,6 +75,8 @@ public class Raavarer {
 		}
 		html +="</select>";
 		request.setAttribute("vareList", html);
+		request.setAttribute("succes", "Råvare opdateret!");
+		request.getRequestDispatcher("/WEB-INF/admin/raavare/updatevare.jsp").forward(request, response);
 	}
 	
 }
