@@ -11,8 +11,8 @@
 	<h3>Hej ${sessionScope.operatoerNavn}, du har kun mulighed for at
 		foretage en afvejning via vægten!</h3>
 
-
 	<form action="" method="POST">
+		<br><input type="submit" value="Ændr password" name="changepw">
 		<br> <br> <br> <br> <input type="submit"
 			name="logoff" value="Log af">
 	</form>

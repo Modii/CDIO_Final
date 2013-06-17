@@ -21,8 +21,8 @@
 		<input type="submit" value="Administrere råvarebatches"
 			name="adminiraavarebatch"> <br> <input type="submit"
 			value="Administrere produktbatches" name="adminiproduktbatch">
-			<input type="submit"
-			value="Ændr password" name="changepw">
+			<br>
+			<input type="submit" value="Ændr password" name="changepw">
 	</form>
 
 	<form action="" method="POST">

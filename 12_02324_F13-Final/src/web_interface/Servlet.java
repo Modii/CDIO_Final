@@ -12,12 +12,12 @@ import db_connection.Connector;
 
 public class Servlet extends HttpServlet {
 
-	Brugere brugerMetoder;
-	Raavarer raavareMetoder;
-	Recepter receptMetoder;
-	RaavareBatches raavareBatchMetoder;
-	ProduktBatches produktBatchMetoder;
-	Other otherMetoder;
+	Brugere brugerMetoder = new Brugere();
+	Raavarer raavareMetoder = new Raavarer();
+	Recepter receptMetoder = new Recepter();
+	RaavareBatches raavareBatchMetoder = new RaavareBatches();
+	ProduktBatches produktBatchMetoder = new ProduktBatches();
+	Other otherMetoder = new Other();
 	private static final long serialVersionUID = 1L;
 
 	public Servlet(){
@@ -43,8 +43,9 @@ public class Servlet extends HttpServlet {
 		Functionality funktionalitetsLaget = new Functionality();
 		try{
 
-			if (request.getParameter("login") != null && request.getParameter("login").equals("Log ind")) 
+			if (request.getParameter("login") != null && request.getParameter("login").equals("Log ind")) {
 				otherMetoder.handleLogIn(request, response, funktionalitetsLaget);
+			}
 			if (request.getParameter("logoff") != null && request.getParameter("logoff").equals("Log af"))
 				otherMetoder.handleLogOff(request, response);
 			if (request.getParameter("hovedmenu") != null && request.getParameter("hovedmenu").equals("Tilbage til hovedmenu"))

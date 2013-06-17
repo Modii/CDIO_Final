@@ -17,7 +17,7 @@ public class Other {
 
 
 	public void handleLogIn(HttpServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException{
-		HttpSession session = request.getSession(true);	
+		HttpSession session = request.getSession(true);
 		String txtID = request.getParameter("Id");
 		String pw = request.getParameter("Password");
 		try {
@@ -68,13 +68,15 @@ public class Other {
 	}
 
 	public void handleChangePwSubmit(HttpServletRequest request,
-			HttpServletResponse response, Functionality funktionalitetsLaget) throws DALException {
+			HttpServletResponse response, Functionality funktionalitetsLaget) throws DALException, ServletException, IOException {
 		HttpSession session = request.getSession(true);
 		int id = Integer.parseInt(String.valueOf(session.getAttribute("operatoerID")));
 		if(funktionalitetsLaget.askForNewPassword(id, request.getParameter("password")))
-			request.setAttribute("sucess", "Password er ændret!");
+			request.setAttribute("succes", "Password er ændret!");
 		else
 			request.setAttribute("fail", "Password ikke godkendt!");
+		
+		request.getRequestDispatcher("/WEB-INF/admin/changepw.jsp").forward(request, response);
 		
 	}
 	
