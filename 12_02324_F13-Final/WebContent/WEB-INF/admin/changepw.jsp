@@ -12,7 +12,7 @@
 		<h1>Ændr password</h1>
 		Gammelt password: <input type="text" name="gammeltpassword"><br>
 		Nyt Password: <input type="text" name="nytpassword1"><br>
-		Nyt Password (igen): <input type="text" name="nytpassword1"><br>
+		Nyt Password (igen): <input type="text" name="nytpassword2"><br>
 		<br> <input type="submit" value="Ændr password"
 			name="changepw_submit">
 	</form>
@@ -25,6 +25,13 @@ Adgangskoden skal indeholde mindst 6 tegn af mindst tre af de følgende fire kate
 Undgå at bruge dit fornavn, efternavn eller bruger-ID som en del af din adgangskode, da dette vil medføre problemer med at logge ind på nogle systemer og tjenester på DTU, især Windows-tjenester.
 <br><br>
 Anvend blot følgende special-tegn: {'.', '-', '_', '+', '!', '?', '='}
-
+	<form action="" method="POST">
+		<br> <br> <br> <br> <input type="submit"
+			name="hovedmenu" value="Tilbage til hovedmenu">
+	</form>
+	<form action="" method="POST">
+		<br>
+		<input type="submit" name="logoff" value="Log af">
+	</form>
 </body>
 </html>

@@ -176,11 +176,8 @@ public class Functionality implements IFunctionality{
 	 * Her sammenlignes password fra brugerinput med eksisterende password i vores Array 
 	 * baseret p� det f�rstindtastede id (int i) som er unikt for operat�r til operat�r  
 	 */
-	public boolean testPassword(int i, String s) throws DALException {
-		if ((s.equals(oprDAO.getOperatoer(i).getPassword())))
-			return true;
-		else
-			return false;
+	public boolean testPassword(int oprID, String password) throws DALException {
+		return (password.equals(oprDAO.getOperatoer(oprID).getPassword()));
 	}
 
 	/**

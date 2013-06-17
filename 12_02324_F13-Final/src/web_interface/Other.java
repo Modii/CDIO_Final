@@ -71,13 +71,21 @@ public class Other {
 			HttpServletResponse response, Functionality funktionalitetsLaget) throws DALException, ServletException, IOException {
 		HttpSession session = request.getSession(true);
 		int id = Integer.parseInt(String.valueOf(session.getAttribute("operatoerID")));
-		if(funktionalitetsLaget.askForNewPassword(id, request.getParameter("password")))
+		String nytpassword1, nytpassword2, gammeltpassword, errorString = "";
+		nytpassword1 = String.valueOf(request.getParameter("nytpassword1"));
+		nytpassword2 = String.valueOf(request.getParameter("nytpassword2"));
+		gammeltpassword = String.valueOf(request.getParameter("gammeltpassword"));
+		if (!funktionalitetsLaget.testPassword(id, gammeltpassword))
+			errorString += "Dit gamle password er forkert! ";
+		if (!funktionalitetsLaget.checkIfIdentical(nytpassword1,nytpassword2))
+			errorString += "De to nye password er ikke identiske! ";
+		if (!funktionalitetsLaget.askForNewPassword(id, nytpassword1)) 
+			errorString += "Dit nye password er ikke godkendt ud fra nedenstående regler!";
+		if (errorString.length() == 0)
 			request.setAttribute("succes", "Password er ændret!");
 		else
-			request.setAttribute("fail", "Password ikke godkendt!");
-		
+			request.setAttribute("fail", errorString);		
 		request.getRequestDispatcher("/WEB-INF/admin/changepw.jsp").forward(request, response);
-		
 	}
 	
 
