@@ -52,32 +52,36 @@ public class Functionality implements IFunctionality{
 		int numOfSymbol = 0;
 		int differentTypes = 0; // Forskellige kategorier/typer -
 		// Lowercase,Uppercase, osv i passwd.
-		String[] arrayOfTypes = { "Lowercase", "Uppercase", "Number", "Symbol" };
+		int[] arrayOfTypes = { 1, 2, 3, 4 };
 		while (password.length() < 6 || differentTypes < 3) {
 			Random r = new Random();
 			switch (arrayOfTypes[r.nextInt(arrayOfTypes.length)]) {
-			case "Lowercase":
+			// lower case
+			case 1:
 				password += randomLowercase();
 				numOfLowercase++;
 				if (numOfLowercase <= 1) {
 					differentTypes++;
 				}
 				break;
-			case "Uppercase":
+			// upper case
+			case 2:
 				password += randomUppercase();
 				numOfUppercase++;
 				if (numOfUppercase <= 1) {
 					differentTypes++;
 				}
 				break;
-			case "Number":
+			// number
+			case 3:
 				password += randomNumber();
 				numOfNumber++;
 				if (numOfNumber <= 1) {
 					differentTypes++;
 				}
 				break;
-			case "Symbol":
+			// symbol
+			case 4:
 				password += randomSymbol();
 				numOfSymbol++;
 				if (numOfSymbol <= 1) {

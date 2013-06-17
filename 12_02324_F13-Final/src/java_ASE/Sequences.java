@@ -318,7 +318,10 @@ public class Sequences {
 		data.setRbID(Integer.parseInt(temp));
 		try {
 			data.setWeightMsg("Du har valgt: " + mRaa.getRaavare(mRaaB.getRaavareBatch(Integer.parseInt(temp)).getRaavareId()).getRaavareNavn() + ". Tryk OK for at paabegynde afvejning. Naar den oenskede maengde er afvejet, tryk da paa AFVEJ");
-		} catch (NumberFormatException | DALException e) {
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+		catch(DALException e){
 			e.printStackTrace();
 		}
 		outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
