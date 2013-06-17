@@ -118,7 +118,8 @@ public class Sequences {
 		try {
 			if(func.testPbId(data.getPbID()))
 			{
-				mPb.getProduktBatch(data.getPbID()).setStatus(1);
+				ProduktBatchDTO produktBatch = mPb.getProduktBatch(data.getPbID());
+				produktBatch.setStatus(2);
 				data.setWeightMsg("Recept: " + mRec.getRecept(mPb.getProduktBatch(data.getPbID()).getReceptId()).getReceptNavn() + ". Tryk OK for at bruge den valgte recept eller CANCEL for at vaelge en anden.");
 				outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
 				outToServer.flush();
@@ -258,7 +259,7 @@ public class Sequences {
 		data.setServerInput((temp));
 		data.setPbID(Integer.parseInt(temp));
 		try {
-			data.setWeightMsg("Du har valgt: " + mRaa.getRaavare(mRaaB.getRaavareBatch(Integer.parseInt(temp)).getRaavareId()).getRaavareNavn() + ". Tryk OK for at paabegynde afvejning. Naar den oenskede maengde er afvejet, tryk da paa [->");
+			data.setWeightMsg("Du har valgt: " + mRaa.getRaavare(mRaaB.getRaavareBatch(Integer.parseInt(temp)).getRaavareId()).getRaavareNavn() + ". Tryk OK for at paabegynde afvejning. Naar den oenskede maengde er afvejet, tryk da paa AFVEJ");
 		} catch (NumberFormatException | DALException e) {
 			e.printStackTrace();
 		}
@@ -290,10 +291,10 @@ public class Sequences {
 		else this.sequence13(inFromServer, outToServer);
 	}
 	//-----------------------------------------------------------------
-	// (15) Vægt spørger om der er flere afvejninger.
+	// (15_16) Vægt spørger om der er flere afvejninger.
 	//-----------------------------------------------------------------
 	public void sequence15_16(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
-		data.setWeightMsg("Afvejning af varen er gennefoert. Tryk OK for at afveje flere raavarer eller cancel for at markere produktbatchet som afsluttet.");
+		data.setWeightMsg("Afvejning af varen er gennefoert. Tryk OK for at afveje flere raavarer eller CANCEL for at markere produktbatchet som afsluttet.");
 		outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
@@ -319,7 +320,7 @@ public class Sequences {
 		else this.sequence15_16(inFromServer, outToServer);
 	}
 	//-----------------------------------------------------------------
-	// (16_17) Systemet sætter produktbatch nummerets status til ”Afsluttet” (status = 2).
+	// (17) Systemet spørger om der skal startes forfra eller afsluttes
 	//-----------------------------------------------------------------	
 	public void sequence17(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 
