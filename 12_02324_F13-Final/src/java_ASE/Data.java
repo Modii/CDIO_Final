@@ -8,7 +8,7 @@ import dto.ReceptKompDTO;
 public class Data {
 
 	String weightMsg, serverInput, itemName, userInput;
-	int oprID, pbID, receptID, rbID;
+	int oprID, pbID, receptID, rbID, raavareID;
 
 	int itemNoInput, itemNoStore;
 
@@ -117,4 +117,11 @@ public class Data {
 	public void setPbID(int pbID) {
 		this.pbID = pbID;
 	}
+	public int getRaavareID() {
+		return raavareID;
+	}
+	public void setRaavareID(int raavareID) {
+		this.raavareID = raavareID;
+	}
+
 }

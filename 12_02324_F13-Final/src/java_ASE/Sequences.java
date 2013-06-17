@@ -50,9 +50,7 @@ public class Sequences {
 		{
 			data.setServerInput(inFromServer.readLine());
 			data.setSplittedInput(data.getServerInput().split(" "));
-			String temp;
-			temp = data.getSplittedInput()[2].replaceAll("\"","");
-			data.setOprID(Integer.parseInt(temp));
+			data.setOprID(Integer.parseInt(data.getSplittedInput()[2].replaceAll("\"","")));
 			this.sequence4(inFromServer, outToServer);
 		}
 		else
@@ -106,9 +104,7 @@ public class Sequences {
 		{
 			data.setServerInput(inFromServer.readLine());
 			data.setSplittedInput(data.getServerInput().split(" "));
-			String temp = data.getSplittedInput()[2].replaceAll("\"","");
-			data.setServerInput((temp));
-			data.setPbID(Integer.parseInt(temp));
+			data.setPbID(Integer.parseInt(data.getSplittedInput()[2].replaceAll("\"","")));
 
 			data.setReceptID(mPb.getProduktBatch(data.getPbID()).getReceptId());
 			data.setListen(mRecKomp.getReceptKompList(data.getReceptID()));
@@ -168,6 +164,7 @@ public class Sequences {
 
 			if (data.getListen().size() > 0) {
 				int id = data.getListen().get(data.getListen().size()-1).getRaavareId();
+				data.setRaavareID(id); //Gemmer raavareID til senere brug.
 				String navn = mRaa.getRaavare(id).getRaavareNavn();
 				data.getListen().remove(data.getListen().size()-1);
 				data.setWeightMsg("Du skal nu afveje raavaren: " + navn);
@@ -280,11 +277,8 @@ public class Sequences {
 		outToServer.writeBytes("T\r\n");
 		data.setServerInput(inFromServer.readLine());
 		if(data.getServerInput().startsWith("T S")){
-
 			data.setSplittedInput(data.getServerInput().split(" "));
-			String temp = data.getSplittedInput()[7];
-			data.setTara(Double.parseDouble(temp));
-
+			data.setTara(Double.parseDouble(data.getSplittedInput()[7]));
 			this.sequence13(inFromServer, outToServer);
 		}
 		else this.sequence12(inFromServer, outToServer);
@@ -301,6 +295,9 @@ public class Sequences {
 
 		if(data.getServerInput().equals("RM20 B"))
 		{
+			data.setServerInput(inFromServer.readLine());
+			data.setSplittedInput(data.getServerInput().split(" "));
+			data.setRbID(Integer.parseInt(data.getSplittedInput()[2].replaceAll("\"","")));
 			this.sequence14(inFromServer, outToServer);
 		}
 		else
@@ -309,56 +306,69 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	// (14) Bruger afvejer og trykker ok.
 	//-----------------------------------------------------------------
-	public void sequence14(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException{
+	public void sequence14(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
+	{
 
-		data.setServerInput(inFromServer.readLine());
-		data.setSplittedInput(data.getServerInput().split(" "));
-		String temp = data.getSplittedInput()[2].replaceAll("\"","");
-		data.setServerInput((temp));
-		data.setRbID(Integer.parseInt(temp));
-		try {
-			data.setWeightMsg("Du har valgt: " + mRaa.getRaavare(mRaaB.getRaavareBatch(Integer.parseInt(temp)).getRaavareId()).getRaavareNavn() + ". Tryk OK for at paabegynde afvejning. Naar den oenskede maengde er afvejet, tryk da paa AFVEJ");
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		}
-		catch(DALException e){
-			e.printStackTrace();
-		}
+		data.setWeightMsg("Du har valgt: " + mRaa.getRaavare(mRaaB.getRaavareBatch(data.getRbID()).getRaavareId()).getRaavareNavn() + ". Tryk OK for at paabegynde afvejning. Naar den oenskede maengde er afvejet, tryk da paa AFVEJ");
 		outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
 		data.setServerInput(inFromServer.readLine());
 
-		outToServer.writeBytes("DW" + "\r\n");
+		outToServer.writeBytes("DW" + "\r\n"); // Skifter til vejedisplay
 		data.setServerInput(inFromServer.readLine());
 
-		System.out.println("DW: " + data.getServerInput());
+		double tolerance = ((mRaaB.getRaavareBatch(data.getRbID()).getMaengde()) * (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getTolerance()) / 100);
+		double totPosTol = mRaaB.getRaavareBatch(data.getRbID()).getMaengde() + tolerance;
+		double totNegTol = mRaaB.getRaavareBatch(data.getRbID()).getMaengde() - tolerance;
+		outToServer.writeBytes("P121 " + mRaaB.getRaavareBatch(data.getRbID()).getMaengde() + " kg " + tolerance + " kg " + tolerance + " kg " + "\r\n"); // Tilføjer tolerencepil
+		System.out.println("Linje:" + "P121 " + mRaaB.getRaavareBatch(data.getRbID()).getMaengde() + " g " + tolerance + " g " + tolerance + " g " + "\r\n");
+		data.setServerInput(inFromServer.readLine());
+
 		String temp1 = "afvej";
-		System.out.println("Vi skriver: " + "RM30 \"" + temp1);
-		outToServer.writeBytes("RM30 \"" + temp1 + "\"\r\n");
+		outToServer.writeBytes("RM30 \"" + temp1 + "\"\r\n"); // Tilføjer en knap til vejedisplay
 
 		data.setServerInput(inFromServer.readLine());
-		if(data.getServerInput().equals("RM30 B")){
+		if(data.getServerInput().equals("RM30 B"))
+		{
 			outToServer.writeBytes("RM39 1" + "\r\n");
 			data.setServerInput(inFromServer.readLine());
 			data.setServerInput(inFromServer.readLine());
-			if(data.getServerInput().equals("RM30 A 1")){
+			if(data.getServerInput().equals("RM30 A 1"))
+			{
 				outToServer.writeBytes("S\r\n");
 				data.setServerInput(inFromServer.readLine());
-				if(data.getServerInput().startsWith("S S")){
+				data.setSplittedInput(data.getServerInput().split(" "));
+				data.setNetto(Double.parseDouble(data.getSplittedInput()[7]));
 
-					data.setSplittedInput(data.getServerInput().split(" "));
-					String temp2 = data.getSplittedInput()[7];
-					data.setBrutto(Double.parseDouble(temp2));
-					data.setNetto(data.getBrutto()-data.getTara());
-
-					mPbKomp.createProduktBatchKomp(new ProduktBatchKompDTO(data.getPbID(), data.getRbID(), data.getTara(), data.getNetto(), data.getOprID()));
-					this.sequence6_5(inFromServer, outToServer);
+				if(data.getNetto() >= totNegTol && data.getNetto() <= totPosTol)
+				{
+					if(data.getServerInput().startsWith("S S"))
+					{
+						mPbKomp.createProduktBatchKomp(new ProduktBatchKompDTO(data.getPbID(), data.getRbID(), data.getTara(), data.getNetto(), data.getOprID()));
+						this.sequence6_5(inFromServer, outToServer);
+					}
+					else this.sequence14(inFromServer, outToServer);
+				}
+				else
+				{
+					data.setWeightMsg("Ugyldig vejning. Maengden skal være mellem " + totNegTol + " kg og " + totPosTol + " kg.");
+					outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
+					data.setServerInput(inFromServer.readLine());
+					if(data.getServerInput().equals("RM49 B"))
+					{
+						data.setServerInput(inFromServer.readLine());
+						if(data.getServerInput().equals("RM49 A 1"))
+						{
+							outToServer.writeBytes("RM49 0");	
+						}
+					}
+					else this.sequence14(inFromServer, outToServer);
 				}
 			}
-			else this.sequence13(inFromServer, outToServer);
+			else this.sequence14(inFromServer, outToServer);
 		}
-		else this.sequence13(inFromServer, outToServer);
+		else this.sequence14(inFromServer, outToServer);
 	}
 	//-----------------------------------------------------------------
 	// (15_16) Vægt spørger om der er flere afvejninger.
