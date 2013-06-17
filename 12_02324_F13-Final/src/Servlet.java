@@ -254,9 +254,13 @@ public class Servlet extends HttpServlet {
 					
 
 				}
+				else {
+					request.setAttribute("error", "BrugerID eller password findes ikke - prøv igen.");
+					request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+				}
 			}
 			else {
-				request.setAttribute("error", "Unknown user, please try again");
+				request.setAttribute("error", "BrugerID eller password findes ikke - prøv igen.");
 				request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
 			}
 		} catch (DALException e) {

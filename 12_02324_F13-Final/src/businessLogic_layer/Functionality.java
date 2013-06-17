@@ -172,7 +172,7 @@ public class Functionality implements IFunctionality{
 		if ((s.equals(oprDAO.getOperatoer(i).getPassword())))
 			return true;
 		else
-			throw new DALException("Password invalid!");
+			return false;
 	}
 
 	/**
