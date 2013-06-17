@@ -1,13 +1,48 @@
 package java_ASE;
 
+import java.util.List;
+
+import dto.ReceptKompDTO;
+
+
 public class Data {
 
 	String weightMsg, serverInput, itemName, userInput;
-	int oprID, pbID;
-	int itemNoInput, itemNoStore;
-	String[] splittedInput = new String[10];
-	double tara, netto, bruttoCheck;
+	int oprID, pbID, receptID, rbID;
 
+	int itemNoInput, itemNoStore;
+
+	String[] splittedInput = new String[10];
+	double tara, netto, brutto, bruttoCheck;
+	List<ReceptKompDTO> listen;
+
+
+	double getBrutto() {
+		return brutto;
+	}
+	void setBrutto(double brutto) {
+		this.brutto = brutto;
+	}
+	List<ReceptKompDTO> getListen() {
+		return listen;
+	}
+	void setListen(List<ReceptKompDTO> listen) {
+		this.listen = listen;
+	}
+	int getRbID() {
+		return rbID;
+	}
+	void setRbID(int rbID) {
+		this.rbID = rbID;
+	}
+
+	int getReceptID() {
+		return receptID;
+	}
+	void setReceptID(int receptID) {
+		this.receptID = receptID;
+	}
+	
 	String getWeightMsg() {
 		return weightMsg;
 	}

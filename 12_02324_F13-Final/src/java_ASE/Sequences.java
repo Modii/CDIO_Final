@@ -7,19 +7,24 @@ import businessLogic_layer.Functionality;
 import dao_interfaces.DALException;
 import db_mysqldao.MySQLOperatoerDAO;
 import db_mysqldao.MySQLProduktBatchDAO;
+import db_mysqldao.MySQLProduktBatchKompDAO;
 import db_mysqldao.MySQLRaavareBatchDAO;
 import db_mysqldao.MySQLRaavareDAO;
 import db_mysqldao.MySQLReceptDAO;
+import db_mysqldao.MySQLReceptKompDAO;
 import dto.ProduktBatchDTO;
+import dto.ProduktBatchKompDTO;
 
 public class Sequences {
 
 	private Functionality func = new Functionality();
 	private MySQLOperatoerDAO mOpr = new MySQLOperatoerDAO();
 	private MySQLProduktBatchDAO mPb = new MySQLProduktBatchDAO();
+	private MySQLProduktBatchKompDAO mPbKomp = new MySQLProduktBatchKompDAO();
 	private MySQLReceptDAO mRec = new MySQLReceptDAO();
 	private MySQLRaavareDAO mRaa = new MySQLRaavareDAO();
 	private MySQLRaavareBatchDAO mRaaB = new MySQLRaavareBatchDAO();
+	private MySQLReceptKompDAO mRecKomp = new MySQLReceptKompDAO();
 	private Data data = new Data();
 
 	//-----------------------------------------------------------------
@@ -90,7 +95,7 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	// (5)	Operatør indtaster produktbatchnummer
 	//-----------------------------------------------------------------
-	public void sequence5(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
+	public void sequence5(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
 	{
 		data.setWeightMsg("Indtast produktbatchnr.");
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
@@ -104,6 +109,10 @@ public class Sequences {
 			String temp = data.getSplittedInput()[2].replaceAll("\"","");
 			data.setServerInput((temp));
 			data.setPbID(Integer.parseInt(temp));
+
+			data.setReceptID(mPb.getProduktBatch(data.getPbID()).getReceptId());
+			data.setListen(mRecKomp.getReceptKompList(data.getReceptID()));
+
 			this.sequence6(inFromServer, outToServer);
 		}
 		else
@@ -130,7 +139,7 @@ public class Sequences {
 				{
 					data.setServerInput(inFromServer.readLine());
 					if(data.getServerInput().equals("RM49 A 1")){
-						this.sequence7(inFromServer, outToServer);
+						this.sequence6_5(inFromServer, outToServer);
 					}
 					else if(data.getServerInput().equals("RM49 A 2")){
 						this.sequence5(inFromServer, outToServer);
@@ -149,9 +158,52 @@ public class Sequences {
 	}
 
 	//-----------------------------------------------------------------
+	// (6,5)	Vægten fortæller Operatør hvilken råvare han skal afveje nu
+	//-----------------------------------------------------------------
+
+	public void sequence6_5(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
+	{
+		try{
+			System.out.println("ProduktbatchID: " + data.getPbID());
+
+			if (data.getListen().size() > 0) {
+				int id = data.getListen().get(data.getListen().size()-1).getRaavareId();
+				String navn = mRaa.getRaavare(id).getRaavareNavn();
+				data.getListen().remove(data.getListen().size()-1);
+				data.setWeightMsg("Du skal nu afveje raavaren: " + navn);
+				outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
+				outToServer.flush();
+				data.setServerInput(inFromServer.readLine());
+
+				if(data.getServerInput().equals("RM49 B"))
+				{
+					data.setServerInput(inFromServer.readLine());
+					if(data.getServerInput().equals("RM49 A 1")){
+						this.sequence7(inFromServer, outToServer);
+					}
+					else if(data.getServerInput().equals("RM49 A 2")){
+						this.sequence5(inFromServer, outToServer);
+					}
+					else this.sequence6(inFromServer, outToServer);
+				}
+				this.sequence6(inFromServer, outToServer);
+			}
+			else {
+				this.sequence17(inFromServer, outToServer);
+			}
+		}
+
+		catch (DALException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
+	//-----------------------------------------------------------------
 	// (7)	Operatøren kontrollerer at vægten er ubelastet og trykker ’ok’
 	//-----------------------------------------------------------------
-	public void sequence7(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
+	public void sequence7(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
 	{
 		data.setWeightMsg("Aflast vaegten og tryk OK for at tarere.");
 		outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
@@ -177,7 +229,7 @@ public class Sequences {
 	// (8) Vægt tareres
 	//-----------------------------------------------------------------	
 
-	public void sequence8(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
+	public void sequence8(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException{
 
 		outToServer.writeBytes("T\r\n");
 		data.setServerInput(inFromServer.readLine());
@@ -191,7 +243,7 @@ public class Sequences {
 	// (9_10) Vægt beder om første tara-beholder.
 	//-----------------------------------------------------------------	
 
-	public void sequence9_10(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
+	public void sequence9_10(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException{
 		data.setWeightMsg("Anbring taraholder. Tryk dernaest OK.");
 		outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
 		data.setServerInput(inFromServer.readLine());
@@ -213,7 +265,7 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	// (11)	Vægtdisplay beder om evt. tara og at brugeren bekræfter. 	
 	//-----------------------------------------------------------------
-	public void sequence11(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
+	public void sequence11(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
 	{
 		// Vægten af tarabeholder registreres
 		// Mangler registrering af tara.
@@ -223,11 +275,16 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	// (12) Vægt tareres
 	//-----------------------------------------------------------------
-	public void sequence12(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
+	public void sequence12(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
 	{
 		outToServer.writeBytes("T\r\n");
 		data.setServerInput(inFromServer.readLine());
 		if(data.getServerInput().startsWith("T S")){
+
+			data.setSplittedInput(data.getServerInput().split(" "));
+			String temp = data.getSplittedInput()[7];
+			data.setTara(Double.parseDouble(temp));
+
 			this.sequence13(inFromServer, outToServer);
 		}
 		else this.sequence12(inFromServer, outToServer);
@@ -236,7 +293,7 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	// (13) Vægten beder om raavarebatch nummer på råvare.
 	//-----------------------------------------------------------------
-	public void sequence13(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
+	public void sequence13(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException{
 		data.setWeightMsg("Indtast raavarebatchnr.");
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
@@ -252,13 +309,13 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	// (14) Bruger afvejer og trykker ok.
 	//-----------------------------------------------------------------
-	public void sequence14(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
+	public void sequence14(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException{
 
 		data.setServerInput(inFromServer.readLine());
 		data.setSplittedInput(data.getServerInput().split(" "));
 		String temp = data.getSplittedInput()[2].replaceAll("\"","");
 		data.setServerInput((temp));
-		data.setPbID(Integer.parseInt(temp));
+		data.setRbID(Integer.parseInt(temp));
 		try {
 			data.setWeightMsg("Du har valgt: " + mRaa.getRaavare(mRaaB.getRaavareBatch(Integer.parseInt(temp)).getRaavareId()).getRaavareNavn() + ". Tryk OK for at paabegynde afvejning. Naar den oenskede maengde er afvejet, tryk da paa AFVEJ");
 		} catch (NumberFormatException | DALException e) {
@@ -285,7 +342,16 @@ public class Sequences {
 			if(data.getServerInput().equals("RM30 A 1")){
 				outToServer.writeBytes("S\r\n");
 				data.setServerInput(inFromServer.readLine());
-				this.sequence15_16(inFromServer, outToServer);
+				if(data.getServerInput().startsWith("S S")){
+
+					data.setSplittedInput(data.getServerInput().split(" "));
+					String temp2 = data.getSplittedInput()[7];
+					data.setBrutto(Double.parseDouble(temp2));
+					data.setNetto(data.getBrutto()-data.getTara());
+
+					mPbKomp.createProduktBatchKomp(new ProduktBatchKompDTO(data.getPbID(), data.getRbID(), data.getTara(), data.getNetto(), data.getOprID()));
+					this.sequence6_5(inFromServer, outToServer);
+				}
 			}
 			else this.sequence13(inFromServer, outToServer);
 		}
@@ -294,32 +360,32 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	// (15_16) Vægt spørger om der er flere afvejninger.
 	//-----------------------------------------------------------------
-	public void sequence15_16(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
-		data.setWeightMsg("Afvejning af varen er gennefoert. Tryk OK for at afveje flere raavarer eller CANCEL for at markere produktbatchet som afsluttet.");
-		outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
-		outToServer.flush();
-		data.setServerInput(inFromServer.readLine());
-		if(data.getServerInput().equals("RM49 B"))
-		{
-			data.setServerInput(inFromServer.readLine());
-			if(data.getServerInput().equals("RM49 A 1")){
-				this.sequence7(inFromServer, outToServer);
-			}
-			else if(data.getServerInput().equals("RM49 A 2"))
-			{
-				try {
-					ProduktBatchDTO produktBatch = mPb.getProduktBatch(data.getPbID());
-					produktBatch.setStatus(2);
-					mPb.updateProduktBatch(produktBatch);
-				} catch (DALException e) {
-					e.printStackTrace();
-				}
-				this.sequence17(inFromServer, outToServer);
-			}
-			else sequence15_16(inFromServer, outToServer);
-		}
-		else this.sequence15_16(inFromServer, outToServer);
-	}
+	//	public void sequence15_16(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
+	//		data.setWeightMsg("Afvejning af varen er gennefoert. Tryk OK for at afveje flere raavarer eller CANCEL for at markere produktbatchet som afsluttet.");
+	//		outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
+	//		outToServer.flush();
+	//		data.setServerInput(inFromServer.readLine());
+	//		if(data.getServerInput().equals("RM49 B"))
+	//		{
+	//			data.setServerInput(inFromServer.readLine());
+	//			if(data.getServerInput().equals("RM49 A 1")){
+	//				this.sequence7(inFromServer, outToServer);
+	//			}
+	//			else if(data.getServerInput().equals("RM49 A 2"))
+	//			{
+	//				try {
+	//					ProduktBatchDTO produktBatch = mPb.getProduktBatch(data.getPbID());
+	//					produktBatch.setStatus(2);
+	//					mPb.updateProduktBatch(produktBatch);
+	//				} catch (DALException e) {
+	//					e.printStackTrace();
+	//				}
+	//				this.sequence17(inFromServer, outToServer);
+	//			}
+	//			else sequence15_16(inFromServer, outToServer);
+	//		}
+	//		else this.sequence15_16(inFromServer, outToServer);
+	//	}
 	//-----------------------------------------------------------------
 	// (17) Systemet spørger om der skal startes forfra eller afsluttes
 	//-----------------------------------------------------------------	
