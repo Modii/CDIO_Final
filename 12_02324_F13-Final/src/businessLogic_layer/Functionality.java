@@ -2,7 +2,6 @@ package businessLogic_layer;
 
 import java.util.Random;
 import java.util.Scanner;
-
 import dao_interfaces.IOperatoerDAO;
 import dao_interfaces.IProduktBatchDAO;
 import dao_interfaces.IRaavareBatchDAO;
