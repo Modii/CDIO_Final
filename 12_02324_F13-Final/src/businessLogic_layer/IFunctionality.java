@@ -5,7 +5,7 @@ import dao_interfaces.DALException;
 public interface IFunctionality {
 	String generatePassword();
 	void askForOprName();
-	boolean testId(int i) throws DALException;
+	boolean testId(String i) throws DALException;
 	boolean testPbId(int i) throws DALException;
 	boolean testRaavareBatchId(int i) throws DALException;
 	boolean testPassword(int i, String s) throws DALException;

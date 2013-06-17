@@ -1,3 +1,4 @@
+package web_interface;
 
 public class Main {
 

@@ -14,6 +14,7 @@ import db_mysqldao.MySQLRaavareBatchDAO;
 import db_mysqldao.MySQLRaavareDAO;
 import db_mysqldao.MySQLReceptDAO;
 import db_mysqldao.MySQLReceptKompDAO;
+import dto.OperatoerDTO;
 import dao_interfaces.DALException;
 
 public class Functionality implements IFunctionality{
@@ -125,9 +126,10 @@ public class Functionality implements IFunctionality{
 	 * Fra index {0;9} indeholder listen objekter med parametrerne null.
 	 * Derfor bruges catch p� NullPointerException, s� man ikke kan tilg� disse objekter.  
 	 */
-	public boolean testId(int i) throws DALException {
+	public boolean testId(String inputID) throws DALException {
 		try {
-			return (i == oprDAO.getOperatoer(i).getOprId());
+			int id = Integer.parseInt(inputID);
+			return (id == oprDAO.getOperatoer(id).getOprId());
 		}
 
 		catch (IndexOutOfBoundsException e) {
@@ -136,7 +138,10 @@ public class Functionality implements IFunctionality{
 		catch (NullPointerException f) {
 			throw new DALException("ID findes ikke");
 		}
-		catch (DALException g) {
+		catch(NumberFormatException g){
+			return false;
+		}
+		catch (DALException h) {
 			return false;
 		}
 	}
@@ -205,7 +210,9 @@ public class Functionality implements IFunctionality{
 			}
 		}
 		if (newPassword.length() >= 6 && differentTypes >= 3) {
-			oprDAO.getOperatoer(oprId).setPassword(newPassword);
+			OperatoerDTO opr = oprDAO.getOperatoer(oprId);
+			opr.setPassword(newPassword);
+			oprDAO.updateOperatoer(opr);
 			return true;
 		}
 

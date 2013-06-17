@@ -23,7 +23,7 @@ public class MySQLOperatoerDAO implements IOperatoerDAO {
 	    	
 	    }
 	    catch (SQLException e) {e.printStackTrace(); throw new DALException(e); }
-	    catch (Exception e) {e.printStackTrace(); throw new DALException(e); }
+	    catch (Exception e) {throw new DALException(e); }
 	}
 	public OperatoerDTO getHighestOprID() throws DALException {
 		try {
@@ -33,7 +33,7 @@ public class MySQLOperatoerDAO implements IOperatoerDAO {
 	    	
 	    }
 	    catch (SQLException e) {e.printStackTrace(); throw new DALException(e); }
-	    catch (Exception e) {e.printStackTrace(); throw new DALException(e); }
+	    catch (Exception e) {throw new DALException(e); }
 	}
 	
 	public void createOperatoer(OperatoerDTO opr) throws DALException {		
