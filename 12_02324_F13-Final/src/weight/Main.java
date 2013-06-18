@@ -28,7 +28,7 @@ public class Main {
 		System.out.println("Streng modtaget: "+inline) ;
 		System.out.println(" ");
 		System.out.println("Denne vægt simulator lytter på ordrene:");
-		System.out.println("D, DN, S, T, B, Q ");
+		System.out.println("D, DN, S, T, B, Q, RM20, RM30, RM39, RM49, P121");
 		System.out.println("på kommunikationsporten. ");
 		System.out.println(" ");
 		System.out.println("*************************************************");
