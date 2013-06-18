@@ -1,4 +1,4 @@
-package java_ASE;
+package ase;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -13,7 +13,7 @@ public class Main {
 		new Connector();
 		Sequences s = new Sequences();
 
-		Socket clientSocket = new Socket("169.254.2.2", 8000);
+		Socket clientSocket = new Socket("localhost", 8000);
 
 		DataOutputStream outToServer = new DataOutputStream(
 				clientSocket.getOutputStream());
