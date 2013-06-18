@@ -148,18 +148,24 @@ public class Functionality implements IFunctionality{
 	/**
 	 * Her sammenlignes pb id fra brugerinput med eksisterende id'er i vores Array på samme måde som ovenover.
 	 */
+	
+	
 	public boolean testPbId(int i) throws DALException {
 		try {
 			return (i == produktBatchDAO.getProduktBatch(i).getPbId());
 		}
-
+	
 		catch (IndexOutOfBoundsException e) {
 			throw new DALException("ID findes ikke");
 		}
 		catch (NullPointerException f) {
 			throw new DALException("ID findes ikke");
 		}
+		catch (DALException h) {
+			return false;
+		}
 	}
+
 
 	public boolean testRaavareBatchId(int i) throws DALException {
 		try {

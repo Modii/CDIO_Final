@@ -93,7 +93,7 @@ public class Sequences {
 	}
 
 	//-----------------------------------------------------------------
-	// (5)	Operatør indtaster produktbatchnummer
+	// (5)	Operat¯r indtaster produktbatchnummer
 	//-----------------------------------------------------------------
 	public void sequence5(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
 	{
@@ -101,53 +101,52 @@ public class Sequences {
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
-
+	
 		if(data.getServerInput().equals("RM20 B"))
 		{
 			data.setServerInput(inFromServer.readLine());
 			data.setSplittedInput(data.getServerInput().split(" "));
 			data.setPbID(Integer.parseInt(data.getSplittedInput()[2].replaceAll("\"","")));
-
-			//			 Ikke eksisterende PbID
-			//						if(!mPb.getProduktBatchList().contains(mPb.getProduktBatch(data.getPbID()))){
-			//							data.setWeightMsg("Dette produktbatch ID eksisterer ikke!");
-			//							outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
-			//							outToServer.flush();
-			//							data.setServerInput(inFromServer.readLine());
-			//			
-			//							if(data.getServerInput().equals("RM49 B")){
-			//								data.setServerInput(inFromServer.readLine());
-			//								if(data.getServerInput().equals("RM49 A 1"))
-			//									this.sequence5(inFromServer, outToServer);	
-			//								}
-			//							else
-			//								this.sequence5(inFromServer, outToServer);
-			//						}
-
+			
+			// Ikke eksisterende PbID
+			if (!func.testPbId(data.getPbID())) {
+				System.out.println("Erm den virker vidst");
+				data.setWeightMsg("Dette produktbatch ID eksisterer ikke!");
+				outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");
+				outToServer.flush();
+				data.setServerInput(inFromServer.readLine());
+	
+				if (data.getServerInput().equals("RM49 B")) {
+					data.setServerInput(inFromServer.readLine());
+					if (data.getServerInput().equals("RM49 A 1"))
+						this.sequence5(inFromServer, outToServer);
+				} else
+					this.sequence5(inFromServer, outToServer);
+			}
+			
 			// ALLEREDE AFSLUTTET PB (Status=2)
 			if(mPb.getProduktBatch(data.getPbID()).getStatus() == 2){
 				data.setWeightMsg("Produktbatch allerede afsluttet!");
 				outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
 				outToServer.flush();
 				data.setServerInput(inFromServer.readLine());
-
+	
 				if(data.getServerInput().equals("RM49 B")){
 					data.setServerInput(inFromServer.readLine());
 					if(data.getServerInput().equals("RM49 A 1"))
 						this.sequence5(inFromServer, outToServer);	
-				}
+					}
 				else
 					this.sequence5(inFromServer, outToServer);
 			}
 			data.setReceptID(mPb.getProduktBatch(data.getPbID()).getReceptId());
 			data.setListen(mRecKomp.getReceptKompList(data.getReceptID()));
-
+	
 			this.sequence6(inFromServer, outToServer);
 		}
 		else
 			this.sequence3(inFromServer, outToServer);
-	}
-
+		}
 
 	//-----------------------------------------------------------------
 	// (6)	Vægten svarer tilbage med navn på recept
