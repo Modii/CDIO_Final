@@ -425,8 +425,8 @@ public class Sequences {
 		} catch (DALException e) {
 			e.printStackTrace();
 		}
-		data.setWeightMsg("Produktionsforskrift gennemfoert. Tryk OK for at paabegynde en ny afvejningsprocedure eller CANCEL for at afslutte programmet.");
-		outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
+		data.setWeightMsg("Produktionsforskrift gennemfoert. Tryk OK for at paabegynde en ny afvejningsprocedure eller sluk vaegten.");
+		outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
 		if(data.getServerInput().equals("RM49 B"))
@@ -434,9 +434,6 @@ public class Sequences {
 			data.setServerInput(inFromServer.readLine());
 			if(data.getServerInput().equals("RM49 A 1")){
 				this.sequence3(inFromServer, outToServer);
-			}
-			else if(data.getServerInput().equals("RM49 A 2")){
-				// Afslut.
 			}
 			else this.sequence17(inFromServer, outToServer);
 		}
