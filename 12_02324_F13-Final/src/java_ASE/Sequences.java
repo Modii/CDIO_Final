@@ -107,7 +107,23 @@ public class Sequences {
 			data.setSplittedInput(data.getServerInput().split(" "));
 			data.setPbID(Integer.parseInt(data.getSplittedInput()[2].replaceAll("\"","")));
 			
-			// ALLEREDE AFSLUTTET PB
+			// Ikke eksisterende PbID
+//			if(!mPb.getProduktBatchList().contains(mPb.getProduktBatch(data.getPbID()))){
+//				data.setWeightMsg("Dette produktbatch ID eksisterer ikke!");
+//				outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
+//				outToServer.flush();
+//				data.setServerInput(inFromServer.readLine());
+//
+//				if(data.getServerInput().equals("RM49 B")){
+//					data.setServerInput(inFromServer.readLine());
+//					if(data.getServerInput().equals("RM49 A 1"))
+//						this.sequence5(inFromServer, outToServer);	
+//					}
+//				else
+//					this.sequence5(inFromServer, outToServer);
+//			}
+				
+			// ALLEREDE AFSLUTTET PB (Status=2)
 			if(mPb.getProduktBatch(data.getPbID()).getStatus() == 2){
 				data.setWeightMsg("Produktbatch allerede afsluttet!");
 				outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
@@ -129,7 +145,8 @@ public class Sequences {
 		}
 		else
 			this.sequence3(inFromServer, outToServer);
-	}
+			}
+	
 
 	//-----------------------------------------------------------------
 	// (6)	Vægten svarer tilbage med navn på recept
