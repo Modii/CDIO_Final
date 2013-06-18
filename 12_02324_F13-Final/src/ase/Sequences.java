@@ -14,6 +14,7 @@ import db_mysqldao.MySQLReceptDAO;
 import db_mysqldao.MySQLReceptKompDAO;
 import dto.ProduktBatchDTO;
 import dto.ProduktBatchKompDTO;
+import dto.RaavareBatchDTO;
 
 public class Sequences {
 
@@ -106,23 +107,23 @@ public class Sequences {
 			data.setServerInput(inFromServer.readLine());
 			data.setSplittedInput(data.getServerInput().split(" "));
 			data.setPbID(Integer.parseInt(data.getSplittedInput()[2].replaceAll("\"","")));
-			
-			// Ikke eksisterende PbID
-//			if(!mPb.getProduktBatchList().contains(mPb.getProduktBatch(data.getPbID()))){
-//				data.setWeightMsg("Dette produktbatch ID eksisterer ikke!");
-//				outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
-//				outToServer.flush();
-//				data.setServerInput(inFromServer.readLine());
-//
-//				if(data.getServerInput().equals("RM49 B")){
-//					data.setServerInput(inFromServer.readLine());
-//					if(data.getServerInput().equals("RM49 A 1"))
-//						this.sequence5(inFromServer, outToServer);	
-//					}
-//				else
-//					this.sequence5(inFromServer, outToServer);
-//			}
-				
+
+			//			 Ikke eksisterende PbID
+			//						if(!mPb.getProduktBatchList().contains(mPb.getProduktBatch(data.getPbID()))){
+			//							data.setWeightMsg("Dette produktbatch ID eksisterer ikke!");
+			//							outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
+			//							outToServer.flush();
+			//							data.setServerInput(inFromServer.readLine());
+			//			
+			//							if(data.getServerInput().equals("RM49 B")){
+			//								data.setServerInput(inFromServer.readLine());
+			//								if(data.getServerInput().equals("RM49 A 1"))
+			//									this.sequence5(inFromServer, outToServer);	
+			//								}
+			//							else
+			//								this.sequence5(inFromServer, outToServer);
+			//						}
+
 			// ALLEREDE AFSLUTTET PB (Status=2)
 			if(mPb.getProduktBatch(data.getPbID()).getStatus() == 2){
 				data.setWeightMsg("Produktbatch allerede afsluttet!");
@@ -134,7 +135,7 @@ public class Sequences {
 					data.setServerInput(inFromServer.readLine());
 					if(data.getServerInput().equals("RM49 A 1"))
 						this.sequence5(inFromServer, outToServer);	
-					}
+				}
 				else
 					this.sequence5(inFromServer, outToServer);
 			}
@@ -145,8 +146,8 @@ public class Sequences {
 		}
 		else
 			this.sequence3(inFromServer, outToServer);
-			}
-	
+	}
+
 
 	//-----------------------------------------------------------------
 	// (6)	Vægten svarer tilbage med navn på recept
@@ -333,10 +334,28 @@ public class Sequences {
 			outToServer.flush();
 			data.setServerInput(inFromServer.readLine());
 			data.setServerInput(inFromServer.readLine());
-			this.sequence14(inFromServer, outToServer);
+
+			if(mRaaB.getRaavareBatch(data.getRbID()).getMaengde() > mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto())
+				this.sequence14(inFromServer, outToServer);
+			else 
+			{
+				data.setWeightMsg("Der er ikke nok '" + mRaa.getRaavare(mRaaB.getRaavareBatch(data.getRbID()).getRaavareId()).getRaavareNavn() + "' i raavarebatchen. Vaelg venligst en raavarebatch.");
+				outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
+				data.setServerInput(inFromServer.readLine());
+
+				if(data.getServerInput().equals("RM49 B"))
+				{
+					data.setServerInput(inFromServer.readLine());
+					if(data.getServerInput().equals("RM49 A 1"))
+						this.sequence13(inFromServer, outToServer);
+
+					else 
+						this.sequence13(inFromServer, outToServer);
+				}
+				else
+					this.sequence13(inFromServer, outToServer);
+			}	
 		}
-		else
-			this.sequence13(inFromServer, outToServer);
 	}
 	//-----------------------------------------------------------------
 	// (14) Bruger afvejer og trykker ok.
@@ -373,6 +392,11 @@ public class Sequences {
 				{
 					if(data.getServerInput().startsWith("S S"))
 					{
+
+						RaavareBatchDTO raavareBatch = mRaaB.getRaavareBatch(data.getRbID());
+						raavareBatch.setMaengde(raavareBatch.getMaengde() - data.getNetto());
+						mRaaB.updateRaavareBatch(raavareBatch);
+
 						mPbKomp.createProduktBatchKomp(new ProduktBatchKompDTO(data.getPbID(), data.getRbID(), data.getTara(), data.getNetto(), data.getOprID()));
 						ProduktBatchDTO produktBatch = mPb.getProduktBatch(data.getPbID());
 						produktBatch.setStatus(1);
@@ -383,7 +407,7 @@ public class Sequences {
 				}
 				else
 				{
-					data.setWeightMsg("Ugyldig vejning. Maengden skal være mellem " + totNegTol + " kg og " + totPosTol + " kg ifoelge databasens veardier.");
+					data.setWeightMsg("Ugyldig vejning. Den nominelle nettoveagt skal være mellem " + totNegTol + " kg og " + totPosTol + " kg ifoelge databasens toleranceveardier.");
 					outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
 					data.setServerInput(inFromServer.readLine());
 					data.setServerInput(inFromServer.readLine());
@@ -394,7 +418,7 @@ public class Sequences {
 		}
 		else this.sequence14(inFromServer, outToServer);
 	}
-	
+
 	//-----------------------------------------------------------------
 	// (17) Systemet spørger om der skal startes forfra eller afsluttes
 	//-----------------------------------------------------------------	
