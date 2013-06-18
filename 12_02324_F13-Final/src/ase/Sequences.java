@@ -326,6 +326,23 @@ public class Sequences {
 
 		if(data.getServerInput().equals("RM20 B"))
 		{
+			if(mRaaB.getRaavareBatch(data.getRbID()).getMaengde() < mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto())
+			{
+				data.setWeightMsg("Der er ikke nok '" + mRaa.getRaavare(mRaaB.getRaavareBatch(data.getRbID()).getRaavareId()).getRaavareNavn() + "' i raavarebatchen. Vaelg venligst en anden raavarebatch.");
+				outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
+				data.setServerInput(inFromServer.readLine());
+				if(data.getServerInput().equals("RM49 B"))
+				{
+					data.setServerInput(inFromServer.readLine());
+					if(data.getServerInput().equals("RM49 A 1"))
+						this.sequence13(inFromServer, outToServer);
+					else 
+						this.sequence13(inFromServer, outToServer);
+				}
+				else
+					this.sequence13(inFromServer, outToServer);
+			}	
+
 			data.setServerInput(inFromServer.readLine());
 			data.setSplittedInput(data.getServerInput().split(" "));
 			data.setRbID(Integer.parseInt(data.getSplittedInput()[2].replaceAll("\"","")));
@@ -335,26 +352,7 @@ public class Sequences {
 			data.setServerInput(inFromServer.readLine());
 			data.setServerInput(inFromServer.readLine());
 
-			if(mRaaB.getRaavareBatch(data.getRbID()).getMaengde() > mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto())
-				this.sequence14(inFromServer, outToServer);
-			else 
-			{
-				data.setWeightMsg("Der er ikke nok '" + mRaa.getRaavare(mRaaB.getRaavareBatch(data.getRbID()).getRaavareId()).getRaavareNavn() + "' i raavarebatchen. Vaelg venligst en raavarebatch.");
-				outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
-				data.setServerInput(inFromServer.readLine());
 
-				if(data.getServerInput().equals("RM49 B"))
-				{
-					data.setServerInput(inFromServer.readLine());
-					if(data.getServerInput().equals("RM49 A 1"))
-						this.sequence13(inFromServer, outToServer);
-
-					else 
-						this.sequence13(inFromServer, outToServer);
-				}
-				else
-					this.sequence13(inFromServer, outToServer);
-			}	
 		}
 	}
 	//-----------------------------------------------------------------
