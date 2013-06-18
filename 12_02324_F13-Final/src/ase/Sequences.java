@@ -323,23 +323,19 @@ public class Sequences {
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
-		data.setServerInput(inFromServer.readLine());
-		data.setSplittedInput(data.getServerInput().split(" "));
-		data.setRbID(Integer.parseInt(data.getSplittedInput()[2].replaceAll("\"","")));
 
 		if(data.getServerInput().equals("RM20 B"))
 		{
+			data.setServerInput(inFromServer.readLine());
+			data.setSplittedInput(data.getServerInput().split(" "));
+			data.setRbID(Integer.parseInt(data.getSplittedInput()[2].replaceAll("\"","")));
 			if(mRaaB.getRaavareBatch(data.getRbID()).getMaengde() < mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto())
 			{
 				data.setWeightMsg("Der er ikke nok '" + mRaa.getRaavare(mRaaB.getRaavareBatch(data.getRbID()).getRaavareId()).getRaavareNavn() + "' i raavarebatchen. Vaelg venligst en anden raavarebatch.");
 				outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
 				data.setServerInput(inFromServer.readLine());
-				if(data.getServerInput().equals("RM49 B"))
-				{
+				if(data.getServerInput().equals("RM49 B")){
 					data.setServerInput(inFromServer.readLine());
-					if(data.getServerInput().equals("RM49 A 1"))
-						this.sequence13(inFromServer, outToServer);
-					else 
 						this.sequence13(inFromServer, outToServer);
 				}
 				else
@@ -351,9 +347,9 @@ public class Sequences {
 			outToServer.flush();
 			data.setServerInput(inFromServer.readLine());
 			data.setServerInput(inFromServer.readLine());
-
-
+			this.sequence14(inFromServer, outToServer);
 		}
+		else this.sequence13(inFromServer, outToServer);
 	}
 	//-----------------------------------------------------------------
 	// (14) Bruger afvejer og trykker ok.
