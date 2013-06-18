@@ -43,7 +43,7 @@ public class ProduktBatches {
 		for (int i=0; i < produktbatch.size(); i++) {
 			produktbatchid = produktbatch.get(i).getPbId();
 			receptid = produktbatch.get(i).getReceptId();
-			dato = produktbatch.get(i).getDato();
+			dato = produktbatch.get(i).getStartDato();
 			status = produktbatch.get(i).getStatus();
 			html += "<tr><td>"+produktbatchid+"</td><td>"+receptid+"</td><td>"+dato+"</td><td>"+statusToString(status)+"</td></tr>";
 		}
@@ -76,13 +76,14 @@ public class ProduktBatches {
 		int status = Integer.parseInt(request.getParameter("status"));
 		Calendar d = Calendar.getInstance();
 		DecimalFormat df = new DecimalFormat("00");
-		String dato = d.get(Calendar.YEAR) + "-"
+		String startDato = d.get(Calendar.YEAR) + "-"
 		+ df.format(d.get(Calendar.MONTH) + 1) + "-"
 		+ df.format(d.get(Calendar.DATE)) + " "
 		+ df.format(d.get(Calendar.HOUR_OF_DAY)) + ":"
 		+ df.format(d.get(Calendar.MINUTE)) + ":"
 		+ df.format(d.get(Calendar.SECOND));
-		funktionalitetsLaget.getProduktBatchDAO().createProduktBatch(new ProduktBatchDTO(produktbatchid,receptid,dato,status));
+		String slutDato = null;
+		funktionalitetsLaget.getProduktBatchDAO().createProduktBatch(new ProduktBatchDTO(produktbatchid,receptid,startDato, slutDato, status));
 		
 		int receptId;
 		String receptNavn;

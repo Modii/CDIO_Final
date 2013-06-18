@@ -16,7 +16,7 @@ public class MySQLProduktBatchDAO implements IProduktBatchDAO{
 		ResultSet rs = Connector.doQuery("SELECT * FROM Produktbatch WHERE pbId = " + pbId);
 		try{
 			if (!rs.first()) throw new DALException("Produktbatchen " + pbId + " findes ikke");
-			return new ProduktBatchDTO(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4));
+			return new ProduktBatchDTO(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getInt(5));
 		}
 		catch(SQLException e){
 			throw new DALException(e);
@@ -31,7 +31,7 @@ public class MySQLProduktBatchDAO implements IProduktBatchDAO{
 		{
 			while (rs.next()) 
 			{
-				list.add(new ProduktBatchDTO(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4)));
+				list.add(new ProduktBatchDTO(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getInt(5)));
 			}
 		}
 		catch (SQLException e) { throw new DALException(e); }
@@ -43,9 +43,9 @@ public class MySQLProduktBatchDAO implements IProduktBatchDAO{
 			throws DALException {
 
 		Connector.doUpdate(
-				"INSERT INTO Produktbatch(pbId, receptId, dato, status) VALUES " +
+				"INSERT INTO Produktbatch(pbId, receptId, startDato, slutDato, status) VALUES " +
 						"(" + produktbatch.getPbId() + ", '" + produktbatch.getReceptId() + 
-						"', '" + produktbatch.getDato() + "', '" + produktbatch.getStatus() + "')"
+						"', '" + produktbatch.getStartDato() + "', '" + produktbatch.getSlutDato() + "', '" + produktbatch.getStatus() + "')"
 				);
 
 	}
@@ -56,7 +56,8 @@ public class MySQLProduktBatchDAO implements IProduktBatchDAO{
 
 		Connector.doUpdate(
 				"UPDATE Produktbatch SET  receptId = '" + produktbatch.getReceptId() + "', " +
-						"dato =  '" + produktbatch.getDato() + "', " +
+						"startDato =  '" + produktbatch.getStartDato() + "', " +
+						"slutDato =  '" + produktbatch.getSlutDato() + "', " +
 						"status =  '" + produktbatch.getStatus() + "' WHERE pbId = " +
 						produktbatch.getPbId());
 
