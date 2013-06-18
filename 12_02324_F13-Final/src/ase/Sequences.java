@@ -323,6 +323,9 @@ public class Sequences {
 		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
 		outToServer.flush();
 		data.setServerInput(inFromServer.readLine());
+		data.setServerInput(inFromServer.readLine());
+		data.setSplittedInput(data.getServerInput().split(" "));
+		data.setRbID(Integer.parseInt(data.getSplittedInput()[2].replaceAll("\"","")));
 
 		if(data.getServerInput().equals("RM20 B"))
 		{
@@ -343,9 +346,6 @@ public class Sequences {
 					this.sequence13(inFromServer, outToServer);
 			}	
 
-			data.setServerInput(inFromServer.readLine());
-			data.setSplittedInput(data.getServerInput().split(" "));
-			data.setRbID(Integer.parseInt(data.getSplittedInput()[2].replaceAll("\"","")));
 			data.setWeightMsg("Du har valgt: " + mRaa.getRaavare(mRaaB.getRaavareBatch(data.getRbID()).getRaavareId()).getRaavareNavn() + ". Tryk OK for at paabegynde afvejning. Naar den oenskede maengde er afvejet, tryk da paa AFVEJ");
 			outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
 			outToServer.flush();
