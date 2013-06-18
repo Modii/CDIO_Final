@@ -25,7 +25,9 @@ public class Server implements Runnable{
 			instream = new BufferedReader(new InputStreamReader(Main.sock.getInputStream()));
 			outstream = new DataOutputStream(Main.sock.getOutputStream());
 			Main.printmenu();
+			outstream.writeBytes("I4 A \"3154308\"\r\n");
 			while (!(Main.inline = instream.readLine().toUpperCase()).isEmpty()){
+				System.out.println("Streng modtaget:"+Main.inline);
 				if(Main.inline.startsWith("CP")){
 					portdst = (instream.read());
 				}
@@ -39,13 +41,23 @@ public class Server implements Runnable{
 					outstream.writeBytes("DB"+"\r\n");
 				}
 				else if (Main.inline.startsWith("T")){
-					outstream.writeBytes("T " + (Main.tara) + " kg "+"\r\n");
 					Main.tara=Main.brutto;
+					outstream.writeBytes("T S      " + (Main.tara) + " kg "+"\r\n");
 					Main.printmenu();
 				}
 				else if (Main.inline.startsWith("S")){
 					Main.printmenu();
-					outstream.writeBytes("S " + (Main.brutto-Main.tara)+ " kg " +"\r\n");
+					outstream.writeBytes("S S      " + (Main.brutto-Main.tara)+ " kg " +"\r\n");
+					outstream.flush();
+				}
+				else if (Main.inline.startsWith("DW")){
+					Main.printmenu();
+					outstream.writeBytes("DW A\r\n");
+					outstream.flush();
+				}
+				else if (Main.inline.startsWith("P121")){
+					Main.printmenu();
+					outstream.writeBytes("P121 A\r\n");
 					outstream.flush();
 				}
 				else if (Main.inline.startsWith("RM20")){
@@ -53,9 +65,39 @@ public class Server implements Runnable{
 						String[] temp = Main.inline.split("\"");
 						Main.IndstruktionsDisplay = temp[1];
 						Main.printmenu();
-						outstream.writeBytes("RM20 B \r\n");
+						outstream.writeBytes("RM20 B\r\n");
 						lock.wait();
 						outstream.writeBytes("RM20 A \"" + Local.getSvar() + "\"\r\n");
+						outstream.flush();
+					}
+				}
+				else if (Main.inline.startsWith("RM30")){
+						String[] temp = Main.inline.split("\""); //KNAPPENAVN
+						Local.setKnap(temp[1]);
+						outstream.writeBytes("RM30 B\r\n");
+						outstream.flush();
+				}
+				else if (Main.inline.startsWith("RM39")){
+					synchronized(lock){
+						outstream.writeBytes("RM39 A\r\n");
+						outstream.flush();
+						Main.IndstruktionsDisplay = "Knap tilfoejet: "+Local.getKnap();
+						Main.printmenu();
+						lock.wait();
+						outstream.writeBytes("RM30 A 1\r\n");
+					}
+				}
+				else if (Main.inline.startsWith("RM49")){
+					synchronized(lock){
+						String[] temp = Main.inline.split("\"");
+						Main.IndstruktionsDisplay = temp[1];
+						Main.printmenu();
+						outstream.writeBytes("RM49 B\r\n");
+						lock.wait();
+						if (Local.getSvar().equals("OK")) 
+							outstream.writeBytes("RM49 A 1\r\n");
+						else if (Local.getSvar().equals("CANCEL"))
+							outstream.writeBytes("RM49 A 2\r\n");
 						outstream.flush();
 					}
 				}
@@ -79,7 +121,8 @@ public class Server implements Runnable{
 			}
 		}
 		catch (Exception e){
-			System.out.println("Exception: "+e.getMessage());
+			System.out.println("Exception: ");
+			e.printStackTrace();
 		}
 	}
 

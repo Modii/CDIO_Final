@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class Local implements Runnable {
 
 	private static String svar;
+	private static String knappeNavn;
 
 	public void run(){
 		Scanner scan = new Scanner(System.in);
@@ -34,6 +35,25 @@ public class Local implements Runnable {
 						Main.printmenu();
 					}
 				}
+				else if(input.equals("O")){
+					synchronized (Server.getLock()) {
+						svar = "OK";
+						Server.getLock().notify();
+						Main.printmenu();
+					}
+				}
+				else if(input.equals("C")){
+					synchronized (Server.getLock()) {
+						svar = "CANCEL";
+						Server.getLock().notify();
+						Main.printmenu();
+					}
+				}
+				else if (input.equals(getKnap())) {
+					synchronized (Server.getLock()) {
+						Server.getLock().notify();
+					}
+				}
 
 			}
 		}
@@ -44,6 +64,12 @@ public class Local implements Runnable {
 
 	public static String getSvar(){
 		return svar;
+	}
+	public static void setKnap(String knappeNavn){
+		Local.knappeNavn = knappeNavn;
+	}
+	public static String getKnap() {
+		return Local.knappeNavn;
 	}
 }
 

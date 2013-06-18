@@ -36,6 +36,9 @@ public class Main {
 		System.out.println("Tast 'B' for ny brutto (eksempel: \" B 20.5 \").");
 		System.out.println("Tast 'Q' for at slukke vægten.");
 		System.out.println("Tast 'S' efterfulgt af dit svar for at svare på forespørgsel (eksempel: \" S 'svar' \").");
+		System.out.println("Tast 'O' for at trykke OK");
+		System.out.println("Tast 'C' for at trykke CANCEL");
+		System.out.println("Tast 'knappenavn' for at trykke på en tilfoejet knap.");
 		System.out.println(" ");
 		System.out.println("*************************************************");
 		System.out.print ("Tast her: ");
