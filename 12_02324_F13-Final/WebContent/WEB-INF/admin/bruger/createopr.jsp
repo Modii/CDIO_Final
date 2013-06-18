@@ -22,7 +22,7 @@
 		</select> <br> <input type="submit" value="Opret Operatør"
 			name="createopr_submit">
 	</form>
-	${succes} ${password}
+	${succes} ${password} ${fail}
 
 	<form action="" method="POST">
 		<br> <br> <br> <br> <input type="submit"

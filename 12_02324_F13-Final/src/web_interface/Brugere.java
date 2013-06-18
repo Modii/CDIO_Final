@@ -76,10 +76,9 @@ public class Brugere {
 		String navn = request.getParameter("navn");
 		String init = request.getParameter("init");
 		String cpr = request.getParameter("cpr");
+		cpr = cpr.replace("-", "");
 		String newPw = funktionalitetsLaget.generatePassword();
 		int aktoer = Integer.parseInt(request.getParameter("aktoer"));
-		funktionalitetsLaget.getOprDAO().createOperatoer(new OperatoerDTO(id, navn, init, cpr, newPw, aktoer));
-		request.setAttribute("password", "<br>Brugerens password er: " + newPw);
 		int oprID = 0;
 		try {
 			oprID = funktionalitetsLaget.getOprDAO().getHighestOprID().getOprId()+1;
@@ -87,7 +86,22 @@ public class Brugere {
 			e.printStackTrace();
 		}
 		request.setAttribute("autoid", oprID);
-		request.setAttribute("succes", "Operatør oprettet!");
+		String errorMsg = "";
+		if (navn.length() == 0)
+			errorMsg = "Navn er ikke defineret! ";
+		if (init.length() == 0)
+			errorMsg += "Initialer er ikke defineret! ";
+		if (cpr.length() == 0)
+			errorMsg += "CPR-nummeret er ikke defineret! ";
+		if (cpr.length() != 10)
+			errorMsg += "Et CPR nummer er 10 cifre!";
+		if (errorMsg.length() == 0) {
+			funktionalitetsLaget.getOprDAO().createOperatoer(new OperatoerDTO(id, navn, init, cpr, newPw, aktoer));
+			request.setAttribute("password", "<br>Brugerens password er: " + newPw);
+			request.setAttribute("succes", "Operatør oprettet!");
+		}
+		else
+			request.setAttribute("fail", errorMsg);
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/createopr.jsp").forward(request, response);
 	}
 
