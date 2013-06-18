@@ -329,11 +329,11 @@ public class Sequences {
 		outToServer.writeBytes("DW" + "\r\n"); // Skifter til vejedisplay
 		data.setServerInput(inFromServer.readLine());
 
-		double tolerance = ((mRaaB.getRaavareBatch(data.getRbID()).getMaengde()) * (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getTolerance()) / 100);
-		double totPosTol = mRaaB.getRaavareBatch(data.getRbID()).getMaengde() + tolerance;
-		double totNegTol = mRaaB.getRaavareBatch(data.getRbID()).getMaengde() - tolerance;
-		outToServer.writeBytes("P121 " + mRaaB.getRaavareBatch(data.getRbID()).getMaengde() + " kg " + tolerance + " kg " + tolerance + " kg " + "\r\n"); // Tilføjer tolerencepil
-		System.out.println("Linje:" + "P121 " + mRaaB.getRaavareBatch(data.getRbID()).getMaengde() + " g " + tolerance + " g " + tolerance + " g " + "\r\n");
+		double tolerance = ((mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) * (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getTolerance()) / 100);
+		double totPosTol = (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) + tolerance;
+		double totNegTol = (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) - tolerance;
+		outToServer.writeBytes("P121 " + mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto() + " kg " + tolerance + " kg " + tolerance + " kg " + "\r\n"); // Tilføjer tolerencepil
+		System.out.println("Linje:" + "P121 " + mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto() + " g " + tolerance + " g " + tolerance + " g " + "\r\n");
 		data.setServerInput(inFromServer.readLine());
 
 		String temp1 = "afvej";
