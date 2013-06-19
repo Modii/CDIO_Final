@@ -30,252 +30,159 @@ public class Sequences {
 	private Other other = new Other();
 
 	//-----------------------------------------------------------------
-	// (2)	Opstart
+	// (1)	Opstart
+	//-----------------------------------------------------------------
+	public void sequence1(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
+
+	{
+		data.setServerInput(inFromServer.readLine());
+		this.sequence2(inFromServer, outToServer);
+	}
+
+	//-----------------------------------------------------------------
+	// (2)	Operatør indtaster operatørnummer og vægten svarer tilbage med navn og godkendes af bruger.
 	//-----------------------------------------------------------------
 	public void sequence2(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
-
 	{
-		data.setServerInput(inFromServer.readLine());
-		this.sequence3(inFromServer, outToServer);
+		try {
+			this.RMPrintOgRead(20, 8, "Indtast operatoernummer", inFromServer, outToServer);
+			this.tjekForFejl(2, data.getServerInput(), inFromServer, outToServer);
+			data.setOprID(this.splitInt(inFromServer, outToServer));
+
+			if (!func.testId("" + data.getOprID())){
+				this.RMPrintOgRead(49, 2, "Dette operatoer ID eksisterer ikke!", inFromServer, outToServer);
+				this.tjekForFejl(2, data.getServerInput(), inFromServer, outToServer);
+				data.setServerInput(inFromServer.readLine());
+				this.tjekForFejl(2, data.getServerInput(), inFromServer, outToServer);
+				this.sequence2(inFromServer, outToServer);
+			}
+			else{
+				String weightMsg = "Operatoer: " + mOpr.getOperatoer(data.getOprID()).getOprNavn() + ". Tryk OK for at bruge det valgte ID eller CANCEL for at vaelge et andet.";
+				this.RMPrintOgRead(49, 4, weightMsg, inFromServer, outToServer);
+				this.tjekForFejl(2, data.getServerInput(), inFromServer, outToServer);
+				data.setServerInput(inFromServer.readLine());
+				if(data.getServerInput().equals("RM49 A 1"))
+					this.sequence3(inFromServer, outToServer);
+				else if(data.getServerInput().equals("RM49 A 2"))
+					this.sequence2(inFromServer, outToServer);
+			}
+		} catch (DALException e) {
+			e.printStackTrace();
+		}
 	}
 
 	//-----------------------------------------------------------------
-	// (3)	Operatør indtaster operatørnummer
+	// (3)	Operatør indtaster produktbatchnummer
 	//-----------------------------------------------------------------
-	public void sequence3(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
+	public void sequence3(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
 	{
-		data.setWeightMsg("Indtast operatoernummer");
-		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
-		outToServer.flush();
-		data.setServerInput(inFromServer.readLine());
-		if(data.getServerInput().equals("RM20 B"))
-		{
+		this.RMPrintOgRead(20, 8, "Indtast produktbatchnr.", inFromServer, outToServer);
+		this.tjekForFejl(3, data.getServerInput(), inFromServer, outToServer);
+		data.setPbID(this.splitInt(inFromServer, outToServer));
+
+		// Ikke eksisterende PbID.
+		if (!func.testPbId(data.getPbID())){
+			this.RMPrintOgRead(49, 2, "Dette produktbatch ID eksisterer ikke!", inFromServer, outToServer);
+			this.tjekForFejl(3, data.getServerInput(), inFromServer, outToServer);
 			data.setServerInput(inFromServer.readLine());
-			data.setSplittedInput(data.getServerInput().split(" "));
-			data.setOprID(Integer.parseInt(data.getSplittedInput()[2].replaceAll("\"","")));
-			this.sequence4(inFromServer, outToServer);
+			this.tjekForFejl(3, data.getServerInput(), inFromServer, outToServer);
+			this.sequence3(inFromServer, outToServer);
+		} 
+
+		// Allerede afsluttet PB (status=2).
+		else if(mPb.getProduktBatch(data.getPbID()).getStatus() == 2){
+			this.RMPrintOgRead(49, 2, "Produktbatch allerede afsluttet!", inFromServer, outToServer);
+			this.tjekForFejl(3, data.getServerInput(), inFromServer, outToServer);
+			data.setServerInput(inFromServer.readLine());
+			this.tjekForFejl(3, data.getServerInput(), inFromServer, outToServer);
+			this.sequence3(inFromServer, outToServer);	
 		}
 		else
-		{
-			System.out.println("Derp");
-			this.sequence3(inFromServer, outToServer);
-		}
+			data.setReceptID(mPb.getProduktBatch(data.getPbID()).getReceptId());
+		data.setListen(mRecKomp.getReceptKompList(data.getReceptID()));
+		this.sequence4(inFromServer, outToServer);
 	}
 
 	//-----------------------------------------------------------------
-	// (4)	Vægten svarer tilbage med navn og godkendes af bruger.
+	// (4)	Vægten svarer tilbage med navn på recept
 	//-----------------------------------------------------------------
 	public void sequence4(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
 		try {
-			if (func.testId("" + data.getOprID())){
-				data.setWeightMsg("Operatoer: " + mOpr.getOperatoer(data.getOprID()).getOprNavn() + ". Tryk OK for at bruge det valgte ID eller CANCEL for at vaelge et andet.");
-				outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
-				outToServer.flush();
-				data.setServerInput(inFromServer.readLine());
+			String weightMsg = "Recept: " + mRec.getRecept(mPb.getProduktBatch(data.getPbID()).getReceptId()).getReceptNavn() + ". Tryk OK for at bruge den valgte recept eller CANCEL for at vaelge en anden.";
+			this.RMPrintOgRead(49, 4, weightMsg, inFromServer, outToServer);
 
-				if(data.getServerInput().equals("RM49 B"))
-				{
-					data.setServerInput(inFromServer.readLine());
-					if(data.getServerInput().equals("RM49 A 1")){
-						this.sequence5(inFromServer, outToServer);
-					}
-					else if(data.getServerInput().equals("RM49 A 2")){
-						this.sequence3(inFromServer, outToServer);
-					}
-				}
-				else this.sequence3(inFromServer, outToServer);
-			}
-			else this.sequence3(inFromServer, outToServer);
-		} catch (DALException e) {
-			e.printStackTrace();
-		}
-	}
-
-	//-----------------------------------------------------------------
-	// (5)	Operatør indtaster produktbatchnummer
-	//-----------------------------------------------------------------
-	public void sequence5(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
-	{
-		data.setWeightMsg("Indtast produktbatchnr.");
-		outToServer.writeBytes("RM20 8 \"" + data.getWeightMsg() + "\" \" \" \"&3\"\r\n");
-		outToServer.flush();
-		data.setServerInput(inFromServer.readLine());
-
-		if(data.getServerInput().equals("RM20 B")){
+			this.tjekForFejl(4, data.getServerInput(), inFromServer, outToServer);
 			data.setServerInput(inFromServer.readLine());
-			data.setSplittedInput(data.getServerInput().split(" "));
-			data.setPbID(Integer.parseInt(data.getSplittedInput()[2].replaceAll("\"","")));
-			data.setReceptID(mPb.getProduktBatch(data.getPbID()).getReceptId());
-			data.setListen(mRecKomp.getReceptKompList(data.getReceptID()));
 
-			// Ikke eksisterende PbID.
-			if (!func.testPbId(data.getPbID())){
-				System.out.println("Erm den virker vidst");
-				data.setWeightMsg("Dette produktbatch ID eksisterer ikke!");
-				outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");
-				outToServer.flush();
-				data.setServerInput(inFromServer.readLine());
-
-				if (data.getServerInput().equals("RM49 B")){
-					data.setServerInput(inFromServer.readLine());
-					if (data.getServerInput().equals("RM49 A 1"))
-						this.sequence5(inFromServer, outToServer);
-				} 
-				else
-					this.sequence5(inFromServer, outToServer);
-			}
-
-			// Allerede afsluttet PB (status=2).
-			else if(mPb.getProduktBatch(data.getPbID()).getStatus() == 2){
-				data.setWeightMsg("Produktbatch allerede afsluttet!");
-				outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
-				outToServer.flush();
-				data.setServerInput(inFromServer.readLine());
-
-				if(data.getServerInput().equals("RM49 B")){
-					data.setServerInput(inFromServer.readLine());
-					if(data.getServerInput().equals("RM49 A 1"))
-						this.sequence5(inFromServer, outToServer);	
-				}
-				else
-					this.sequence5(inFromServer, outToServer);
-			}
-			else
-				this.sequence6(inFromServer, outToServer);
-		}
-		else
-			this.sequence3(inFromServer, outToServer);
-	}
-
-	//-----------------------------------------------------------------
-	// (6)	Vægten svarer tilbage med navn på recept
-	//-----------------------------------------------------------------
-	public void sequence6(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
-	{
-		try {
-			if(func.testPbId(data.getPbID())){
-				data.setWeightMsg("Recept: " + mRec.getRecept(mPb.getProduktBatch(data.getPbID()).getReceptId()).getReceptNavn() + ". Tryk OK for at bruge den valgte recept eller CANCEL for at vaelge en anden.");
-				outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
-				outToServer.flush();
-				data.setServerInput(inFromServer.readLine());
-
-				if(data.getServerInput().equals("RM49 B")){
-					data.setServerInput(inFromServer.readLine());
-					if(data.getServerInput().equals("RM49 A 1"))
-						this.sequence6_5(inFromServer, outToServer);
-					else if(data.getServerInput().equals("RM49 A 2"))
-						this.sequence5(inFromServer, outToServer);
-					else this.sequence6(inFromServer, outToServer);
-				}
-				this.sequence6(inFromServer, outToServer);
-			}
-			else
+			if(data.getServerInput().equals("RM49 A 1"))
 				this.sequence5(inFromServer, outToServer);
+			else if(data.getServerInput().equals("RM49 A 2"))
+				this.sequence3(inFromServer, outToServer);
+			else this.sequence4(inFromServer, outToServer);
 		} catch (DALException e) {
 			e.printStackTrace();
 		}
 	}
 
 	//-----------------------------------------------------------------
-	// (6,5)	Vægten fortæller Operatør hvilken råvare han skal afveje nu
+	// (5)	Vægten fortæller Operatør hvilken råvare han skal afveje nu
 	//-----------------------------------------------------------------
 
-	public void sequence6_5(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
+	public void sequence5(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
 		try{
-			System.out.println("ProduktbatchID: " + data.getPbID());
-
 			if (data.getListen().size() > 0) {
 				int id = data.getListen().get(data.getListen().size()-1).getRaavareId();
-				data.setRaavareID(id); //Gemmer raavareID til senere brug.
-				String navn = mRaa.getRaavare(id).getRaavareNavn();
+				//Gemmer raavareID til senere brug.
+				data.setRaavareID(id);
 				data.getListen().remove(data.getListen().size()-1);
-				data.setWeightMsg("Du skal nu afveje raavaren: " + navn);
-				outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
-				outToServer.flush();
+				this.RMPrintOgRead(49, 4, "Du skal nu afveje raavaren: " + mRaa.getRaavare(id).getRaavareNavn(), inFromServer, outToServer);
+				this.tjekForFejl(5, data.getServerInput(), inFromServer, outToServer);
 				data.setServerInput(inFromServer.readLine());
-
-				if(data.getServerInput().equals("RM49 B"))
-				{
-					data.setServerInput(inFromServer.readLine());
-					if(data.getServerInput().equals("RM49 A 1")){
-						this.sequence7(inFromServer, outToServer);
-					}
-					else if(data.getServerInput().equals("RM49 A 2")){
-						this.sequence5(inFromServer, outToServer);
-					}
-					else this.sequence6(inFromServer, outToServer);
-				}
-				this.sequence6(inFromServer, outToServer);
+				if(data.getServerInput().equals("RM49 A 1"))
+					this.sequence6(inFromServer, outToServer);
+				else if(data.getServerInput().equals("RM49 A 2"))
+					this.sequence3(inFromServer, outToServer);
+				else this.sequence5(inFromServer, outToServer);
 			}
-			else {
+			else
 				this.sequence17(inFromServer, outToServer);
-			}
 		}
-
 		catch (DALException e) {
 			e.printStackTrace();
 		}
 	}
 
-
-
 	//-----------------------------------------------------------------
-	// (7)	Operatøren kontrollerer at vægten er ubelastet og trykker ’ok’
+	// (6)	Operatøren kontrollerer at vægten er ubelastet og trykker ’ok’
 	//-----------------------------------------------------------------
 
-	// Sekvens 7 efter reducering.
-	public void sequence7(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
+	public void sequence6(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
 	{
 		RMPrintOgRead(49, 2, "Aflast vaegten og tryk OK for at tarere.", inFromServer, outToServer);
-		tjekForFejl(7, data.getServerInput(), inFromServer, outToServer);
+		tjekForFejl(6, data.getServerInput(), inFromServer, outToServer);
 		data.setServerInput(inFromServer.readLine());
-		tjekForFejl(7, data.getServerInput(), inFromServer, outToServer);
-		this.sequence8(inFromServer, outToServer);
+		tjekForFejl(6, data.getServerInput(), inFromServer, outToServer);
+		this.sequence7(inFromServer, outToServer);
 	}
 
-	// Sekvens 7 før reducering.
-	//
-	//	public void sequence7(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
-	//	{
-	//		data.setWeightMsg("Aflast vaegten og tryk OK for at tarere.");
-	//		outToServer.writeBytes("RM49 2 \"" + data.getWeightMsg() + "\"\r\n");	
-	//		outToServer.flush();
-	//		data.setServerInput(inFromServer.readLine());
-	//	if(data.getServerInput().equals("RM49 B"))
-	//	{
-	//		data.setServerInput(inFromServer.readLine());
-	//		if(data.getServerInput().equals("RM49 A 1")){
-	//			this.sequence8(inFromServer, outToServer);
-	//		}
-	//		else {
-	//			this.sequence7(inFromServer, outToServer);
-	//		}
-	//	}
-	//	else {
-	//		this.sequence7(inFromServer, outToServer);
-	//	}
-	//}
-
-
-
 	//-----------------------------------------------------------------
-	// (8) Vægt tareres
+	// (7) Vægt tareres
 	//-----------------------------------------------------------------	
 
-	public void sequence8(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException{
+	public void sequence7(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException{
 
 		outToServer.writeBytes("T\r\n");
 		data.setServerInput(inFromServer.readLine());
 		if(data.getServerInput().startsWith("T S")){
 			this.sequence9_10(inFromServer, outToServer);
 		}
-		else this.sequence8(inFromServer, outToServer);
+		else this.sequence7(inFromServer, outToServer);
 	}
 
 	//-----------------------------------------------------------------
-	// (9_10) Vægt beder om første tara-beholder.
+	// (8) Vægt beder om første tara-beholder.
 	//-----------------------------------------------------------------	
 
 	public void sequence9_10(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException{
@@ -298,7 +205,7 @@ public class Sequences {
 		}
 	}
 	//-----------------------------------------------------------------
-	// (11)	Vægtdisplay beder om evt. tara og at brugeren bekræfter. 	
+	// (9)	Vægtdisplay beder om evt. tara og at brugeren bekræfter. 	
 	//-----------------------------------------------------------------
 	public void sequence11(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
 	{
@@ -308,7 +215,7 @@ public class Sequences {
 
 	}
 	//-----------------------------------------------------------------
-	// (12) Vægt tareres
+	// (10) Vægt tareres
 	//-----------------------------------------------------------------
 	public void sequence12(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
 	{
@@ -323,7 +230,7 @@ public class Sequences {
 	}
 
 	//-----------------------------------------------------------------
-	// (13) Vægten beder om raavarebatch nummer på råvare.
+	// (11) Vægten beder om raavarebatch nummer på råvare.
 	//-----------------------------------------------------------------
 	public void sequence13(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException{
 		data.setWeightMsg("Indtast raavarebatchnr.");
@@ -346,7 +253,7 @@ public class Sequences {
 				else
 					this.sequence13(inFromServer, outToServer);
 			}	
-			
+
 			// Udregner tolerance ud fra angivet tolerance og nominel nettovægt.
 			double tolerance = ((mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) * (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getTolerance()) / 100);
 			double totPosTol = (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) + tolerance;
@@ -362,7 +269,7 @@ public class Sequences {
 		else this.sequence13(inFromServer, outToServer);
 	}
 	//-----------------------------------------------------------------
-	// (14) Bruger afvejer og trykker ok.
+	// (12) Bruger afvejer og trykker ok.
 	//-----------------------------------------------------------------
 	public void sequence14(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
 	{
@@ -374,7 +281,7 @@ public class Sequences {
 		double tolerance = ((mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) * (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getTolerance()) / 100);
 		double totPosTol = (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) + tolerance;
 		double totNegTol = (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) - tolerance;
-		
+
 		// Tilføjer tolerence-pil ud vha. udregnet tolerance.
 		outToServer.writeBytes("P121 " + mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto() + " kg " + tolerance + " kg " + tolerance + " kg " + "\r\n");
 		data.setServerInput(inFromServer.readLine());
@@ -404,7 +311,7 @@ public class Sequences {
 					ProduktBatchDTO produktBatch = mPb.getProduktBatch(data.getPbID());
 					produktBatch.setStatus(1);
 					mPb.updateProduktBatch(produktBatch);
-					this.sequence6_5(inFromServer, outToServer);
+					this.sequence5(inFromServer, outToServer);
 				}
 				else{
 					data.setWeightMsg("Ugyldig vejning. Den nominelle nettoveagt skal være mellem " + totNegTol + " kg og " + totPosTol + " kg ifoelge databasens toleranceveardier. Undgå yderligere, at vægten er i overbelastning eller underbelastning.");
@@ -440,7 +347,7 @@ public class Sequences {
 		{
 			data.setServerInput(inFromServer.readLine());
 			if(data.getServerInput().equals("RM49 A 1")){
-				this.sequence3(inFromServer, outToServer);
+				this.sequence2(inFromServer, outToServer);
 			}
 			else this.sequence17(inFromServer, outToServer);
 		}
@@ -480,51 +387,55 @@ public class Sequences {
 	// Metoden er til for at undgå bunker af if og else.
 	// Hvis vægten returnerer en acceptabel kommando, vender metoden blot tilbage til sekvensen.
 	// Kan eventuelt udvides med en RM49 2, der siger, at der opstod en fejl.
-	public void tjekForFejl(int sekvensVedFejl, String kommandoModtaget, BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException{
-		if(kommandoModtaget.contains(" B") || kommandoModtaget.contains(" A") || kommandoModtaget.contains("T S") )
-			return;
-		else if(kommandoModtaget.contains(" I") || kommandoModtaget.contains(" L") || kommandoModtaget.contains("T +") || kommandoModtaget.contains("T -")){
-			switch(sekvensVedFejl){
+	public void tjekForFejl(int sekvensVedFejl, String kommandoModtaget, BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
+		try{
+			if(kommandoModtaget.contains(" B") || kommandoModtaget.contains(" A") || kommandoModtaget.contains("T S") )
+				return;
+			else if(kommandoModtaget.contains(" I") || kommandoModtaget.contains(" L") || kommandoModtaget.contains("T +") || kommandoModtaget.contains("T -")){
+				switch(sekvensVedFejl){
+				case 3: this.sequence2(inFromServer, outToServer);
+				break;
 
-			case 3: this.sequence3(inFromServer, outToServer);
-			break;
+				case 4: this.sequence2(inFromServer, outToServer);
+				break;
 
-			case 4: this.sequence4(inFromServer, outToServer);
-			break;
+				case 5: this.sequence3(inFromServer, outToServer);
+				break;
 
-			case 5: this.sequence5(inFromServer, outToServer);
-			break;
+				case 6: this.sequence4(inFromServer, outToServer);
+				break;
 
-			case 6: this.sequence6(inFromServer, outToServer);
-			break;
+				case 65: this.sequence5(inFromServer, outToServer);
+				break;
 
-			case 65: this.sequence6_5(inFromServer, outToServer);
-			break;
+				case 7: this.sequence6(inFromServer, outToServer);
+				break;
 
-			case 7: this.sequence7(inFromServer, outToServer);
-			break;
+				case 8: this.sequence7(inFromServer, outToServer);
+				break;
 
-			case 8: this.sequence8(inFromServer, outToServer);
-			break;
+				case 910: this.sequence9_10(inFromServer, outToServer);
+				break;
 
-			case 910: this.sequence9_10(inFromServer, outToServer);
-			break;
+				case 11: this.sequence11(inFromServer, outToServer);
+				break;
 
-			case 11: this.sequence11(inFromServer, outToServer);
-			break;
+				case 12: this.sequence12(inFromServer, outToServer);
+				break;
 
-			case 12: this.sequence12(inFromServer, outToServer);
-			break;
+				case 13: this.sequence13(inFromServer, outToServer);
+				break;
 
-			case 13: this.sequence13(inFromServer, outToServer);
-			break;
+				case 14: this.sequence14(inFromServer, outToServer);
+				break;
 
-			case 14: this.sequence14(inFromServer, outToServer);
-			break;
-
-			case 17: this.sequence17(inFromServer, outToServer);
-			break;
+				case 17: this.sequence17(inFromServer, outToServer);
+				break;
+				}
 			}
+		}
+		catch (DALException e) {
+			e.printStackTrace();
 		}
 	}
 }

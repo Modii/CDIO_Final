@@ -48,7 +48,7 @@ public class Main {
 				clientSocket.getInputStream()));
 
 		
-		s.sequence2(inFromServer, outToServer);
+		s.sequence1(inFromServer, outToServer);
 
 		clientSocket.close();
 	}
