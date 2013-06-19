@@ -57,12 +57,12 @@ public class Raavarer {
 			id = Integer.parseInt(request.getParameter("id"));
 		}
 		catch (NumberFormatException e) {
-			errorMsg = "NumberFormatException i råvareID! ";
+			errorMsg = "Fejl i råvare ID, muligvis specialtegn! ";
 		}
 		navn = request.getParameter("navn");
 		leverandoer = request.getParameter("leverandoer");
 		if (id != 0 && funktionalitetsLaget.testRaavareId(id))
-			errorMsg = "RåvareBatch ID findes i forvejen!";
+			errorMsg = "Råvare ID findes i forvejen!";
 		if (errorMsg.length() == 0) {
 			funktionalitetsLaget.getRaavareDAO().createRaavare(new RaavareDTO(id, navn, leverandoer));
 			request.setAttribute("succes", "Råvare oprettet!");

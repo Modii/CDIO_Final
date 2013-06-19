@@ -11,11 +11,7 @@
 		<h1>Opret produktbatch</h1>
 		Produktbatch ID: <input type="text" name="produktbatchid"><br>
 		Recept ID: ${receptList}<br>
-		Status: <select name="status">
-			<option value="0">Startet</option>
-			<option value="1">Under produktion</option>
-			<option value="2">Afsluttet</option>
-		</select><br> <input type="submit" value="Opret produktbatch"
+		Status: Startet<br> <input type="submit" value="Opret produktbatch"
 			name="createproduktbatch_submit">
 	</form>
 	${succes} ${fail}

@@ -72,15 +72,15 @@ public class ProduktBatches {
 	
 	public void handleCreateProduktBatchSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int produktbatchid = 0, receptid, status;
-		String errorMsg = "", slutDato = null,startDato;
+		String errorMsg = "", slutDato = "",startDato;
 		try {
 			produktbatchid = Integer.parseInt(request.getParameter("produktbatchid"));
 		}
 		catch (NumberFormatException e) {
-			errorMsg = "NumberFormatException i produktbatchid! ";
+			errorMsg = "Fejl i produktbatchid, muligvis specialtegn! ";
 		}
 		receptid = Integer.parseInt(request.getParameter("receptid"));
-		status = Integer.parseInt(request.getParameter("status"));
+		status = 0;
 		Calendar d = Calendar.getInstance();
 		DecimalFormat df = new DecimalFormat("00");
 		startDato = d.get(Calendar.YEAR) + "-"

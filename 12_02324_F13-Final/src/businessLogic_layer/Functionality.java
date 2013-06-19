@@ -176,6 +176,9 @@ public class Functionality implements IFunctionality{
 		catch (NullPointerException f) {
 			throw new DALException("ID findes ikke");
 		}
+		catch (DALException h) {
+			return false;
+		}
 	}
 	public boolean testRaavareId(int i) throws DALException {
 		try {
@@ -186,6 +189,23 @@ public class Functionality implements IFunctionality{
 		}
 		catch (NullPointerException f) {
 			throw new DALException("ID findes ikke");
+		}
+		catch (DALException h) {
+			return false;
+		}
+	}
+	public boolean testReceptId(int i) throws DALException {
+		try {
+			return (i == receptDAO.getRecept(i).getReceptId());
+		}
+		catch (IndexOutOfBoundsException e) {
+			throw new DALException("ID findes ikke");
+		}
+		catch (NullPointerException f) {
+			throw new DALException("ID findes ikke");
+		}
+		catch (DALException h) {
+			return false;
 		}
 	}
 	/**

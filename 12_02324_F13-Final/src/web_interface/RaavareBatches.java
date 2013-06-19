@@ -58,11 +58,11 @@ public class RaavareBatches {
 			maengde = Double.parseDouble(request.getParameter("maengde"));
 		}
 		catch (NumberFormatException e) {
-			errorMsg = "NumberFormatException i råvarebatchid, råvareid eller mængden! ";
+			errorMsg = "Fejl i råvarebatchid, råvareid eller mængden, muligvis specialtegn! ";
 		}
-		if (funktionalitetsLaget.testRaavareBatchId(raavarebatchid))
+		if (raavarebatchid != 0 && funktionalitetsLaget.testRaavareBatchId(raavarebatchid))
 			errorMsg = "RåvareBatch ID findes i forvejen!";
-		if (errorMsg.length() == 0) {
+		if (raavarebatchid != 0 && errorMsg.length() == 0) {
 			funktionalitetsLaget.getRaavareBatchDAO().createRaavareBatch(new RaavareBatchDTO(raavarebatchid, raavareid, maengde));
 			request.setAttribute("succes", "Råvarebatch oprettet!");
 		}

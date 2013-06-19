@@ -62,12 +62,20 @@ public class Recepter {
 	}
 
 	public void handleCreateReceptSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
-		int receptid = Integer.parseInt(request.getParameter("receptid"));
-		String receptnavn = request.getParameter("receptnavn");
-		funktionalitetsLaget.getReceptDAO().createRecept(new ReceptDTO(receptid, receptnavn));
-		int x = 0;
-		int raavareid;
-		String errorMsg = "";
+		int receptid=0, raavareid, x=0;
+		String errorMsg = "", receptnavn;
+		try {
+			receptid = Integer.parseInt(request.getParameter("receptid"));
+		}
+		catch (NumberFormatException e) {
+			errorMsg += "Fejl i recept ID, muligvis specialtegn! ";
+		}
+		receptnavn = request.getParameter("receptnavn");
+		
+		if (receptid != 0 && !funktionalitetsLaget.testReceptId(receptid))
+			funktionalitetsLaget.getReceptDAO().createRecept(new ReceptDTO(receptid, receptnavn));
+		else 
+			errorMsg = "Recept ID findes i forvejen! ";
 		double nomNetto = 0, tolerance = 0;
 		while (x < 5) {
 			if (request.getParameter("raavareid"+(x+1)).length() > 0 && request.getParameter("nomnetto"+(x+1)).length() > 0 && request.getParameter("tolerance"+(x+1)).length() > 0) {
@@ -77,13 +85,18 @@ public class Recepter {
 					tolerance = Double.parseDouble(request.getParameter("tolerance"+(x+1)));
 				}
 				catch (NumberFormatException e) {
-					errorMsg = "Number format exception ved Nominel netto eller tolerance. Højest sandsynligt pga komma istedet for punktum.";
+					errorMsg += "Fejl i Nominel netto eller tolerance, muligvis specialtegn. ";
 				}
 				if (errorMsg.length() == 0)
 					funktionalitetsLaget.getReceptKompDAO().createReceptKomp(new ReceptKompDTO(receptid,raavareid,nomNetto,tolerance));
 			}
 			x++;
 		}
+		if (errorMsg.length() == 0)
+			request.setAttribute("succes", "Recept oprettet!");
+		else
+			request.setAttribute("fail", errorMsg);
+		
 		int raavareid2;
 		String raavareNavn,html = "";
 		List<RaavareDTO> raavare = funktionalitetsLaget.getRaavareDAO().getRaavareList();
@@ -93,10 +106,6 @@ public class Recepter {
 			html += "<option value='"+raavareid2+"'>"+raavareNavn+"</option>";
 		}
 		request.setAttribute("raavarer", html);
-		if (errorMsg.length() == 0)
-			request.setAttribute("succes", "Recept oprettet!");
-		else
-			request.setAttribute("fail", errorMsg);
 		request.getRequestDispatcher("/WEB-INF/admin/recept/createrecept.jsp").forward(request, response);
 	}
 }
