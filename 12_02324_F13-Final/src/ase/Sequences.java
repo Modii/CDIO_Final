@@ -229,9 +229,9 @@ public class Sequences {
 	public void sequence7(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
 	{
 		RMPrintOgRead(49, 2, "Aflast vaegten og tryk OK for at tarere.", inFromServer, outToServer);
-		tjekForFejl(7, inFromServer.readLine(), inFromServer, outToServer);
+		tjekForFejl(7, data.getServerInput(), inFromServer, outToServer);
 		data.setServerInput(inFromServer.readLine());
-		tjekForFejl(7, inFromServer.readLine(), inFromServer, outToServer);
+		tjekForFejl(7, data.getServerInput(), inFromServer, outToServer);
 		this.sequence8(inFromServer, outToServer);
 	}
 
@@ -442,8 +442,8 @@ public class Sequences {
 		else this.sequence17(inFromServer, outToServer);
 	}
 
-	
-	
+
+
 	public int splitInt(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 		data.setServerInput(inFromServer.readLine());
 		data.setSplittedInput(data.getServerInput().split(" "));
@@ -457,7 +457,7 @@ public class Sequences {
 		double returnSplitDouble = (Double.parseDouble(data.getSplittedInput()[7]));
 		return returnSplitDouble;
 	}
-	
+
 	// Metoden tjekker hvilken type RM-kommando, der er tale om. Derefter kommer den krævede efterfulgte integerværdi og dernæst vægtbeskeden.
 	public void RMPrintOgRead(int RMType, int x1, String weightMsg, BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
@@ -493,7 +493,7 @@ public class Sequences {
 			case 6: this.sequence6(inFromServer, outToServer);
 			break;
 
-			case 65: this.sequence6(inFromServer, outToServer);
+			case 65: this.sequence6_5(inFromServer, outToServer);
 			break;
 
 			case 7: this.sequence7(inFromServer, outToServer);
