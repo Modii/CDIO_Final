@@ -14,13 +14,13 @@
 		valgmuligheder:</h3>
 
 	<form method="POST" action="">
-		<input type="submit" value="Administrere brugere" name="adminibruger">
-		<br> <input type="submit" value="Administrere råvarer"
+		<input type="submit" value="Administrer brugere" name="adminibruger">
+		<br> <input type="submit" value="Administrer råvarer"
 			name="adminivare"> <br> <input type="submit"
-			value="Administrere recepter" name="adminirecept"> <br>
-		<input type="submit" value="Administrere råvarebatches"
+			value="Administrer recepter" name="adminirecept"> <br>
+		<input type="submit" value="Administrer råvarebatches"
 			name="adminiraavarebatch"> <br> <input type="submit"
-			value="Administrere produktbatches" name="adminiproduktbatch">
+			value="Administrer produktbatches" name="adminiproduktbatch">
 			<br>
 			<input type="submit" value="Ændr password" name="changepw">
 	</form>

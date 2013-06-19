@@ -13,9 +13,9 @@
 		valgmuligheder:</h3>
 
 	<form method="POST" action="">
-		<input type="submit" value="Administrere råvarebatches"
+		<input type="submit" value="Administrer råvarebatches"
 			name="adminiraavarebatch"> <br> <input type="submit"
-			value="Administrere produktbatches" name="adminiproduktbatch"><br>
+			value="Administrer produktbatches" name="adminiproduktbatch"><br>
 			<input type="submit" value="Ændr password" name="changepw">
 	</form>
 

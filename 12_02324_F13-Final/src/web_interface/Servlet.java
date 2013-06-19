@@ -50,7 +50,7 @@ public class Servlet extends HttpServlet {
 				otherMetoder.handleLogOff(request, response);
 			if (request.getParameter("hovedmenu") != null && request.getParameter("hovedmenu").equals("Tilbage til hovedmenu"))
 				otherMetoder.handleGoToHovedmenu(request, response);
-			if (request.getParameter("adminibruger") != null && request.getParameter("adminibruger").equals("Administrere brugere"))
+			if (request.getParameter("adminibruger") != null && request.getParameter("adminibruger").equals("Administrer brugere"))
 				request.getRequestDispatcher("/WEB-INF/admin/bruger/adminibruger.jsp").forward(request, response);
 			if (request.getParameter("createopr") != null && request.getParameter("createopr").equals("Opret bruger")) {
 				int oprID = 0;
@@ -63,7 +63,7 @@ public class Servlet extends HttpServlet {
 				brugerMetoder.handleRemoveOpr(request, response, funktionalitetsLaget);
 			if (request.getParameter("updateopr") != null && request.getParameter("updateopr").equals("Opdatér bruger"))
 				brugerMetoder.handleUpdateOpr(request, response, funktionalitetsLaget);
-			if (request.getParameter("adminivare") != null && request.getParameter("adminivare").equals("Administrere råvarer"))
+			if (request.getParameter("adminivare") != null && request.getParameter("adminivare").equals("Administrer råvarer"))
 				raavareMetoder.handleAdminiVare(request, response, funktionalitetsLaget);
 			if (request.getParameter("createvare") != null && request.getParameter("createvare").equals("Opret råvare"))
 				raavareMetoder.handleCreateVare(request, response, funktionalitetsLaget);
@@ -71,19 +71,19 @@ public class Servlet extends HttpServlet {
 				raavareMetoder.handleShowVare(request, response, funktionalitetsLaget);
 			if (request.getParameter("updatevare") != null && request.getParameter("updatevare").equals("Opdater råvare"))
 				raavareMetoder.handleUpdateVare(request, response, funktionalitetsLaget);
-			if (request.getParameter("adminirecept") != null && request.getParameter("adminirecept").equals("Administrere recepter"))
+			if (request.getParameter("adminirecept") != null && request.getParameter("adminirecept").equals("Administrer recepter"))
 				receptMetoder.handleAdminiRecept(request, response, funktionalitetsLaget);
 			if (request.getParameter("createrecept") != null && request.getParameter("createrecept").equals("Opret recept"))
 				receptMetoder.handleCreateRecept(request, response, funktionalitetsLaget);
 			if (request.getParameter("showrecept") != null && request.getParameter("showrecept").equals("Vis recepter"))
 				receptMetoder.handleShowRecept(request, response, funktionalitetsLaget);
-			if (request.getParameter("adminiraavarebatch") != null && request.getParameter("adminiraavarebatch").equals("Administrere råvarebatches"))
+			if (request.getParameter("adminiraavarebatch") != null && request.getParameter("adminiraavarebatch").equals("Administrer råvarebatches"))
 				raavareBatchMetoder.handleAdminiRaavareBatch(request, response, funktionalitetsLaget);
 			if (request.getParameter("createraavarebatch") != null && request.getParameter("createraavarebatch").equals("Opret råvarebatch"))
 				raavareBatchMetoder.handleCreateRaavareBatch(request, response, funktionalitetsLaget);
 			if (request.getParameter("showraavarebatch") != null && request.getParameter("showraavarebatch").equals("Vis råvarebatch"))
 				raavareBatchMetoder.handleShowRaavareBatch(request, response, funktionalitetsLaget);
-			if (request.getParameter("adminiproduktbatch") != null && request.getParameter("adminiproduktbatch").equals("Administrere produktbatches"))
+			if (request.getParameter("adminiproduktbatch") != null && request.getParameter("adminiproduktbatch").equals("Administrer produktbatches"))
 				produktBatchMetoder.handleAdminiProduktBatch(request, response, funktionalitetsLaget);
 			if (request.getParameter("createproduktbatch") != null && request.getParameter("createproduktbatch").equals("Opret produktbatch"))
 				produktBatchMetoder.handleCreateProduktBatch(request, response, funktionalitetsLaget);

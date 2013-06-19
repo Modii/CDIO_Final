@@ -14,10 +14,10 @@
 
 	<form method="POST" action="">
 		<input type="submit" value="Administrere råvarer" name="adminivare">
-		<br> <input type="submit" value="Administrere recepter"
+		<br> <input type="submit" value="Administrer recepter"
 			name="adminirecept"> <br> <input type="submit"
-			value="Administrere råvarebatches" name="adminiraavarebatch">
-		<br> <input type="submit" value="Administrere produktbatches"
+			value="Administrer råvarebatches" name="adminiraavarebatch">
+		<br> <input type="submit" value="Administrer produktbatches"
 			name="adminiproduktbatch"><br>
 			<input type="submit" value="Ændr password" name="changepw">
 	</form>
