@@ -346,8 +346,13 @@ public class Sequences {
 				else
 					this.sequence13(inFromServer, outToServer);
 			}	
+			
+			// Udregner tolerance ud fra angivet tolerance og nominel nettovægt.
+			double tolerance = ((mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) * (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getTolerance()) / 100);
+			double totPosTol = (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) + tolerance;
+			double totNegTol = (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) - tolerance;
 
-			data.setWeightMsg("Du har valgt: " + mRaa.getRaavare(mRaaB.getRaavareBatch(data.getRbID()).getRaavareId()).getRaavareNavn() + ". Tryk OK for at paabegynde afvejning. Naar den oenskede maengde er afvejet, tryk da paa AFVEJ");
+			data.setWeightMsg("Du har valgt: " + mRaa.getRaavare(mRaaB.getRaavareBatch(data.getRbID()).getRaavareId()).getRaavareNavn() + ". Tryk OK for at paabegynde afvejning. Den kraevede maengde skal være mellem " + totNegTol + " kg og " + totPosTol +" kg. Tryk AFVEJ for at afveje.");
 			outToServer.writeBytes("RM49 4 \"" + data.getWeightMsg() + "\"\r\n");	
 			outToServer.flush();
 			data.setServerInput(inFromServer.readLine());
@@ -369,7 +374,7 @@ public class Sequences {
 		double tolerance = ((mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) * (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getTolerance()) / 100);
 		double totPosTol = (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) + tolerance;
 		double totNegTol = (mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto()) - tolerance;
-
+		
 		// Tilføjer tolerence-pil ud vha. udregnet tolerance.
 		outToServer.writeBytes("P121 " + mRecKomp.getReceptKomp(data.getReceptID(), data.getRaavareID()).getNomNetto() + " kg " + tolerance + " kg " + tolerance + " kg " + "\r\n");
 		data.setServerInput(inFromServer.readLine());

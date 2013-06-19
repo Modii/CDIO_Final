@@ -47,7 +47,7 @@ public class Server implements Runnable{
 				}
 				else if (Main.inline.startsWith("S")){
 					Main.printmenu();
-					outstream.writeBytes("S S      " + (Main.brutto-Main.tara)+ " kg " +"\r\n");
+					outstream.writeBytes("S S      " + (Main.brutto)+ " kg " +"\r\n");
 					outstream.flush();
 				}
 				else if (Main.inline.startsWith("DW")){
