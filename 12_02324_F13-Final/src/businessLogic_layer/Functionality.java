@@ -14,7 +14,6 @@ import db_mysqldao.MySQLRaavareBatchDAO;
 import db_mysqldao.MySQLRaavareDAO;
 import db_mysqldao.MySQLReceptDAO;
 import db_mysqldao.MySQLReceptKompDAO;
-import dto.OperatoerDTO;
 import dao_interfaces.DALException;
 
 public class Functionality implements IFunctionality{
@@ -190,7 +189,7 @@ public class Functionality implements IFunctionality{
 	 * Her valideres hvert enkelt element i det indtastede password for at overholde
 	 * de givet kriterier for et password  
 	 */
-	public boolean askForNewPassword(int oprId, String newPassword) throws DALException {
+	public boolean checkPasswordStandards(int oprId, String newPassword) throws DALException {
 		boolean containLowerCase = false, containUpperCase = false, containNumber = false, containSymbol = false;
 		int differentTypes = 0;
 
@@ -213,9 +212,6 @@ public class Functionality implements IFunctionality{
 			}
 		}
 		if (newPassword.length() >= 6 && differentTypes >= 3) {
-			OperatoerDTO opr = oprDAO.getOperatoer(oprId);
-			opr.setPassword(newPassword);
-			oprDAO.updateOperatoer(opr);
 			return true;
 		}
 

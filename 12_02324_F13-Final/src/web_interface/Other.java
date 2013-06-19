@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import businessLogic_layer.Functionality;
 import dao_interfaces.DALException;
+import dto.OperatoerDTO;
 
 public class Other {
 	
@@ -79,10 +80,14 @@ public class Other {
 			errorString += "Dit gamle password er forkert! ";
 		if (!funktionalitetsLaget.checkIfIdentical(nytpassword1,nytpassword2))
 			errorString += "De to nye password er ikke identiske! ";
-		if (!funktionalitetsLaget.askForNewPassword(id, nytpassword1)) 
+		if (!funktionalitetsLaget.checkPasswordStandards(id, nytpassword1)) 
 			errorString += "Dit nye password er ikke godkendt ud fra nedenstående regler!";
-		if (errorString.length() == 0)
+		if (errorString.length() == 0) {
+			OperatoerDTO opr = funktionalitetsLaget.getOprDAO().getOperatoer(id);
+			opr.setPassword(nytpassword1);
+			funktionalitetsLaget.getOprDAO().updateOperatoer(opr);
 			request.setAttribute("succes", "Password er ændret!");
+		}
 		else
 			request.setAttribute("fail", errorString);		
 		request.getRequestDispatcher("/WEB-INF/admin/changepw.jsp").forward(request, response);
