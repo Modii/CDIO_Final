@@ -67,13 +67,20 @@ public class Recepter {
 		funktionalitetsLaget.getReceptDAO().createRecept(new ReceptDTO(receptid, receptnavn));
 		int x = 0;
 		int raavareid;
-		double nomNetto, tolerance;
+		String errorMsg = "";
+		double nomNetto = 0, tolerance = 0;
 		while (x < 5) {
 			if (request.getParameter("raavareid"+(x+1)).length() > 0 && request.getParameter("nomnetto"+(x+1)).length() > 0 && request.getParameter("tolerance"+(x+1)).length() > 0) {
 				raavareid = Integer.parseInt(request.getParameter("raavareid"+(x+1)));
-				nomNetto = Double.parseDouble(request.getParameter("nomnetto"+(x+1)));
-				tolerance = Double.parseDouble(request.getParameter("tolerance"+(x+1)));
-				funktionalitetsLaget.getReceptKompDAO().createReceptKomp(new ReceptKompDTO(receptid,raavareid,nomNetto,tolerance));
+				try {
+					nomNetto = Double.parseDouble(request.getParameter("nomnetto"+(x+1)));
+					tolerance = Double.parseDouble(request.getParameter("tolerance"+(x+1)));
+				}
+				catch (NumberFormatException e) {
+					errorMsg = "Number format exception ved Nominel netto eller tolerance. Højest sandsynligt pga komma istedet for punktum.";
+				}
+				if (errorMsg.length() == 0)
+					funktionalitetsLaget.getReceptKompDAO().createReceptKomp(new ReceptKompDTO(receptid,raavareid,nomNetto,tolerance));
 			}
 			x++;
 		}
@@ -86,7 +93,10 @@ public class Recepter {
 			html += "<option value='"+raavareid2+"'>"+raavareNavn+"</option>";
 		}
 		request.setAttribute("raavarer", html);
-		request.setAttribute("succes", "Recept oprettet!");
+		if (errorMsg.length() == 0)
+			request.setAttribute("succes", "Recept oprettet!");
+		else
+			request.setAttribute("fail", errorMsg);
 		request.getRequestDispatcher("/WEB-INF/admin/recept/createrecept.jsp").forward(request, response);
 	}
 }

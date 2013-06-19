@@ -7,7 +7,7 @@
 <title>Opret recept</title>
 </head>
 <body>
-	${succes}
+	${succes} ${fail}
 	<form method="POST" action="">
 		<h1>Opret recept</h1>
 		ReceptId: <input type="text" name="receptid"><br> Navn: <input
