@@ -8,9 +8,7 @@ import dto.ReceptKompDTO;
 public class Data {
 
 	String weightMsg, serverInput, itemName, userInput;
-	int oprID, pbID, receptID, rbID, raavareID;
-
-	int itemNoInput, itemNoStore;
+	int oprID, pbID, receptID, rbID, raavareID, itemNoInput, iteNoStore;	
 
 	String[] splittedInput = new String[10];
 	double tara, netto, brutto, bruttoCheck;
@@ -81,11 +79,11 @@ public class Data {
 	void setItemNoInput(int itemNoInput) {
 		this.itemNoInput = itemNoInput;
 	}
-	int getItemNoStore() {
-		return itemNoStore;
+	public int getIteNoStore() {
+		return iteNoStore;
 	}
-	void setItemNoStore(int itemNoStore) {
-		this.itemNoStore = itemNoStore;
+	public void setIteNoStore(int iteNoStore) {
+		this.iteNoStore = iteNoStore;
 	}
 	String[] getSplittedInput() {
 		return splittedInput;
@@ -123,5 +121,4 @@ public class Data {
 	public void setRaavareID(int raavareID) {
 		this.raavareID = raavareID;
 	}
-
 }

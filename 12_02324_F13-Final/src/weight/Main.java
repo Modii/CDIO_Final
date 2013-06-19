@@ -18,7 +18,7 @@ public class Main {
 			System.out.println(" ");
 
 		System.out.println("*************************************************");
-		System.out.println("Netto: " + (brutto-tara)+ " kg" );
+		System.out.println("Netto: " + brutto + " kg" );
 		System.out.println("Display: " + IndstruktionsDisplay );
 		System.out.println("*************************************************");
 		System.out.println(" ");
