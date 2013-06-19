@@ -49,11 +49,26 @@ public class RaavareBatches {
 	}
 	
 	public void handleCreateRaavareBatchSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
-		int raavarebatchid = Integer.parseInt(request.getParameter("raavarebatchid"));
-		int raavareid = Integer.parseInt(request.getParameter("raavareid"));
-		double maengde = Double.parseDouble(request.getParameter("maengde"));
-		funktionalitetsLaget.getRaavareBatchDAO().createRaavareBatch(new RaavareBatchDTO(raavarebatchid, raavareid, maengde));
-		
+		int raavarebatchid = 0, raavareid = 0;
+		double maengde = 0;
+		String errorMsg ="";
+		try {
+			raavarebatchid = Integer.parseInt(request.getParameter("raavarebatchid"));
+			raavareid = Integer.parseInt(request.getParameter("raavareid"));
+			maengde = Double.parseDouble(request.getParameter("maengde"));
+		}
+		catch (NumberFormatException e) {
+			errorMsg = "NumberFormatException i råvarebatchid, råvareid eller mængden! ";
+		}
+		if (funktionalitetsLaget.testRaavareBatchId(raavarebatchid))
+			errorMsg = "RåvareBatch ID findes i forvejen!";
+		if (errorMsg.length() == 0) {
+			funktionalitetsLaget.getRaavareBatchDAO().createRaavareBatch(new RaavareBatchDTO(raavarebatchid, raavareid, maengde));
+			request.setAttribute("succes", "Råvarebatch oprettet!");
+		}
+		else {
+			request.setAttribute("fail", errorMsg);
+		}
 		int vareId;
 		String vareNavn;
 		List<RaavareDTO> oprList = funktionalitetsLaget.getRaavareDAO().getRaavareList();
@@ -65,7 +80,6 @@ public class RaavareBatches {
 		}
 		html +="</select>";
 		request.setAttribute("vareList", html);
-		request.setAttribute("succes", "Råvarebatch oprettet!");
 		request.getRequestDispatcher("/WEB-INF/admin/raavarebatch/createraavarebatch.jsp").forward(request, response);
 	}
 

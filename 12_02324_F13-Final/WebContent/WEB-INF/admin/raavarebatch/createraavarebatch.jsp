@@ -15,7 +15,7 @@
 			type="submit" value="Opret råvarebatch"
 			name="createraavarebatch_submit">
 	</form>
-	${succes}
+	${succes} ${fail}
 
 	<form action="" method="POST">
 		<br> <br> <br> <br> <input type="submit"
