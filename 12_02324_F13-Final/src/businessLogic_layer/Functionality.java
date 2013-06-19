@@ -244,7 +244,7 @@ public class Functionality implements IFunctionality{
 	}
 
 	/**
-	 * Her udregnes netto-v�gten ud fra brugerinputs, hvilket sker under menupunkt 3  
+	 * Her udregnes netto-vægten fra bruger-inputs, hvilket sker under menupunkt 3  
 	 */
 	public double calculateWeight(double tare, double brutto) {
 		double netto = brutto - tare;
@@ -273,6 +273,4 @@ public class Functionality implements IFunctionality{
 	public void setOprDAO(IOperatoerDAO oprDAO) {
 		this.oprDAO = oprDAO;
 	}
-
-
 }
