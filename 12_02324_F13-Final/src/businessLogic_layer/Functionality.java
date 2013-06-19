@@ -177,6 +177,17 @@ public class Functionality implements IFunctionality{
 			throw new DALException("ID findes ikke");
 		}
 	}
+	public boolean testRaavareId(int i) throws DALException {
+		try {
+			return (i == raavareDAO.getRaavare(i).getRaavareId());
+		}
+		catch (IndexOutOfBoundsException e) {
+			throw new DALException("ID findes ikke");
+		}
+		catch (NullPointerException f) {
+			throw new DALException("ID findes ikke");
+		}
+	}
 	/**
 	 * Her sammenlignes password fra brugerinput med eksisterende password i vores Array 
 	 * baseret p� det f�rstindtastede id (int i) som er unikt for operat�r til operat�r  

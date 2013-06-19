@@ -71,19 +71,33 @@ public class ProduktBatches {
 	}
 	
 	public void handleCreateProduktBatchSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
-		int produktbatchid = Integer.parseInt(request.getParameter("produktbatchid"));
-		int receptid = Integer.parseInt(request.getParameter("receptid"));
-		int status = Integer.parseInt(request.getParameter("status"));
+		int produktbatchid = 0, receptid, status;
+		String errorMsg = "", slutDato = null,startDato;
+		try {
+			produktbatchid = Integer.parseInt(request.getParameter("produktbatchid"));
+		}
+		catch (NumberFormatException e) {
+			errorMsg = "NumberFormatException i produktbatchid! ";
+		}
+		receptid = Integer.parseInt(request.getParameter("receptid"));
+		status = Integer.parseInt(request.getParameter("status"));
 		Calendar d = Calendar.getInstance();
 		DecimalFormat df = new DecimalFormat("00");
-		String startDato = d.get(Calendar.YEAR) + "-"
+		startDato = d.get(Calendar.YEAR) + "-"
 		+ df.format(d.get(Calendar.MONTH) + 1) + "-"
 		+ df.format(d.get(Calendar.DATE)) + " "
 		+ df.format(d.get(Calendar.HOUR_OF_DAY)) + ":"
 		+ df.format(d.get(Calendar.MINUTE)) + ":"
 		+ df.format(d.get(Calendar.SECOND));
-		String slutDato = null;
-		funktionalitetsLaget.getProduktBatchDAO().createProduktBatch(new ProduktBatchDTO(produktbatchid,receptid,startDato, slutDato, status));
+		if (produktbatchid != 0 && funktionalitetsLaget.testPbId(produktbatchid))
+			errorMsg = "RåvareBatch ID findes i forvejen!";
+		if (errorMsg.length() == 0) {
+			funktionalitetsLaget.getProduktBatchDAO().createProduktBatch(new ProduktBatchDTO(produktbatchid,receptid,startDato, slutDato, status));
+			request.setAttribute("succes", "Produktbatch oprettet!");
+		}
+		else {
+			request.setAttribute("fail", errorMsg);
+		}
 		
 		int receptId;
 		String receptNavn;
@@ -96,7 +110,6 @@ public class ProduktBatches {
 		}
 		html +="</select>";
 		request.setAttribute("receptList", html);
-		request.setAttribute("succes", "Produktbatch oprettet!");
 		request.getRequestDispatcher("/WEB-INF/admin/produktbatch/createproduktbatch.jsp").forward(request, response);
 	}
 	

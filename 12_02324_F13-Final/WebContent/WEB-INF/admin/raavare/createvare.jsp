@@ -14,7 +14,7 @@
 		Leverandør: <input type="text" name="leverandoer"><br> 
 		<input type="submit" value="Opret råvare" name="createraavare_submit">
 	</form>
-	${succes}
+	${succes} ${fail}
 
 	<form action="" method="POST">
 		<br> <br> <br> <br> <input type="submit" name="hovedmenu"

@@ -51,11 +51,25 @@ public class Raavarer {
 		request.getRequestDispatcher("/WEB-INF/admin/raavare/updatevare.jsp").forward(request, response);
 	}
 	public void handleCreateVareSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
-		int id = Integer.parseInt(request.getParameter("id"));
-		String navn = request.getParameter("navn");
-		String leverandoer = request.getParameter("leverandoer");
-		funktionalitetsLaget.getRaavareDAO().createRaavare(new RaavareDTO(id, navn, leverandoer));
-		request.setAttribute("succes", "Råvare oprettet!");
+		int id = 0;
+		String navn, leverandoer, errorMsg = "";
+		try {
+			id = Integer.parseInt(request.getParameter("id"));
+		}
+		catch (NumberFormatException e) {
+			errorMsg = "NumberFormatException i råvareID! ";
+		}
+		navn = request.getParameter("navn");
+		leverandoer = request.getParameter("leverandoer");
+		if (id != 0 && funktionalitetsLaget.testRaavareId(id))
+			errorMsg = "RåvareBatch ID findes i forvejen!";
+		if (errorMsg.length() == 0) {
+			funktionalitetsLaget.getRaavareDAO().createRaavare(new RaavareDTO(id, navn, leverandoer));
+			request.setAttribute("succes", "Råvare oprettet!");
+		}
+		else {
+			request.setAttribute("fail", errorMsg);
+		}
 		request.getRequestDispatcher("/WEB-INF/admin/raavare/createvare.jsp").forward(request, response);
 	}
 	public void handleUpdateVareSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {

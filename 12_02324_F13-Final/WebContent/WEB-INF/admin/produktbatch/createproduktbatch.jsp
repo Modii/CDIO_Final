@@ -18,7 +18,7 @@
 		</select><br> <input type="submit" value="Opret produktbatch"
 			name="createproduktbatch_submit">
 	</form>
-	${succes}
+	${succes} ${fail}
 
 	<form action="" method="POST">
 		<br> <br> <br> <br> <input type="submit"
