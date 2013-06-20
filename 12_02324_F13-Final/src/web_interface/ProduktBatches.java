@@ -166,6 +166,7 @@ public class ProduktBatches {
 	        response.setHeader("Cache-Control",
 	            "must-revalidate, post-check=0, pre-check=0");
 	        response.setHeader("Pragma", "public");
+	        response.setHeader("Content-Disposition", "attachment; filename=\"ProduktBatch"+produktBatchId+".pdf\"");
 	        // setting the content type
 	        response.setContentType("application/pdf");
 	        // the contentlength
