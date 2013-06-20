@@ -47,6 +47,9 @@ public class ProduktBatches {
 		request.setAttribute("receptList", html);
 		request.getRequestDispatcher("/WEB-INF/admin/produktbatch/createproduktbatch.jsp").forward(request, response);
 	}
+    public static final float[][] COLUMNS = {
+        { 36, 36, 296, 806 } , { 299, 36, 559, 806 }
+    };
 	public void handleShowProduktBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		String html = "<table border=1>";
 		html += "<tr><td>Produktbatch ID</td><td>Recept ID</td><td>Dato</td><td>Status</td><td>Udskriv</td></tr>";
@@ -97,7 +100,11 @@ public class ProduktBatches {
 	        document.add(new Paragraph("Råvare navn:"));
 	        document.add(DOTTED);
 	        ColumnText ct = new ColumnText(pdfWriter.getDirectContent());
-	        ct.setSim
+	        int column= 0;
+	        ct.setSimpleColumn(COLUMNS[column][0], COLUMNS[column][1],
+            COLUMNS[column][2], COLUMNS[column][3]);
+	        ct.addText(new Paragraph("HEJ"));
+	        ct.go(false);
 	        document.add(new Paragraph("\n"));
 	        document.add(SEPERATOR);
 	        document.add(new Paragraph("Sum Tara:"));
