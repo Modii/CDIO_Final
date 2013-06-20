@@ -19,12 +19,10 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import com.itextpdf.text.pdf.draw.LineSeparator;
-import com.itextpdf.text.pdf.draw.VerticalPositionMark;
 
 import businessLogic_layer.Functionality;
 import dao_interfaces.DALException;
@@ -143,7 +141,6 @@ public class ProduktBatches {
 		        		table.addCell(""+netto);
 		        		table.addCell(""+raavareBatchId);
 		        		table.addCell(""+oprId);
-		        		System.out.println("Tara:"+tara+"netto:"+netto+"raavarebatchid:"+raavareBatchId+"oprId"+oprId);
 		        	}
 		        }
 		        if (tara == 0) {
