@@ -2,16 +2,19 @@ package ase;
 
 import java.util.List;
 
+import dao_interfaces.DALException;
+import db_mysqldao.MySQLReceptKompDAO;
 import dto.ReceptKompDTO;
 
 
 public class Data {
+	private MySQLReceptKompDAO mRecKomp = new MySQLReceptKompDAO();
 
 	String weightMsg, serverInput, itemName, userInput;
 	int oprID, pbID, receptID, rbID, raavareID, itemNoInput, iteNoStore;	
+	double tara, netto, brutto, bruttoCheck, tolerance, totPosTol, totNegTol;
 
 	String[] splittedInput = new String[10];
-	double tara, netto, brutto, bruttoCheck;
 	List<ReceptKompDTO> listen;
 
 
@@ -40,7 +43,7 @@ public class Data {
 	void setReceptID(int receptID) {
 		this.receptID = receptID;
 	}
-	
+
 	String getWeightMsg() {
 		return weightMsg;
 	}
@@ -120,5 +123,35 @@ public class Data {
 	}
 	public void setRaavareID(int raavareID) {
 		this.raavareID = raavareID;
+	}
+	public double getTolerance() {
+		return tolerance;
+	}
+	public void setTolerance() {
+		try {
+			tolerance = ((mRecKomp.getReceptKomp(this.getReceptID(), this.getRaavareID()).getNomNetto()) * (mRecKomp.getReceptKomp(this.getReceptID(), this.getRaavareID()).getTolerance()) / 100);
+		} catch (DALException e) {
+			e.printStackTrace();
+		}
+	}
+	public double getTotPosTol() {
+		return totPosTol;
+	}
+	public void setTotPosTol() {
+		try {
+			totPosTol = (mRecKomp.getReceptKomp(this.getReceptID(), this.getRaavareID()).getNomNetto()) + this.getTolerance();
+		} catch (DALException e) {
+			e.printStackTrace();
+		}
+	}
+	public double getTotNegTol() {
+		return totNegTol;
+	}
+	public void setTotNegTol() {
+		try {
+			totNegTol = (mRecKomp.getReceptKomp(this.getReceptID(), this.getRaavareID()).getNomNetto()) - this.getTolerance();
+		} catch (DALException e) {
+			e.printStackTrace();
+		}
 	}
 }

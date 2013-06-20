@@ -1,4 +1,5 @@
 package web_interface;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.servlet.ServletConfig;
@@ -91,6 +92,8 @@ public class Servlet extends HttpServlet {
 				produktBatchMetoder.handleShowProduktBatch(request, response, funktionalitetsLaget);
 			if (request.getParameter("createopr_submit") != null && request.getParameter("createopr_submit").equals("Opret bruger"))
 				brugerMetoder.handleCreateOprSubmit(request, response, funktionalitetsLaget);
+			if (request.getParameter("udskriv") != null && request.getParameter("udskriv").equals("Udskriv"))
+				produktBatchMetoder.handlePrintProduktBatch(request, response, funktionalitetsLaget);
 			if (request.getParameter("removeopr_submit") != null && request.getParameter("removeopr_submit").equals("Slet bruger"))
 				brugerMetoder.handleRemoveOprSubmit(request, response, funktionalitetsLaget);
 			if (request.getParameter("updateopr_submit") != null && request.getParameter("updateopr_submit").equals("Opdater bruger"))

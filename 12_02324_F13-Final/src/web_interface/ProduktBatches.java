@@ -1,6 +1,8 @@
 package web_interface;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -10,6 +12,17 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.DottedLineSeparator;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import businessLogic_layer.Functionality;
 import dao_interfaces.DALException;
@@ -36,7 +49,7 @@ public class ProduktBatches {
 	}
 	public void handleShowProduktBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		String html = "<table border=1>";
-		html += "<tr><td>Produktbatch ID</td><td>Recept ID</td><td>Dato</td><td>Status</td></tr>";
+		html += "<tr><td>Produktbatch ID</td><td>Recept ID</td><td>Dato</td><td>Status</td><td>Udskriv</td></tr>";
 		int produktbatchid, receptid, status;
 		String dato;
 		List<ProduktBatchDTO> produktbatch = funktionalitetsLaget.getProduktBatchDAO().getProduktBatchList(); 
@@ -45,11 +58,75 @@ public class ProduktBatches {
 			receptid = produktbatch.get(i).getReceptId();
 			dato = produktbatch.get(i).getStartDato();
 			status = produktbatch.get(i).getStatus();
-			html += "<tr><td>"+produktbatchid+"</td><td>"+receptid+"</td><td>"+dato+"</td><td>"+statusToString(status)+"</td></tr>";
+			html += "<tr><td>"+produktbatchid+"</td><td>"+receptid+"</td><td>"+dato+"</td><td>"+statusToString(status)+"</td><td><form action='' method='POST'><input type='hidden' name='pbId' value='"+produktbatchid+"'><input type='submit' value='Udskriv' name='udskriv'></form></td></tr>";
 		}
 		html +="</table>";
 		request.setAttribute("list", html);
 		request.getRequestDispatcher("/WEB-INF/admin/produktbatch/showproduktbatch.jsp").forward(request, response);
+	}
+	public void handlePrintProduktBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+		int produktBatchId, receptId, oprId, raavareId, status;
+		String udskrevet, raavareNavn, startDato, slutDato;
+		double tara, netto;
+		produktBatchId = Integer.parseInt(request.getParameter("pbId"));
+		ProduktBatchDTO pbDTO = funktionalitetsLaget.getProduktBatchDAO().getProduktBatch(produktBatchId);
+		receptId = pbDTO.getReceptId();
+		status = pbDTO.getStatus();
+		startDato = pbDTO.getStartDato();
+		slutDato = pbDTO.getSlutDato();
+		try {
+			// step 1
+	        Document document = new Document();
+	        // step 2
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
+	        // step 3
+	        document.open();
+	        // Line seperator
+	        Chunk SEPERATOR = new Chunk(
+	                new LineSeparator(0.5f, 95, BaseColor.BLUE, Element.ALIGN_CENTER, 3.5f));
+	        Chunk DOTTED = new Chunk(
+	                new DottedLineSeparator());
+	        // step 4
+	        document.add(new Paragraph("Udskrevet"));
+	        document.add(new Paragraph("Produkt Batch nr. "+produktBatchId));
+	        document.add(new Paragraph("Recept nr. "+receptId));
+	        document.add(new Paragraph("OPR nr."));
+	        document.add(SEPERATOR);
+	        document.add(new Paragraph("Råvare nr."));
+	        document.add(new Paragraph("Råvare navn:"));
+	        document.add(DOTTED);
+	        ColumnText ct = new ColumnText(pdfWriter.getDirectContent());
+	        ct.setSim
+	        document.add(new Paragraph("\n"));
+	        document.add(SEPERATOR);
+	        document.add(new Paragraph("Sum Tara:"));
+	        document.add(new Paragraph("Sum Netto:"));
+	        document.add(new Paragraph("\n\n"));
+	        document.add(new Paragraph("Produktion Status: "+statusToString(status)));
+	        document.add(new Paragraph("Produktion Startet: "+startDato));
+	        document.add(new Paragraph("Produktion Slut: "+slutDato));
+	       
+	        // step 5
+	        document.close();
+	        // slut
+	        response.setHeader("Expires", "0");
+	        response.setHeader("Cache-Control",
+	            "must-revalidate, post-check=0, pre-check=0");
+	        response.setHeader("Pragma", "public");
+	        // setting the content type
+	        response.setContentType("application/pdf");
+	        // the contentlength
+	        response.setContentLength(baos.size());
+	        // write ByteArrayOutputStream to the ServletOutputStream
+	        OutputStream os = response.getOutputStream();
+	        baos.writeTo(os);
+	        os.flush();
+	        os.close();
+		}
+		catch(DocumentException e) {
+			System.out.println("fanget");
+		}
 	}
 	private String statusToString(int id) {
 		String status;

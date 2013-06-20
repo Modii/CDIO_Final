@@ -67,15 +67,20 @@ public class Server implements Runnable{
 						Main.printMenu();
 						outstream.writeBytes("RM20 B\r\n");
 						lock.wait();
-						outstream.writeBytes("RM20 A \"" + Local.getSvar() + "\"\r\n");
-						outstream.flush();
+						if(Local.getSvar().equals("CANCEL")){
+							outstream.writeBytes("RM20 C \r\n");
+						}
+						else{
+							outstream.writeBytes("RM20 A \"" + Local.getSvar() + "\"\r\n");
+							outstream.flush();
+						}
 					}
 				}
 				else if (Main.inline.startsWith("RM30")){
-						String[] temp = Main.inline.split("\""); //KNAPPENAVN
-						Local.setKnap(temp[1]);
-						outstream.writeBytes("RM30 B\r\n");
-						outstream.flush();
+					String[] temp = Main.inline.split("\""); //KNAPPENAVN
+					Local.setKnap(temp[1]);
+					outstream.writeBytes("RM30 B\r\n");
+					outstream.flush();
 				}
 				else if (Main.inline.startsWith("RM39")){
 					synchronized(lock){
@@ -129,5 +134,5 @@ public class Server implements Runnable{
 	public static Object getLock() {
 		return lock;
 	}
-	
+
 }
