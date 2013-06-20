@@ -1,4 +1,4 @@
-package weight;
+package weight_simulator;
 
 
 import java.net.ServerSocket;
@@ -10,16 +10,16 @@ public class Main {
 	static double brutto=0;
 	static double tara=0;
 	static String inline;
-	static String IndstruktionsDisplay= "";
+	static String instruktionsDisplay= "";
 	static Socket sock;
 
-	public static void printmenu(){
+	public static void printMenu(){
 		for (int i=0;i<20;i++)
 			System.out.println(" ");
 
 		System.out.println("*************************************************");
 		System.out.println("Netto: " + brutto + " kg" );
-		System.out.println("Display: " + IndstruktionsDisplay );
+		System.out.println("Display: " + instruktionsDisplay );
 		System.out.println("*************************************************");
 		System.out.println(" ");
 		System.out.println("Debug info: ");

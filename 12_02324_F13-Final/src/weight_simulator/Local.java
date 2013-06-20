@@ -1,4 +1,4 @@
-package weight;
+package weight_simulator;
 
 import java.util.Scanner;
 
@@ -16,7 +16,7 @@ public class Local implements Runnable {
 				if(input.startsWith("B")){
 					String temp= input.substring(2,input.length());
 					Main.brutto = Double.parseDouble(temp);
-					Main.printmenu();
+					Main.printMenu();
 				}
 				else if(input.startsWith("Q")){
 					System.out.println("Vægten slukkes!");
@@ -26,27 +26,27 @@ public class Local implements Runnable {
 				}
 				else if(input.startsWith("T")){
 					Main.tara = Main.brutto;
-					Main.printmenu();			
+					Main.printMenu();			
 				}
 				else if(input.startsWith("S")){
 					synchronized (Server.getLock()) {
 						svar = input.substring(2);
 						Server.getLock().notify();
-						Main.printmenu();
+						Main.printMenu();
 					}
 				}
 				else if(input.equals("O")){
 					synchronized (Server.getLock()) {
 						svar = "OK";
 						Server.getLock().notify();
-						Main.printmenu();
+						Main.printMenu();
 					}
 				}
 				else if(input.equals("C")){
 					synchronized (Server.getLock()) {
 						svar = "CANCEL";
 						Server.getLock().notify();
-						Main.printmenu();
+						Main.printMenu();
 					}
 				}
 				else if (input.equals(getKnap())) {
