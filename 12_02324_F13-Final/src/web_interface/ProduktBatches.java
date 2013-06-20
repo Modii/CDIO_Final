@@ -20,14 +20,19 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import com.itextpdf.text.pdf.draw.LineSeparator;
+import com.itextpdf.text.pdf.draw.VerticalPositionMark;
 
 import businessLogic_layer.Functionality;
 import dao_interfaces.DALException;
 import dto.ProduktBatchDTO;
+import dto.ProduktBatchKompDTO;
+import dto.RaavareDTO;
 import dto.ReceptDTO;
+import dto.ReceptKompDTO;
 
 public class ProduktBatches {
 	public void handleAdminiProduktBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
@@ -69,11 +74,14 @@ public class ProduktBatches {
 	}
 	public void handlePrintProduktBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int produktBatchId, receptId, oprId, raavareId, status;
-		String udskrevet, raavareNavn, startDato, slutDato;
+		String udskrevet, receptNavn, raavareNavn, startDato, slutDato;
 		double tara, netto;
 		produktBatchId = Integer.parseInt(request.getParameter("pbId"));
 		ProduktBatchDTO pbDTO = funktionalitetsLaget.getProduktBatchDAO().getProduktBatch(produktBatchId);
 		receptId = pbDTO.getReceptId();
+		ReceptDTO receptDTO = funktionalitetsLaget.getReceptDAO().getRecept(receptId);
+		receptNavn = receptDTO.getReceptNavn();
+		List<ReceptKompDTO> receptKompList = funktionalitetsLaget.getReceptKompDAO().getReceptKompList(receptId);
 		status = pbDTO.getStatus();
 		startDato = pbDTO.getStartDato();
 		slutDato = pbDTO.getSlutDato();
@@ -90,23 +98,35 @@ public class ProduktBatches {
 	                new LineSeparator(0.5f, 95, BaseColor.BLUE, Element.ALIGN_CENTER, 3.5f));
 	        Chunk DOTTED = new Chunk(
 	                new DottedLineSeparator());
+	        Chunk tab1 = new Chunk(new VerticalPositionMark());
 	        // step 4
 	        document.add(new Paragraph("Udskrevet"));
 	        document.add(new Paragraph("Produkt Batch nr. "+produktBatchId));
 	        document.add(new Paragraph("Recept nr. "+receptId));
+	        document.add(new Paragraph("Recept navn: "+receptNavn));
 	        document.add(new Paragraph("OPR nr."));
 	        document.add(SEPERATOR);
-	        document.add(new Paragraph("Råvare nr."));
-	        document.add(new Paragraph("Råvare navn:"));
-	        document.add(DOTTED);
-	        ColumnText ct = new ColumnText(pdfWriter.getDirectContent());
-	        int column= 0;
-	        ct.setSimpleColumn(COLUMNS[column][0], COLUMNS[column][1],
-            COLUMNS[column][2], COLUMNS[column][3]);
-	        ct.addText(new Paragraph("HEJ"));
-	        ct.go(false);
-	        document.add(new Paragraph("\n"));
-	        document.add(SEPERATOR);
+	        for (ReceptKompDTO receptKomp: receptKompList) {
+	        	RaavareDTO raavare = funktionalitetsLaget.getRaavareDAO().getRaavare(receptKomp.getRaavareId());
+	        	ProduktBatchKompDTO produktBatchKomp = funktionalitetsLaget.getProduktBatchKompDAO().getProduktBatchKomp(produktBatchId, raavareId);
+		        document.add(new Paragraph("Råvare nr. "+receptKomp.getRaavareId()));
+		        document.add(new Paragraph("Råvare navn: "+raavare.getRaavareNavn()));
+		        document.add(DOTTED);
+		        PdfPTable table = new PdfPTable(5);
+		        table.getDefaultCell().setBorder(0);
+		        table.addCell("Nominel Netto");
+		        table.addCell("Tolerance");
+		        table.addCell("Tara");
+		        table.addCell("Netto");
+		        table.addCell("Operatør");
+		        table.addCell(""+receptKomp.getNomNetto());
+		        table.addCell(""+receptKomp.getTolerance());
+		        table.addCell("Tara");
+		        table.addCell("Netto");
+		        table.addCell("Batch");
+		        document.add(table);
+		        document.add(SEPERATOR);
+	        }
 	        document.add(new Paragraph("Sum Tara:"));
 	        document.add(new Paragraph("Sum Netto:"));
 	        document.add(new Paragraph("\n\n"));
@@ -132,6 +152,7 @@ public class ProduktBatches {
 	        os.close();
 		}
 		catch(DocumentException e) {
+			e.printStackTrace();
 			System.out.println("fanget");
 		}
 	}

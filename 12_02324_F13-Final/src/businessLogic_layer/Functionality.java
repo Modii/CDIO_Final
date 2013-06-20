@@ -4,12 +4,14 @@ import java.util.Random;
 import java.util.Scanner;
 import dao_interfaces.IOperatoerDAO;
 import dao_interfaces.IProduktBatchDAO;
+import dao_interfaces.IProduktBatchKompDAO;
 import dao_interfaces.IRaavareBatchDAO;
 import dao_interfaces.IRaavareDAO;
 import dao_interfaces.IReceptDAO;
 import dao_interfaces.IReceptKompDAO;
 import db_mysqldao.MySQLOperatoerDAO;
 import db_mysqldao.MySQLProduktBatchDAO;
+import db_mysqldao.MySQLProduktBatchKompDAO;
 import db_mysqldao.MySQLRaavareBatchDAO;
 import db_mysqldao.MySQLRaavareDAO;
 import db_mysqldao.MySQLReceptDAO;
@@ -19,15 +21,17 @@ import dao_interfaces.DALException;
 public class Functionality implements IFunctionality{
 
 	private IProduktBatchDAO produktBatchDAO = new MySQLProduktBatchDAO();
+	private IProduktBatchKompDAO produktBatchKompDAO = new MySQLProduktBatchKompDAO();
 	private IOperatoerDAO oprDAO = new MySQLOperatoerDAO();
 	private IRaavareDAO raavareDAO = new MySQLRaavareDAO();
 	private IReceptDAO receptDAO = new MySQLReceptDAO();
 	private IReceptKompDAO receptKompDAO = new MySQLReceptKompDAO();
 	private IRaavareBatchDAO raavareBatchDAO = new MySQLRaavareBatchDAO();
 
-	public Functionality(IProduktBatchDAO produktBatchDAO, IOperatoerDAO oprDAO, IRaavareDAO raavareDAO, IReceptDAO receptDAO, IReceptKompDAO receptKompDAO, IRaavareBatchDAO raavareBatchDAO) {
+	public Functionality(IProduktBatchDAO produktBatchDAO, IProduktBatchKompDAO produktBatchKompDAO, IOperatoerDAO oprDAO, IRaavareDAO raavareDAO, IReceptDAO receptDAO, IReceptKompDAO receptKompDAO, IRaavareBatchDAO raavareBatchDAO) {
 		super();
 		this.produktBatchDAO = produktBatchDAO;
+		this.produktBatchKompDAO = produktBatchKompDAO;
 		this.oprDAO = oprDAO;
 		this.raavareDAO = raavareDAO;
 		this.receptDAO = receptDAO;
@@ -286,6 +290,9 @@ public class Functionality implements IFunctionality{
 	}
 	public IProduktBatchDAO getProduktBatchDAO() {
 		return produktBatchDAO;
+	}
+	public IProduktBatchKompDAO getProduktBatchKompDAO() {
+		return produktBatchKompDAO;
 	}
 	public IReceptDAO getReceptDAO() {
 		return receptDAO;
