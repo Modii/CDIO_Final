@@ -47,9 +47,9 @@ public class Main {
 		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(
 				clientSocket.getInputStream()));
 
-		
-		s.sequence1(inFromServer, outToServer);
 
+		s.sequence1(inFromServer, outToServer);
+		scan.close();
 		clientSocket.close();
 	}
 }
