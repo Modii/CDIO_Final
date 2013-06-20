@@ -31,6 +31,11 @@ public class Server implements Runnable{
 				if(Main.inline.startsWith("CP")){
 					portdst = (instream.read());
 				}
+				else if (Main.inline.startsWith("DW")){
+					Main.printMenu();
+					outstream.writeBytes("DW A\r\n");
+					outstream.flush();
+				}
 				else if (Main.inline.startsWith("D")){
 					if (Main.inline.equals("D"))
 						Main.instruktionsDisplay="";
@@ -48,11 +53,6 @@ public class Server implements Runnable{
 				else if (Main.inline.startsWith("S")){
 					Main.printMenu();
 					outstream.writeBytes("S S      " + (Main.brutto)+ " kg " +"\r\n");
-					outstream.flush();
-				}
-				else if (Main.inline.startsWith("DW")){
-					Main.printMenu();
-					outstream.writeBytes("DW A\r\n");
 					outstream.flush();
 				}
 				else if (Main.inline.startsWith("P121")){
