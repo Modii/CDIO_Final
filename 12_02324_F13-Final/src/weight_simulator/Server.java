@@ -1,4 +1,4 @@
-package weight;
+package weight_simulator;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -24,7 +24,7 @@ public class Server implements Runnable{
 			Main.sock = Main.listener.accept();
 			instream = new BufferedReader(new InputStreamReader(Main.sock.getInputStream()));
 			outstream = new DataOutputStream(Main.sock.getOutputStream());
-			Main.printmenu();
+			Main.printMenu();
 			outstream.writeBytes("I4 A \"3154308\"\r\n");
 			while (!(Main.inline = instream.readLine().toUpperCase()).isEmpty()){
 				System.out.println("Streng modtaget:"+Main.inline);
@@ -33,56 +33,61 @@ public class Server implements Runnable{
 				}
 				else if (Main.inline.startsWith("D")){
 					if (Main.inline.equals("D"))
-						Main.IndstruktionsDisplay="";
+						Main.instruktionsDisplay="";
 					else
-						Main.IndstruktionsDisplay=(Main.inline.substring(2,
+						Main.instruktionsDisplay=(Main.inline.substring(2,
 								Main.inline.length()));
-					Main.printmenu();
+					Main.printMenu();
 					outstream.writeBytes("DB"+"\r\n");
 				}
 				else if (Main.inline.startsWith("T")){
 					Main.tara=Main.brutto;
 					outstream.writeBytes("T S      " + (Main.tara) + " kg "+"\r\n");
-					Main.printmenu();
+					Main.printMenu();
 				}
 				else if (Main.inline.startsWith("S")){
-					Main.printmenu();
+					Main.printMenu();
 					outstream.writeBytes("S S      " + (Main.brutto)+ " kg " +"\r\n");
 					outstream.flush();
 				}
 				else if (Main.inline.startsWith("DW")){
-					Main.printmenu();
+					Main.printMenu();
 					outstream.writeBytes("DW A\r\n");
 					outstream.flush();
 				}
 				else if (Main.inline.startsWith("P121")){
-					Main.printmenu();
+					Main.printMenu();
 					outstream.writeBytes("P121 A\r\n");
 					outstream.flush();
 				}
 				else if (Main.inline.startsWith("RM20")){
 					synchronized(lock){
 						String[] temp = Main.inline.split("\"");
-						Main.IndstruktionsDisplay = temp[1];
-						Main.printmenu();
+						Main.instruktionsDisplay = temp[1];
+						Main.printMenu();
 						outstream.writeBytes("RM20 B\r\n");
 						lock.wait();
-						outstream.writeBytes("RM20 A \"" + Local.getSvar() + "\"\r\n");
-						outstream.flush();
+						if(Local.getSvar().equals("CANCEL")){
+							outstream.writeBytes("RM20 C \r\n");
+						}
+						else{
+							outstream.writeBytes("RM20 A \"" + Local.getSvar() + "\"\r\n");
+							outstream.flush();
+						}
 					}
 				}
 				else if (Main.inline.startsWith("RM30")){
-						String[] temp = Main.inline.split("\""); //KNAPPENAVN
-						Local.setKnap(temp[1]);
-						outstream.writeBytes("RM30 B\r\n");
-						outstream.flush();
+					String[] temp = Main.inline.split("\""); //KNAPPENAVN
+					Local.setKnap(temp[1]);
+					outstream.writeBytes("RM30 B\r\n");
+					outstream.flush();
 				}
 				else if (Main.inline.startsWith("RM39")){
 					synchronized(lock){
 						outstream.writeBytes("RM39 A\r\n");
 						outstream.flush();
-						Main.IndstruktionsDisplay = "Knap tilfoejet: "+Local.getKnap();
-						Main.printmenu();
+						Main.instruktionsDisplay = "Knap tilfoejet: "+Local.getKnap();
+						Main.printMenu();
 						lock.wait();
 						outstream.writeBytes("RM30 A 1\r\n");
 					}
@@ -90,8 +95,8 @@ public class Server implements Runnable{
 				else if (Main.inline.startsWith("RM49")){
 					synchronized(lock){
 						String[] temp = Main.inline.split("\"");
-						Main.IndstruktionsDisplay = temp[1];
-						Main.printmenu();
+						Main.instruktionsDisplay = temp[1];
+						Main.printMenu();
 						outstream.writeBytes("RM49 B\r\n");
 						lock.wait();
 						if (Local.getSvar().equals("OK")) 
@@ -105,7 +110,7 @@ public class Server implements Runnable{
 					//ikke på en fysisk vægt
 					String temp= Main.inline.substring(2,Main.inline.length());
 					Main.brutto = Double.parseDouble(temp);
-					Main.printmenu();
+					Main.printMenu();
 					outstream.writeBytes("DB"+"\r\n");
 					outstream.flush();
 				}
@@ -129,5 +134,5 @@ public class Server implements Runnable{
 	public static Object getLock() {
 		return lock;
 	}
-	
+
 }
