@@ -1,4 +1,5 @@
 package web_interface;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.servlet.ServletConfig;
@@ -89,6 +90,8 @@ public class Servlet extends HttpServlet {
 				produktBatchMetoder.handleCreateProduktBatch(request, response, funktionalitetsLaget);
 			if (request.getParameter("showproduktbatch") != null && request.getParameter("showproduktbatch").equals("Vis produktbatch"))
 				produktBatchMetoder.handleShowProduktBatch(request, response, funktionalitetsLaget);
+			if (request.getParameter("udskriv") != null && request.getParameter("udskriv").equals("Udskriv"))
+				produktBatchMetoder.handlePrintProduktBatch(request, response, funktionalitetsLaget);
 			if (request.getParameter("createopr_submit") != null && request.getParameter("createopr_submit").equals("Opret Operatør"))
 				brugerMetoder.handleCreateOprSubmit(request, response, funktionalitetsLaget);
 			if (request.getParameter("removeopr_submit") != null && request.getParameter("removeopr_submit").equals("Slet Operatør"))
