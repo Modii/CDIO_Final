@@ -127,7 +127,7 @@ public class Functionality implements IFunctionality{
 	/**
 	 * Her sammenlignes operatør id fra brugerinput med eksisterende id'er i vores Array
 	 * Fra index {0;9} indeholder listen objekter med parametrerne null.
-	 * Derfor bruges catch p� NullPointerException, s� man ikke kan tilg� disse objekter.  
+	 * Derfor bruges catch på NullPointerException, så man ikke kan tilgå disse objekter.  
 	 */
 	public boolean testId(String inputID) throws DALException {
 		try {
@@ -214,7 +214,7 @@ public class Functionality implements IFunctionality{
 	}
 	/**
 	 * Her sammenlignes password fra brugerinput med eksisterende password i vores Array 
-	 * baseret p� det f�rstindtastede id (int i) som er unikt for operat�r til operat�r  
+	 * baseret på det førstindtastede id (int i) som er unikt for operatør til operatør  
 	 */
 	public boolean testPassword(int oprID, String password) throws DALException {
 		return (password.equals(oprDAO.getOperatoer(oprID).getPassword()));
@@ -254,7 +254,7 @@ public class Functionality implements IFunctionality{
 	}
 
 	/**
-	 * Her tjekkers om det f�rst indtastede nye password er ens 
+	 * Her tjekkers om det først indtastede nye password er ens 
 	 * med det andet indtastede nye password  
 	 */
 	public boolean checkIfIdentical(String s, String k){

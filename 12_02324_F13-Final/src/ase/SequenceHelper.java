@@ -13,7 +13,6 @@ import dto.ReceptKompDTO;
 
 
 public class SequenceHelper {
-	private Sequences seq = new Sequences();
 	private MySQLReceptKompDAO mRecKomp = new MySQLReceptKompDAO();
 
 	String dato, weightMsg, serverInput, itemName, userInput;
@@ -172,9 +171,6 @@ public class SequenceHelper {
 		}
 	}
 
-
-
-
 	public int splitInt(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 		this.setSplittedInput(this.getServerInput().split(" "));
 		int returnSplitInt = Integer.parseInt(this.getSplittedInput()[2].replaceAll("\"",""));
@@ -198,72 +194,4 @@ public class SequenceHelper {
 		outToServer.flush();
 		this.setServerInput(inFromServer.readLine());
 	}
-
-	public void checkForCancel(BufferedReader inFromServer, DataOutputStream outToServer){
-		if(this.getServerInput().contains(" C"))
-			try {
-				seq.sequence2(inFromServer, outToServer);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		else
-			return;
-	}
-
-
-	// Denne metode kan bruges adskillige steder i koden. Den får som input at vide, hvilken sekvens, den skal gå til, hvis vægtens retur-besked er en fejlbesked.
-	// Metoden er til for at undgå bunker af if og else.
-	// Hvis vægten returnerer en acceptabel kommando, vender metoden blot tilbage til sekvensen.
-	// Kan eventuelt udvides med en RM49 2, der siger, at der opstod en fejl.
-	public void tjekMsgFejlOgRead(int sekvensVedFejl, BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
-		try{
-			if (this.getServerInput().contains("T S ") || this.getServerInput().contains("S S ") || this.getServerInput().contains("RM30 B")  || this.getServerInput().contains("DW A") || this.getServerInput().contains("P121 A") || this.getServerInput().contains("RM39 A"))
-				return;
-			else if(this.getServerInput().contains(" B") || this.getServerInput().contains(" A")){
-				this.setServerInput(inFromServer.readLine());
-				return;
-			}
-			else if(this.getServerInput().contains(" I") || this.getServerInput().contains(" L") || this.getServerInput().contains("T +") || this.getServerInput().contains("T -") || this.getServerInput().contains("S +") || this.getServerInput().contains("S -")){
-				switch(sekvensVedFejl){
-				case 2: seq.sequence2(inFromServer, outToServer);
-				break;
-
-				case 3: seq.sequence3(inFromServer, outToServer);
-				break;
-
-				case 4: seq.sequence4(inFromServer, outToServer);
-				break;
-
-				case 5: seq.sequence5(inFromServer, outToServer);
-				break;
-
-				case 6: seq.sequence6(inFromServer, outToServer);
-				break;
-
-				case 7: seq.sequence7(inFromServer, outToServer);
-				break;
-
-				case 8: seq.sequence8(inFromServer, outToServer);
-				break;
-
-				case 9: seq.sequence9(inFromServer, outToServer);
-				break;
-
-				case 10: seq.sequence10(inFromServer, outToServer);
-				break;
-
-				case 11: seq.sequence11(inFromServer, outToServer);
-				break;
-
-				case 12: seq.sequence12(inFromServer, outToServer);
-				break;
-				}
-			}
-		}
-		catch (DALException e) {
-			e.printStackTrace();
-		}
-	}
-
-
 }
