@@ -10,7 +10,7 @@
 
 	<form method="POST" action="">
 		<input type="hidden" name="id" value="${autoid}">
-		<h1>Opret operatør</h1>
+		<h1>Opret bruger</h1>
 		Id: <input type="text" name="id" disabled value="${autoid}"><br>
 		Navn: <input type="text" name="navn"><br> Initialer: <input
 			type="text" name="init"><br> CPR-nummer: <input
@@ -19,7 +19,7 @@
 			<option value="2">Farmaceut</option>
 			<option value="3">Værkfører</option>
 			<option value="4">Operatør</option>
-		</select> <br> <input type="submit" value="Opret Operatør"
+		</select> <br> <input type="submit" value="Opret bruger"
 			name="createopr_submit">
 	</form>
 	${succes} ${password} ${fail}

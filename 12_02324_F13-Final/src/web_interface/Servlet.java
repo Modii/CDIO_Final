@@ -89,11 +89,11 @@ public class Servlet extends HttpServlet {
 				produktBatchMetoder.handleCreateProduktBatch(request, response, funktionalitetsLaget);
 			if (request.getParameter("showproduktbatch") != null && request.getParameter("showproduktbatch").equals("Vis produktbatch"))
 				produktBatchMetoder.handleShowProduktBatch(request, response, funktionalitetsLaget);
-			if (request.getParameter("createopr_submit") != null && request.getParameter("createopr_submit").equals("Opret Operatør"))
+			if (request.getParameter("createopr_submit") != null && request.getParameter("createopr_submit").equals("Opret bruger"))
 				brugerMetoder.handleCreateOprSubmit(request, response, funktionalitetsLaget);
-			if (request.getParameter("removeopr_submit") != null && request.getParameter("removeopr_submit").equals("Slet Operatør"))
+			if (request.getParameter("removeopr_submit") != null && request.getParameter("removeopr_submit").equals("Slet bruger"))
 				brugerMetoder.handleRemoveOprSubmit(request, response, funktionalitetsLaget);
-			if (request.getParameter("updateopr_submit") != null && request.getParameter("updateopr_submit").equals("Opdater operatør"))
+			if (request.getParameter("updateopr_submit") != null && request.getParameter("updateopr_submit").equals("Opdater bruger"))
 				brugerMetoder.handleUpdateOprSubmit(request, response, funktionalitetsLaget);
 			if (request.getParameter("createraavare_submit") != null && request.getParameter("createraavare_submit").equals("Opret råvare"))
 				raavareMetoder.handleCreateVareSubmit(request, response, funktionalitetsLaget);

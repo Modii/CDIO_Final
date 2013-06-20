@@ -4,12 +4,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Opdater operatør</title>
+<title>Opdater Bruger</title>
 </head>
 <body>
 
 	<form method="POST" action="">
-		<h1>Opdater operatør</h1>
+		<h1>Opdater bruger</h1>
 		Id: ${oprList}<br> Navn: <input
 			type="text" name="navn"><br> Initialer: <input
 			type="text" name="init"><br> CPR-nummer: <input
@@ -20,7 +20,7 @@
 			<option value="4">Operatør</option>
 		</select>
 		<br>
-		<input type="submit" value="Opdater operatør" name="updateopr_submit">
+		<input type="submit" value="Opdater bruger" name="updateopr_submit">
 	</form>
 	${succes} ${password}
 

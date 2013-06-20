@@ -4,10 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Operatør liste</title>
+<title>Brugerliste</title>
 </head>
 <body>
-	<h1>Operatørliste</h1>
+	<h1>Brugerliste</h1>
 	${list}
 	<form action="" method="POST">
 		<br> <br> <br> <br> <input type="submit"

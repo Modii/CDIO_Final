@@ -4,14 +4,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Fjern operatør</title>
+<title>Slet bruger</title>
 </head>
 <body>
 
 	<form method="POST" action="">
-		<h1>Slet operatør</h1>
+		<h1>Slet bruger</h1>
 		Id: ${oprList}<br> <input
-			type="submit" value="Slet Operatør" name="removeopr_submit">
+			type="submit" value="Slet bruger" name="removeopr_submit">
 	</form>
 	${succes}
 

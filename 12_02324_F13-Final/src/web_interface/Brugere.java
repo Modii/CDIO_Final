@@ -98,7 +98,7 @@ public class Brugere {
 		if (errorMsg.length() == 0) {
 			funktionalitetsLaget.getOprDAO().createOperatoer(new OperatoerDTO(id, navn, init, cpr, newPw, aktoer));
 			request.setAttribute("password", "<br>Brugerens password er: " + newPw);
-			request.setAttribute("succes", "Operatør oprettet!");
+			request.setAttribute("succes", "Bruger oprettet!");
 		}
 		else
 			request.setAttribute("fail", errorMsg);
@@ -122,7 +122,7 @@ public class Brugere {
 		}
 		html +="</select>";
 		request.setAttribute("oprList", html);
-		request.setAttribute("succes", "Operatør slettet!");
+		request.setAttribute("succes", "Bruger slettet!");
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/removeopr.jsp").forward(request, response);
 	}
 	public void handleUpdateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
@@ -148,7 +148,7 @@ public class Brugere {
 		
 		request.setAttribute("password", "<br>Brugerens password er: " + newPw);
 		
-		request.setAttribute("succes", "Operatør opdateret!");
+		request.setAttribute("succes", "Bruger opdateret!");
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/updateopr.jsp").forward(request, response);
 	}
 
