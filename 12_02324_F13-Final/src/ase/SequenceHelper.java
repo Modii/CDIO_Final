@@ -33,7 +33,16 @@ public class SequenceHelper {
 				+ df.format(d.get(Calendar.SECOND));
 		return dato;
 	}
+	
+	double trimDecimal(double d) {
+		DecimalFormat df = new DecimalFormat("#.###");
+		String trimmed = (df.format(d));
+		String trimmed1 = trimmed.replace(',' , '.');
+		double trimmedTemp = Double.parseDouble(trimmed1);
+		return trimmedTemp;
 
+	}
+	
 	double getBrutto() {
 		return brutto;
 	}
@@ -77,7 +86,7 @@ public class SequenceHelper {
 		return serverInput;
 	}
 	void setServerInput(String serverInput) {
-		// System.out.println("setServerInput: " + serverInput);
+		//System.out.println("setServerInput: " + serverInput);
 		this.serverInput = serverInput;
 	}
 	String getItemName() {
@@ -145,7 +154,7 @@ public class SequenceHelper {
 	}
 	public void setTolerance() {
 		try {
-			tolerance = ((mRecKomp.getReceptKomp(this.getReceptID(), this.getRaavareID()).getNomNetto()) * (mRecKomp.getReceptKomp(this.getReceptID(), this.getRaavareID()).getTolerance()) / 100);
+			tolerance = this.trimDecimal(((mRecKomp.getReceptKomp(this.getReceptID(), this.getRaavareID()).getNomNetto()) * (mRecKomp.getReceptKomp(this.getReceptID(), this.getRaavareID()).getTolerance()) / 100));
 		} catch (DALException e) {
 			e.printStackTrace();
 		}
@@ -155,7 +164,7 @@ public class SequenceHelper {
 	}
 	public void setTotPosTol() {
 		try {
-			totPosTol = (mRecKomp.getReceptKomp(this.getReceptID(), this.getRaavareID()).getNomNetto()) + this.getTolerance();
+			totPosTol = this.trimDecimal(((mRecKomp.getReceptKomp(this.getReceptID(), this.getRaavareID()).getNomNetto())) + this.getTolerance());
 		} catch (DALException e) {
 			e.printStackTrace();
 		}
@@ -165,7 +174,7 @@ public class SequenceHelper {
 	}
 	public void setTotNegTol() {
 		try {
-			totNegTol = (mRecKomp.getReceptKomp(this.getReceptID(), this.getRaavareID()).getNomNetto()) - this.getTolerance();
+			totNegTol = this.trimDecimal(((mRecKomp.getReceptKomp(this.getReceptID(), this.getRaavareID()).getNomNetto())) - this.getTolerance());
 		} catch (DALException e) {
 			e.printStackTrace();
 		}

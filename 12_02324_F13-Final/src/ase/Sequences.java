@@ -66,35 +66,45 @@ public class Sequences {
 		} catch (DALException e) {
 			e.printStackTrace();
 		}
+		catch(NumberFormatException e){
+			this.sequence2(inFromServer, outToServer);
+		}
 	}
 
 	//-----------------------------------------------------------------
 	// (3)	Operatør indtaster produktbatchnummer.
 	//-----------------------------------------------------------------
-	public void sequence3(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException
+	public void sequence3(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
-		seqH.RMPrintOgRead(20, 8, "Indtast produktbatchnr.", inFromServer, outToServer);
-		this.tjekMsgFejlOgRead(3, inFromServer, outToServer);
-		this.checkForCancel(inFromServer, outToServer);
-		seqH.setPbID(seqH.splitInt(inFromServer, outToServer));
-
-		// Ikke eksisterende PbID.
-		if (!func.testPbId(seqH.getPbID())){
-			seqH.RMPrintOgRead(49, 2, "Dette produktbatch ID eksisterer ikke!", inFromServer, outToServer);
+		try {
+			seqH.RMPrintOgRead(20, 8, "Indtast produktbatchnr.", inFromServer, outToServer);
 			this.tjekMsgFejlOgRead(3, inFromServer, outToServer);
+			this.checkForCancel(inFromServer, outToServer);
+			seqH.setPbID(seqH.splitInt(inFromServer, outToServer));
+
+			// Ikke eksisterende PbID.
+			if (!func.testPbId(seqH.getPbID())){
+				seqH.RMPrintOgRead(49, 2, "Dette produktbatch ID eksisterer ikke!", inFromServer, outToServer);
+				this.tjekMsgFejlOgRead(3, inFromServer, outToServer);
+				this.sequence3(inFromServer, outToServer);
+			} 
+
+			// Allerede afsluttet PB (status=2).
+			else if(mPb.getProduktBatch(seqH.getPbID()).getStatus() == 2){
+				seqH.RMPrintOgRead(49, 2, "Produktbatch allerede afsluttet!", inFromServer, outToServer);
+				this.tjekMsgFejlOgRead(3, inFromServer, outToServer);
+				this.sequence3(inFromServer, outToServer);	
+			}
+			else{
+				seqH.setReceptID(mPb.getProduktBatch(seqH.getPbID()).getReceptId());
+				seqH.setListen(mRecKomp.getReceptKompList(seqH.getReceptID()));
+				this.sequence4(inFromServer, outToServer);
+			}
+		} catch (DALException e) {
+			e.printStackTrace();
+		}		catch(NumberFormatException e){
 			this.sequence3(inFromServer, outToServer);
-		} 
-
-		// Allerede afsluttet PB (status=2).
-		else if(mPb.getProduktBatch(seqH.getPbID()).getStatus() == 2){
-			seqH.RMPrintOgRead(49, 2, "Produktbatch allerede afsluttet!", inFromServer, outToServer);
-			this.tjekMsgFejlOgRead(3, inFromServer, outToServer);
-			this.sequence3(inFromServer, outToServer);	
 		}
-		else
-			seqH.setReceptID(mPb.getProduktBatch(seqH.getPbID()).getReceptId());
-		seqH.setListen(mRecKomp.getReceptKompList(seqH.getReceptID()));
-		this.sequence4(inFromServer, outToServer);
 	}
 
 	//-----------------------------------------------------------------
@@ -194,32 +204,46 @@ public class Sequences {
 	//-----------------------------------------------------------------
 	// (10) Vægten beder om raavarebatch nummer på råvare.
 	//-----------------------------------------------------------------
-	public void sequence10(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException, DALException{
+	public void sequence10(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 
-		seqH.RMPrintOgRead(20, 8, "Indtast raavarebatchnr.", inFromServer, outToServer);
-		this.tjekMsgFejlOgRead(10, inFromServer, outToServer);
-		this.checkForCancel(inFromServer, outToServer);
-		seqH.setRbID(seqH.splitInt(inFromServer, outToServer));
-		if (!func.testRaavareId(seqH.getRbID())){
-			seqH.RMPrintOgRead(49, 2, "Dette raavarebatchnr eksisterer ikke!", inFromServer, outToServer);
+		try {
+			seqH.RMPrintOgRead(20, 8, "Indtast raavarebatchnr.", inFromServer, outToServer);
 			this.tjekMsgFejlOgRead(10, inFromServer, outToServer);
-			this.sequence10(inFromServer, outToServer);
-		}
+			this.checkForCancel(inFromServer, outToServer);
+			seqH.setRbID(seqH.splitInt(inFromServer, outToServer));
 
-		else if(mRaaB.getRaavareBatch(seqH.getRbID()).getMaengde() < mRecKomp.getReceptKomp(seqH.getReceptID(), seqH.getRaavareID()).getNomNetto()){
-			String weightMsg = "Der er ikke nok '" + mRaa.getRaavare(mRaaB.getRaavareBatch(seqH.getRbID()).getRaavareId()).getRaavareNavn() + "' i raavarebatchen. Vaelg venligst en anden raavarebatch.";
-			seqH.RMPrintOgRead(49, 2, weightMsg, inFromServer, outToServer);
-			this.tjekMsgFejlOgRead(10, inFromServer, outToServer);
+			if (!func.testRaavareId(seqH.getRbID())){
+				seqH.RMPrintOgRead(49, 2, "Dette raavarebatchnr eksisterer ikke!", inFromServer, outToServer);
+				this.tjekMsgFejlOgRead(10, inFromServer, outToServer);
+				this.sequence10(inFromServer, outToServer);
+			}
+
+			else if(mRaaB.getRaavareBatch(seqH.getRbID()).getRaavareId() != seqH.getRaavareID()){
+				String weightMsg = "Du har indtastet et forkert raavarebatch. Du skal afveje " + mRaa.getRaavare(seqH.getRaavareID()).getRaavareNavn();
+				seqH.RMPrintOgRead(49, 2, weightMsg, inFromServer, outToServer);
+				this.tjekMsgFejlOgRead(10, inFromServer, outToServer);
+				this.sequence10(inFromServer, outToServer);
+			}
+
+			else if(mRaaB.getRaavareBatch(seqH.getRbID()).getMaengde() < mRecKomp.getReceptKomp(seqH.getReceptID(), seqH.getRaavareID()).getNomNetto()){
+				String weightMsg = "Der er ikke nok '" + mRaa.getRaavare(mRaaB.getRaavareBatch(seqH.getRbID()).getRaavareId()).getRaavareNavn() + "' i raavarebatchen. Vaelg venligst en anden raavarebatch.";
+				seqH.RMPrintOgRead(49, 2, weightMsg, inFromServer, outToServer);
+				this.tjekMsgFejlOgRead(10, inFromServer, outToServer);
+				this.sequence10(inFromServer, outToServer);
+			}	
+
+			else{
+				// Udregner tolerance ud fra angivet tolerance og nominel nettovægt.
+				seqH.setTolerance(); seqH.setTotPosTol(); seqH.setTotNegTol();
+				String weightMsg = "Du har valgt: " + mRaa.getRaavare(mRaaB.getRaavareBatch(seqH.getRbID()).getRaavareId()).getRaavareNavn() + ". Tryk OK for at paabegynde afvejning. Den kraevede maengde skal vaere mellem " + seqH.getTotNegTol() + " kg og " + seqH.getTotPosTol() +" kg. Tryk AFVEJ i den efterfoelgende skaerm for at afveje.";
+				seqH.RMPrintOgRead(49, 2, weightMsg, inFromServer, outToServer);
+				seqH.setServerInput(inFromServer.readLine());
+				this.sequence11(inFromServer, outToServer);
+			}
+		}  catch (DALException e) {
+			e.printStackTrace();
+		}		catch(NumberFormatException e){
 			this.sequence10(inFromServer, outToServer);
-		}	
-		
-		else{
-			// Udregner tolerance ud fra angivet tolerance og nominel nettovægt.
-			seqH.setTolerance(); seqH.setTotPosTol(); seqH.setTotNegTol();
-			String weightMsg = "Du har valgt: " + mRaa.getRaavare(mRaaB.getRaavareBatch(seqH.getRbID()).getRaavareId()).getRaavareNavn() + ". Tryk OK for at paabegynde afvejning. Den kraevede maengde skal vaere mellem " + seqH.getTotNegTol() + " kg og " + seqH.getTotPosTol() +" kg. Tryk AFVEJ i den efterfoelgende skaerm for at afveje.";
-			seqH.RMPrintOgRead(49, 2, weightMsg, inFromServer, outToServer);
-			seqH.setServerInput(inFromServer.readLine());
-			this.sequence11(inFromServer, outToServer);
 		}
 	}
 
@@ -233,7 +257,7 @@ public class Sequences {
 		seqH.setServerInput(inFromServer.readLine());
 		this.tjekMsgFejlOgRead(11, inFromServer, outToServer);
 
-		// Tilføjer tolerence-pil vha. udregnet tolerance.
+		// Tilføjer tolerance-pil vha. udregnet tolerance.
 		outToServer.writeBytes("P121 " + mRecKomp.getReceptKomp(seqH.getReceptID(), seqH.getRaavareID()).getNomNetto() + " kg " + seqH.getTolerance() + " kg " + seqH.getTolerance() + " kg " + "\r\n");
 		seqH.setServerInput(inFromServer.readLine());
 		this.tjekMsgFejlOgRead(11, inFromServer, outToServer);
@@ -248,13 +272,12 @@ public class Sequences {
 		seqH.setServerInput(inFromServer.readLine());
 		this.tjekMsgFejlOgRead(11, inFromServer, outToServer);
 
-		// Afvejer hvis der ikke sker fejl ved softkey-tryk. Der kan kun trykkes på 1 korrekt knap, 
-		// derfor tjekkes der ikke for nogen bestemt knap korrekt knap (RM30 A 1)
+		// Venter på, at der trykkes OK.
+		seqH.setServerInput(inFromServer.readLine());
 		outToServer.writeBytes("S\r\n");
 		seqH.setServerInput(inFromServer.readLine());
 		this.tjekMsgFejlOgRead(9, inFromServer, outToServer);
 		seqH.setNetto(seqH.splitDouble(inFromServer, outToServer));
-		// System.out.println("Netto: " + seqH.getNetto() +". TotNegTol: " + seqH.getTotNegTol() + ". TotPosTol: " + seqH.getTotPosTol());
 
 		if(seqH.getNetto() >= seqH.getTotNegTol() && seqH.getNetto() <= seqH.getTotPosTol()){
 			RaavareBatchDTO raavareBatch = mRaaB.getRaavareBatch(seqH.getRbID());
@@ -267,6 +290,7 @@ public class Sequences {
 			mPb.updateProduktBatch(produktBatch);
 			this.sequence5(inFromServer, outToServer);
 		}
+		
 		else{
 			String weightMsg = "Ugyldig vejning. Den nominelle nettovaegt skal vaere mellem " + seqH.getTotNegTol() + " kg og " + seqH.getTotPosTol() + " kg ifoelge databasens tolerancevaerdier. Undgaa yderligere, at vaegten er i overbelastning eller underbelastning.";
 			seqH.RMPrintOgRead(49, 2, weightMsg, inFromServer, outToServer);
@@ -313,8 +337,9 @@ public class Sequences {
 	// Hvis vægten returnerer en acceptabel kommando, vender metoden blot tilbage til sekvensen.
 	public void tjekMsgFejlOgRead(int sekvensVedFejl, BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 		try{
-			if (seqH.getServerInput().contains("T S ") || seqH.getServerInput().contains("S S ") || seqH.getServerInput().contains("RM30 B")  || seqH.getServerInput().contains("DW A") || seqH.getServerInput().contains("P121 A") || seqH.getServerInput().contains("RM39 A"))
+			if (seqH.getServerInput().contains("T S ") || seqH.getServerInput().contains("S S ") || seqH.getServerInput().contains("RM30 B")  || seqH.getServerInput().contains("DW A") || seqH.getServerInput().contains("P121 A") || seqH.getServerInput().contains("RM39 A")){
 				return;
+			}
 			else if(seqH.getServerInput().contains(" B") || seqH.getServerInput().contains(" A")){
 				seqH.setServerInput(inFromServer.readLine());
 				return;
@@ -360,6 +385,4 @@ public class Sequences {
 			e.printStackTrace();
 		}
 	}
-
-
 }
