@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import businessLogic_layer.Functionality;
+import businessLogic_layer.IFunctionality;
 import db_connection.Connector;
 
 
@@ -41,7 +42,7 @@ public class Servlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		Functionality funktionalitetsLaget = new Functionality();
+		IFunctionality funktionalitetsLaget = new Functionality();
 		try{
 
 			if (request.getParameter("login") != null && request.getParameter("login").equals("Log ind")) {

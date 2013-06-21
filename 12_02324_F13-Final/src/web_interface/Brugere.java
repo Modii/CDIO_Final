@@ -8,19 +8,18 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import businessLogic_layer.Functionality;
+import businessLogic_layer.IFunctionality;
 import dao_interfaces.DALException;
 import dto.OperatoerDTO;
 
 public class Brugere {
 
-	public void handleAdminiBruger(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+	public void handleAdminiBruger(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/adminibruger.jsp").forward(request, response);
 	}
-	public void handleCreateOpr(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+	public void handleCreateOpr(ServletRequest request, ServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException {
 	}
-	public void handleShowOpr(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleShowOpr(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		String html = "<table border=1>";
 		html += "<tr><td>ID</td><td>Navn</td><td>Initialer</td><td>CPR</td><td>Password</td><td>Aktør</td></tr>";
 		int id,aktoer;
@@ -40,7 +39,7 @@ public class Brugere {
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/showopr.jsp").forward(request, response);
 	}
 
-	public void handleRemoveOpr(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleRemoveOpr(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int oprId, oprAktoer;
 		String oprNavn;
 		List<OperatoerDTO> oprList = funktionalitetsLaget.getOprDAO().getOperatoerList();
@@ -56,7 +55,7 @@ public class Brugere {
 		request.setAttribute("oprList", html);
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/removeopr.jsp").forward(request, response);
 	}
-	public void handleUpdateOpr(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleUpdateOpr(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int oprId;
 		String oprNavn;
 		List<OperatoerDTO> oprList = funktionalitetsLaget.getOprDAO().getOperatoerList();
@@ -71,7 +70,7 @@ public class Brugere {
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/updateopr.jsp").forward(request, response);
 	}
 	
-	public void handleCreateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleCreateOprSubmit(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		String navn = request.getParameter("navn");
 		String init = request.getParameter("init");
@@ -105,7 +104,7 @@ public class Brugere {
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/createopr.jsp").forward(request, response);
 	}
 
-	public void handleRemoveOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleRemoveOprSubmit(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		funktionalitetsLaget.getOprDAO().removeOperatoer(funktionalitetsLaget.getOprDAO().getOperatoer(id));
 		
@@ -125,7 +124,7 @@ public class Brugere {
 		request.setAttribute("succes", "Bruger slettet!");
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/removeopr.jsp").forward(request, response);
 	}
-	public void handleUpdateOprSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleUpdateOprSubmit(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		String navn = request.getParameter("navn");
 		String init = request.getParameter("init");

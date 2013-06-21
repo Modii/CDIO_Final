@@ -24,7 +24,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
-import businessLogic_layer.Functionality;
+import businessLogic_layer.IFunctionality;
 import dao_interfaces.DALException;
 import dto.ProduktBatchDTO;
 import dto.ProduktBatchKompDTO;
@@ -34,10 +34,10 @@ import dto.ReceptDTO;
 import dto.ReceptKompDTO;
 
 public class ProduktBatches {
-	public void handleAdminiProduktBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+	public void handleAdminiProduktBatch(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/produktbatch/adminiproduktbatch.jsp").forward(request, response);
 	}
-	public void handleCreateProduktBatch(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleCreateProduktBatch(ServletRequest request, ServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int receptId;
 		String receptNavn;
 		List<ReceptDTO> receptList = funktionalitetsLaget.getReceptDAO().getReceptList();
@@ -51,7 +51,7 @@ public class ProduktBatches {
 		request.setAttribute("receptList", html);
 		request.getRequestDispatcher("/WEB-INF/admin/produktbatch/createproduktbatch.jsp").forward(request, response);
 	}
-	public void handleShowProduktBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleShowProduktBatch(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		String html = "<table border=1>";
 		html += "<tr><td>Produktbatch ID</td><td>Recept ID</td><td>Dato</td><td>Status</td><td>Udskriv</td></tr>";
 		int produktbatchid, receptid, status;
@@ -68,7 +68,7 @@ public class ProduktBatches {
 		request.setAttribute("list", html);
 		request.getRequestDispatcher("/WEB-INF/admin/produktbatch/showproduktbatch.jsp").forward(request, response);
 	}
-	public void handlePrintProduktBatch(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handlePrintProduktBatch(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int produktBatchId, receptId, oprId = 0, raavareId, status, raavareBatchId = 0;
 		String udskrevet, receptNavn, raavareNavn, startDato, slutDato;
 		double tara = 0, netto = 0, taraSum = 0, nettoSum = 0;
@@ -201,7 +201,7 @@ public class ProduktBatches {
 		return status;
 	}
 	
-	public void handleCreateProduktBatchSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleCreateProduktBatchSubmit(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int produktbatchid = 0, receptid, status;
 		String errorMsg = "", slutDato = "",startDato;
 		try {

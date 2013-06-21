@@ -8,8 +8,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import businessLogic_layer.Functionality;
+import businessLogic_layer.IFunctionality;
 import dao_interfaces.DALException;
 import dto.OperatoerDTO;
 
@@ -17,7 +16,7 @@ public class Other {
 	
 
 
-	public void handleLogIn(HttpServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException{
+	public void handleLogIn(HttpServletRequest request, ServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException{
 		HttpSession session = request.getSession(true);
 		String txtID = request.getParameter("Id");
 		String pw = request.getParameter("Password");
@@ -47,7 +46,6 @@ public class Other {
 				request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
 			}
 		} catch (DALException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -69,7 +67,7 @@ public class Other {
 	}
 
 	public void handleChangePwSubmit(HttpServletRequest request,
-			HttpServletResponse response, Functionality funktionalitetsLaget) throws DALException, ServletException, IOException {
+			HttpServletResponse response, IFunctionality funktionalitetsLaget) throws DALException, ServletException, IOException {
 		HttpSession session = request.getSession(true);
 		int id = Integer.parseInt(String.valueOf(session.getAttribute("operatoerID")));
 		String nytpassword1, nytpassword2, gammeltpassword, errorString = "";

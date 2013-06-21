@@ -9,7 +9,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import businessLogic_layer.Functionality;
+import businessLogic_layer.IFunctionality;
 import dao_interfaces.DALException;
 import dto.RaavareDTO;
 import dto.ReceptDTO;
@@ -17,10 +17,10 @@ import dto.ReceptKompDTO;
 
 public class Recepter {
 	
-	public void handleAdminiRecept(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException {
+	public void handleAdminiRecept(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/recept/adminirecept.jsp").forward(request, response);
 	}
-	public void handleCreateRecept(ServletRequest request, ServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleCreateRecept(ServletRequest request, ServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int raavareid;
 		String raavareNavn,html = "";
 		List<RaavareDTO> raavare = funktionalitetsLaget.getRaavareDAO().getRaavareList();
@@ -32,7 +32,7 @@ public class Recepter {
 		request.setAttribute("raavarer", html);
 		request.getRequestDispatcher("/WEB-INF/admin/recept/createrecept.jsp").forward(request, response);
 	}
-	public void handleShowRecept(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleShowRecept(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		String html = "<table border=1>";
 		html += "<tr><td>ID</td><td>Navn</td><td>Receptkomponenter</td></tr>";
 		int receptid, raavareid;
@@ -61,7 +61,7 @@ public class Recepter {
 		request.getRequestDispatcher("/WEB-INF/admin/recept/showrecept.jsp").forward(request, response);
 	}
 
-	public void handleCreateReceptSubmit(HttpServletRequest request, HttpServletResponse response, Functionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleCreateReceptSubmit(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int receptid=0, raavareid, x=0;
 		String errorMsg = "", receptnavn;
 		try {
