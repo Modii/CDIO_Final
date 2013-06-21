@@ -47,70 +47,70 @@ public class Servlet extends HttpServlet {
 			if (request.getParameter("login") != null && request.getParameter("login").equals("Log ind")) {
 				otherMetoder.handleLogIn(request, response, funktionalitetsLaget);
 			}
-			if (request.getParameter("logoff") != null && request.getParameter("logoff").equals("Log af"))
+			else if (request.getParameter("logoff") != null && request.getParameter("logoff").equals("Log af"))
 				otherMetoder.handleLogOff(request, response);
-			if (request.getParameter("hovedmenu") != null && request.getParameter("hovedmenu").equals("Tilbage til hovedmenu"))
+			else if (request.getParameter("hovedmenu") != null && request.getParameter("hovedmenu").equals("Tilbage til hovedmenu"))
 				otherMetoder.handleGoToHovedmenu(request, response);
-			if (request.getParameter("adminibruger") != null && request.getParameter("adminibruger").equals("Administrer brugere"))
+			else if (request.getParameter("adminibruger") != null && request.getParameter("adminibruger").equals("Administrer brugere"))
 				request.getRequestDispatcher("/WEB-INF/admin/bruger/adminibruger.jsp").forward(request, response);
-			if (request.getParameter("createopr") != null && request.getParameter("createopr").equals("Opret bruger")) {
+			else if (request.getParameter("createopr") != null && request.getParameter("createopr").equals("Opret bruger")) {
 				int oprID = 0;
 				oprID = funktionalitetsLaget.getOprDAO().getHighestOprID().getOprId()+1;
 				request.setAttribute("autoid", oprID);
 				request.getRequestDispatcher("/WEB-INF/admin/bruger/createopr.jsp").forward(request, response);}
-			if (request.getParameter("showopr") != null && request.getParameter("showopr").equals("Vis brugere"))
+			else if (request.getParameter("showopr") != null && request.getParameter("showopr").equals("Vis brugere"))
 				brugerMetoder.handleShowOpr(request, response, funktionalitetsLaget);
-			if (request.getParameter("removeopr") != null && request.getParameter("removeopr").equals("Slet bruger"))
+			else if (request.getParameter("removeopr") != null && request.getParameter("removeopr").equals("Slet bruger"))
 				brugerMetoder.handleRemoveOpr(request, response, funktionalitetsLaget);
-			if (request.getParameter("updateopr") != null && request.getParameter("updateopr").equals("Opdatér bruger"))
+			else if (request.getParameter("updateopr") != null && request.getParameter("updateopr").equals("Opdatér bruger"))
 				brugerMetoder.handleUpdateOpr(request, response, funktionalitetsLaget);
-			if (request.getParameter("adminivare") != null && request.getParameter("adminivare").equals("Administrer råvarer"))
+			else if (request.getParameter("adminivare") != null && request.getParameter("adminivare").equals("Administrer råvarer"))
 				raavareMetoder.handleAdminiVare(request, response, funktionalitetsLaget);
-			if (request.getParameter("createvare") != null && request.getParameter("createvare").equals("Opret råvare"))
+			else if (request.getParameter("createvare") != null && request.getParameter("createvare").equals("Opret råvare"))
 				raavareMetoder.handleCreateVare(request, response, funktionalitetsLaget);
-			if (request.getParameter("showvare") != null && request.getParameter("showvare").equals("Vis råvare"))
+			else if (request.getParameter("showvare") != null && request.getParameter("showvare").equals("Vis råvare"))
 				raavareMetoder.handleShowVare(request, response, funktionalitetsLaget);
-			if (request.getParameter("updatevare") != null && request.getParameter("updatevare").equals("Opdater råvare"))
+			else if (request.getParameter("updatevare") != null && request.getParameter("updatevare").equals("Opdater råvare"))
 				raavareMetoder.handleUpdateVare(request, response, funktionalitetsLaget);
-			if (request.getParameter("adminirecept") != null && request.getParameter("adminirecept").equals("Administrer recepter"))
+			else if (request.getParameter("adminirecept") != null && request.getParameter("adminirecept").equals("Administrer recepter"))
 				receptMetoder.handleAdminiRecept(request, response, funktionalitetsLaget);
-			if (request.getParameter("createrecept") != null && request.getParameter("createrecept").equals("Opret recept"))
+			else if (request.getParameter("createrecept") != null && request.getParameter("createrecept").equals("Opret recept"))
 				receptMetoder.handleCreateRecept(request, response, funktionalitetsLaget);
-			if (request.getParameter("showrecept") != null && request.getParameter("showrecept").equals("Vis recepter"))
+			else if (request.getParameter("showrecept") != null && request.getParameter("showrecept").equals("Vis recepter"))
 				receptMetoder.handleShowRecept(request, response, funktionalitetsLaget);
-			if (request.getParameter("adminiraavarebatch") != null && request.getParameter("adminiraavarebatch").equals("Administrer råvarebatches"))
+			else if (request.getParameter("adminiraavarebatch") != null && request.getParameter("adminiraavarebatch").equals("Administrer råvarebatches"))
 				raavareBatchMetoder.handleAdminiRaavareBatch(request, response, funktionalitetsLaget);
-			if (request.getParameter("createraavarebatch") != null && request.getParameter("createraavarebatch").equals("Opret råvarebatch"))
+			else if (request.getParameter("createraavarebatch") != null && request.getParameter("createraavarebatch").equals("Opret råvarebatch"))
 				raavareBatchMetoder.handleCreateRaavareBatch(request, response, funktionalitetsLaget);
-			if (request.getParameter("showraavarebatch") != null && request.getParameter("showraavarebatch").equals("Vis råvarebatch"))
+			else if (request.getParameter("showraavarebatch") != null && request.getParameter("showraavarebatch").equals("Vis råvarebatch"))
 				raavareBatchMetoder.handleShowRaavareBatch(request, response, funktionalitetsLaget);
-			if (request.getParameter("adminiproduktbatch") != null && request.getParameter("adminiproduktbatch").equals("Administrer produktbatches"))
+			else if (request.getParameter("adminiproduktbatch") != null && request.getParameter("adminiproduktbatch").equals("Administrer produktbatches"))
 				produktBatchMetoder.handleAdminiProduktBatch(request, response, funktionalitetsLaget);
-			if (request.getParameter("createproduktbatch") != null && request.getParameter("createproduktbatch").equals("Opret produktbatch"))
+			else if (request.getParameter("createproduktbatch") != null && request.getParameter("createproduktbatch").equals("Opret produktbatch"))
 				produktBatchMetoder.handleCreateProduktBatch(request, response, funktionalitetsLaget);
-			if (request.getParameter("showproduktbatch") != null && request.getParameter("showproduktbatch").equals("Vis produktbatch"))
+			else if (request.getParameter("showproduktbatch") != null && request.getParameter("showproduktbatch").equals("Vis produktbatch"))
 				produktBatchMetoder.handleShowProduktBatch(request, response, funktionalitetsLaget);
-			if (request.getParameter("createopr_submit") != null && request.getParameter("createopr_submit").equals("Opret bruger"))
+			else if (request.getParameter("createopr_submit") != null && request.getParameter("createopr_submit").equals("Opret bruger"))
 				brugerMetoder.handleCreateOprSubmit(request, response, funktionalitetsLaget);
-			if (request.getParameter("udskriv") != null && request.getParameter("udskriv").equals("Udskriv"))
+			else if (request.getParameter("udskriv") != null && request.getParameter("udskriv").equals("Udskriv"))
 				produktBatchMetoder.handlePrintProduktBatch(request, response, funktionalitetsLaget);
-			if (request.getParameter("removeopr_submit") != null && request.getParameter("removeopr_submit").equals("Slet bruger"))
+			else if (request.getParameter("removeopr_submit") != null && request.getParameter("removeopr_submit").equals("Slet bruger"))
 				brugerMetoder.handleRemoveOprSubmit(request, response, funktionalitetsLaget);
-			if (request.getParameter("updateopr_submit") != null && request.getParameter("updateopr_submit").equals("Opdater bruger"))
+			else if (request.getParameter("updateopr_submit") != null && request.getParameter("updateopr_submit").equals("Opdater bruger"))
 				brugerMetoder.handleUpdateOprSubmit(request, response, funktionalitetsLaget);
-			if (request.getParameter("createraavare_submit") != null && request.getParameter("createraavare_submit").equals("Opret råvare"))
+			else if (request.getParameter("createraavare_submit") != null && request.getParameter("createraavare_submit").equals("Opret råvare"))
 				raavareMetoder.handleCreateVareSubmit(request, response, funktionalitetsLaget);
-			if (request.getParameter("updateraavare_submit") != null && request.getParameter("updateraavare_submit").equals("Opdater råvare"))
+			else if (request.getParameter("updateraavare_submit") != null && request.getParameter("updateraavare_submit").equals("Opdater råvare"))
 				raavareMetoder.handleUpdateVareSubmit(request, response, funktionalitetsLaget);
-			if (request.getParameter("createrecept_submit") != null && request.getParameter("createrecept_submit").equals("Opret recept"))
+			else if (request.getParameter("createrecept_submit") != null && request.getParameter("createrecept_submit").equals("Opret recept"))
 				receptMetoder.handleCreateReceptSubmit(request, response, funktionalitetsLaget);
-			if (request.getParameter("createraavarebatch_submit") != null && request.getParameter("createraavarebatch_submit").equals("Opret råvarebatch"))
+			else if (request.getParameter("createraavarebatch_submit") != null && request.getParameter("createraavarebatch_submit").equals("Opret råvarebatch"))
 				raavareBatchMetoder.handleCreateRaavareBatchSubmit(request, response, funktionalitetsLaget);
-			if (request.getParameter("createproduktbatch_submit") != null && request.getParameter("createproduktbatch_submit").equals("Opret produktbatch"))
+			else if (request.getParameter("createproduktbatch_submit") != null && request.getParameter("createproduktbatch_submit").equals("Opret produktbatch"))
 				produktBatchMetoder.handleCreateProduktBatchSubmit(request, response, funktionalitetsLaget);
-			if (request.getParameter("changepw") != null && request.getParameter("changepw").equals("Ændr password"))
+			else if (request.getParameter("changepw") != null && request.getParameter("changepw").equals("Ændr password"))
 				request.getRequestDispatcher("/WEB-INF/admin/changepw.jsp").forward(request, response);
-			if (request.getParameter("changepw_submit") != null && request.getParameter("changepw_submit").equals("Ændr password"))
+			else if (request.getParameter("changepw_submit") != null && request.getParameter("changepw_submit").equals("Ændr password"))
 				otherMetoder.handleChangePwSubmit(request, response, funktionalitetsLaget);
 		}
 		catch(Exception e){
