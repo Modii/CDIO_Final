@@ -136,14 +136,16 @@ public class ProduktBatches {
 		        		raavareBatchId = tjekRaavareBatch.getRbId();
 		        		oprId = produktBatchKomp.getOprId();
 				        table.addCell(""+receptKomp.getNomNetto());
-				        table.addCell(""+receptKomp.getTolerance());
+				        table.addCell(""+receptKomp.getTolerance() + " %");
 		        		table.addCell(""+tara);
 		        		table.addCell(""+netto);
 		        		table.addCell(""+raavareBatchId);
 		        		table.addCell(""+oprId);
 		        	}
 		        }
-		        if (tara == 0) {
+		        if (tara == 0 && netto == 0) {
+		        	table.addCell(""+receptKomp.getNomNetto());
+		        	table.addCell(""+receptKomp.getTolerance()+" %");
 		        	table.addCell("");
 		        	table.addCell("");
 		        	table.addCell("");
