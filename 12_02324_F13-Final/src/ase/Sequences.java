@@ -258,7 +258,8 @@ public class Sequences {
 		this.tjekMsgFejlOgRead(11, inFromServer, outToServer);
 
 		// Tilføjer tolerance-pil vha. udregnet tolerance.
-		outToServer.writeBytes("P121 " + mRecKomp.getReceptKomp(seqH.getReceptID(), seqH.getRaavareID()).getNomNetto() + " kg " + seqH.getTolerance() + " kg " + seqH.getTolerance() + " kg " + "\r\n");
+		outToServer.writeBytes("P121 " + mRecKomp.getReceptKomp(seqH.getReceptID(), seqH.getRaavareID()).getNomNetto()
+				+ " kg " + seqH.getTolerance() + " kg " + seqH.getTolerance() + " kg " + "\r\n");
 		seqH.setServerInput(inFromServer.readLine());
 		this.tjekMsgFejlOgRead(11, inFromServer, outToServer);
 
@@ -335,49 +336,33 @@ public class Sequences {
 	// Denne metode kan bruges adskillige steder i koden. Den får som input at vide, hvilken sekvens, den skal gå til, hvis vægtens retur-besked er en fejlbesked.
 	// Metoden er til for at undgå bunker af if og else.
 	// Hvis vægten returnerer en acceptabel kommando, vender metoden blot tilbage til sekvensen.
-	public void tjekMsgFejlOgRead(int sekvensVedFejl, BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
+	public void tjekMsgFejlOgRead(int sekvensVedFejl, BufferedReader inFromServer, DataOutputStream outToServer) 
+			throws IOException{
 		try{
-			if (seqH.getServerInput().contains("T S ") || seqH.getServerInput().contains("S S ") || seqH.getServerInput().contains("RM30 B")  || seqH.getServerInput().contains("DW A") || seqH.getServerInput().contains("P121 A") || seqH.getServerInput().contains("RM39 A")){
+			if (seqH.getServerInput().contains("T S ") || seqH.getServerInput().contains("S S ") 
+					|| seqH.getServerInput().contains("RM30 B") || seqH.getServerInput().contains("DW A")
+					|| seqH.getServerInput().contains("P121 A") || seqH.getServerInput().contains("RM39 A")){
 				return;
 			}
 			else if(seqH.getServerInput().contains(" B") || seqH.getServerInput().contains(" A")){
 				seqH.setServerInput(inFromServer.readLine());
 				return;
 			}
-			else if(seqH.getServerInput().contains(" I") || seqH.getServerInput().contains(" L") || seqH.getServerInput().contains("T +") || seqH.getServerInput().contains("T -") || seqH.getServerInput().contains("S +") || seqH.getServerInput().contains("S -")){
+			else if(seqH.getServerInput().contains(" I") || seqH.getServerInput().contains(" L") 
+					|| seqH.getServerInput().contains("T +") || seqH.getServerInput().contains("T -") 
+					|| seqH.getServerInput().contains("S +") || seqH.getServerInput().contains("S -")){
 				switch(sekvensVedFejl){
-				case 2: this.sequence2(inFromServer, outToServer);
-				break;
-
-				case 3: this.sequence3(inFromServer, outToServer);
-				break;
-
-				case 4: this.sequence4(inFromServer, outToServer);
-				break;
-
-				case 5: this.sequence5(inFromServer, outToServer);
-				break;
-
-				case 6: this.sequence6(inFromServer, outToServer);
-				break;
-
-				case 7: this.sequence7(inFromServer, outToServer);
-				break;
-
-				case 8: this.sequence8(inFromServer, outToServer);
-				break;
-
-				case 9: this.sequence9(inFromServer, outToServer);
-				break;
-
-				case 10: this.sequence10(inFromServer, outToServer);
-				break;
-
-				case 11: this.sequence11(inFromServer, outToServer);
-				break;
-
-				case 12: this.sequence12(inFromServer, outToServer);
-				break;
+				case 2: this.sequence2(inFromServer, outToServer); break;
+				case 3: this.sequence3(inFromServer, outToServer); break;
+				case 4: this.sequence4(inFromServer, outToServer); break; 
+				case 5: this.sequence5(inFromServer, outToServer); break;
+				case 6: this.sequence6(inFromServer, outToServer); break;
+				case 7: this.sequence7(inFromServer, outToServer); break;
+				case 8: this.sequence8(inFromServer, outToServer); break;
+				case 9: this.sequence9(inFromServer, outToServer); break;
+				case 10: this.sequence10(inFromServer, outToServer); break;
+				case 11: this.sequence11(inFromServer, outToServer); break;
+				case 12: this.sequence12(inFromServer, outToServer); break;
 				}
 			}
 		}
