@@ -32,13 +32,33 @@ public class SequenceHelper {
 				+ df.format(d.get(Calendar.SECOND));
 		return dato;
 	}
-	
 	public double trimDecimal(double d) {
 		DecimalFormat df = new DecimalFormat("#.###");
 		String trimmed = (df.format(d));
 		String trimmed1 = trimmed.replace(',' , '.');
 		double trimmedTemp = Double.parseDouble(trimmed1);
 		return trimmedTemp;
+	}
+	public int splitInt(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
+		this.setSplittedInput(this.getServerInput().split(" "));
+		int returnSplitInt = Integer.parseInt(this.getSplittedInput()[2].replaceAll("\"",""));
+		return returnSplitInt;
+	}
+	public double splitDouble(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
+		this.setSplittedInput(this.getServerInput().split(" "));
+		double returnSplitDouble = (Double.parseDouble(this.getSplittedInput()[7]));
+		return returnSplitDouble;
+	}
+	// Metoden tjekker hvilken type RM-kommando, der er tale om. Derefter kommer den krævede efterfulgte integerværdi og dernæst vægtbeskeden.
+	public void RMPrintOgRead(int RMType, int x1, String weightMsg, BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
+	{
+		this.setWeightMsg(weightMsg);
+		if(RMType == 49)
+			outToServer.writeBytes("RM49 " + x1 + " \"" + this.getWeightMsg() + "\"\r\n");	
+		else if (RMType == 20)
+			outToServer.writeBytes("RM20 " + x1 + " \"" + this.getWeightMsg() + "\" \" \" \"&3\"\r\n");
+		outToServer.flush();
+		this.setServerInput(inFromServer.readLine());
 	}
 	
 	public double getBrutto() {
@@ -174,26 +194,5 @@ public class SequenceHelper {
 		} catch (DALException e) {
 			e.printStackTrace();
 		}
-	}
-	public int splitInt(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
-		this.setSplittedInput(this.getServerInput().split(" "));
-		int returnSplitInt = Integer.parseInt(this.getSplittedInput()[2].replaceAll("\"",""));
-		return returnSplitInt;
-	}
-	public double splitDouble(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
-		this.setSplittedInput(this.getServerInput().split(" "));
-		double returnSplitDouble = (Double.parseDouble(this.getSplittedInput()[7]));
-		return returnSplitDouble;
-	}
-	// Metoden tjekker hvilken type RM-kommando, der er tale om. Derefter kommer den krævede efterfulgte integerværdi og dernæst vægtbeskeden.
-	public void RMPrintOgRead(int RMType, int x1, String weightMsg, BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
-	{
-		this.setWeightMsg(weightMsg);
-		if(RMType == 49)
-			outToServer.writeBytes("RM49 " + x1 + " \"" + this.getWeightMsg() + "\"\r\n");	
-		else if (RMType == 20)
-			outToServer.writeBytes("RM20 " + x1 + " \"" + this.getWeightMsg() + "\" \" \" \"&3\"\r\n");
-		outToServer.flush();
-		this.setServerInput(inFromServer.readLine());
 	}
 }
