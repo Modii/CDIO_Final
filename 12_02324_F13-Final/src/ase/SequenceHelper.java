@@ -16,12 +16,12 @@ public class SequenceHelper {
 	
 	private MySQLReceptKompDAO mRecKomp = new MySQLReceptKompDAO();
 	private String dato, weightMsg, serverInput, itemName, userInput;
-	private int oprID, pbID, receptID, rbID, raavareID, itemNoInput, iteNoStore;	
+	private int oprID, pbID, receptID, rbID, raavareID, itemNoInput, itemNoStore;	
 	private double tara, netto, brutto, bruttoCheck, tolerance, totPosTol, totNegTol;
 	private String[] splittedInput = new String[10];
 	private List<ReceptKompDTO> listen;
 
-	String generateDato(){
+	public String generateDato(){
 		Calendar d = Calendar.getInstance();
 		DecimalFormat df = new DecimalFormat("00");
 		dato = d.get(Calendar.YEAR) + "-"
@@ -33,7 +33,7 @@ public class SequenceHelper {
 		return dato;
 	}
 	
-	double trimDecimal(double d) {
+	public double trimDecimal(double d) {
 		DecimalFormat df = new DecimalFormat("#.###");
 		String trimmed = (df.format(d));
 		String trimmed1 = trimmed.replace(',' , '.');
@@ -41,98 +41,96 @@ public class SequenceHelper {
 		return trimmedTemp;
 	}
 	
-	double getBrutto() {
+	public double getBrutto() {
 		return brutto;
 	}
-	void setBrutto(double brutto) {
+	public void setBrutto(double brutto) {
 		this.brutto = brutto;
 	}
-	List<ReceptKompDTO> getListen() {
+	public List<ReceptKompDTO> getListen() {
 		return listen;
 	}
-	void setListen(List<ReceptKompDTO> listen) {
+	public void setListen(List<ReceptKompDTO> listen) {
 		this.listen = listen;
 	}
-	int getRbID() {
+	public int getRbID() {
 		return rbID;
 	}
-	void setRbID(int rbID) {
+	public void setRbID(int rbID) {
 		this.rbID = rbID;
 	}
-
-	int getReceptID() {
+	public int getReceptID() {
 		return receptID;
 	}
-	void setReceptID(int receptID) {
+	public void setReceptID(int receptID) {
 		this.receptID = receptID;
 	}
-
-	String getWeightMsg() {
+	public String getWeightMsg() {
 		return weightMsg;
 	}
-	void setWeightMsg(String weightMsg) {
+	public void setWeightMsg(String weightMsg) {
 		// System.out.println("setWeightMsg: " + weightMsg);
 		this.weightMsg = weightMsg;
 	}
-	int getOprID() {
+	public int getOprID() {
 		return oprID;
 	}
-	void setOprID(int oprID) {
+	public void setOprID(int oprID) {
 		this.oprID = oprID;
 	}
-	String getServerInput() {
+	public String getServerInput() {
 		return serverInput;
 	}
-	void setServerInput(String serverInput) {
+	public void setServerInput(String serverInput) {
 		//System.out.println("setServerInput: " + serverInput);
 		this.serverInput = serverInput;
 	}
-	String getItemName() {
+	public String getItemName() {
 		return itemName;
 	}
-	void setItemName(String itemName) {
+	public void setItemName(String itemName) {
 		this.itemName = itemName;
 	}
-	String getUserInput() {
+	public String getUserInput() {
 		return userInput;
 	}
-	void setUserInput(String userInput) {
+	public void setUserInput(String userInput) {
 		this.userInput = userInput;
 	}
-	int getItemNoInput() {
+	public int getItemNoInput() {
 		return itemNoInput;
 	}
-	void setItemNoInput(int itemNoInput) {
+	public void setItemNoInput(int itemNoInput) {
 		this.itemNoInput = itemNoInput;
 	}
-	public int getIteNoStore() {
-		return iteNoStore;
+	public int getItemNoStore() {
+		return itemNoStore;
 	}
-	public void setIteNoStore(int iteNoStore) {
-		this.iteNoStore = iteNoStore;
+	public void setItemNoStore(int iteNoStore) {
+		this.itemNoStore = iteNoStore;
 	}
-	String[] getSplittedInput() {
+	public String[] getSplittedInput() {
 		return splittedInput;
 	}
-	void setSplittedInput(String[] splittedInput) {
+	public void setSplittedInput(String[] splittedInput) {
 		this.splittedInput = splittedInput;
 	}
-	double getTara() {
+	public double getTara() {
 		return tara;
 	}
-	void setTara(double tara) {
+	public void setTara(double tara) {
 		this.tara = tara;
 	}
-	double getNetto() {
+	public double getNetto() {
 		return netto;
 	}
-	void setNetto(double netto) {
+	public void setNetto(double netto) {
 		this.netto = netto;
 	}
-	double getBruttoCheck() {
+	public double getBruttoCheck() {
 		return bruttoCheck;
 	}
-	void setBruttoCheck(double bruttoCheck) {
+	public void setBruttoCheck(double bruttoCheck) {
 		this.bruttoCheck = bruttoCheck;
 	}
 	public int getPbID() {
