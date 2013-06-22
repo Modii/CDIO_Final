@@ -14,10 +14,12 @@ import dto.RaavareDTO;
 
 public class RaavareBatches {
 	
-	public void handleAdminiRaavareBatch(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException {
+	public void handleAdminiRaavareBatch(HttpServletRequest request, HttpServletResponse response, 
+			IFunctionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/raavarebatch/adminiraavarebatch.jsp").forward(request, response);
 	}
-	public void handleCreateRaavareBatch(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleCreateRaavareBatch(HttpServletRequest request, HttpServletResponse response, 
+			IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int vareId;
 		String vareNavn;
 		List<RaavareDTO> oprList = funktionalitetsLaget.getRaavareDAO().getRaavareList();
@@ -31,7 +33,8 @@ public class RaavareBatches {
 		request.setAttribute("vareList", html);
 		request.getRequestDispatcher("/WEB-INF/admin/raavarebatch/createraavarebatch.jsp").forward(request, response);
 	}
-	public void handleShowRaavareBatch(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleShowRaavareBatch(HttpServletRequest request, HttpServletResponse response, 
+			IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		String html = "<table border=1>";
 		html += "<tr><td>Råvarebatch ID</td><td>Råvare ID</td><td>Mængde</td></tr>";
 		int raavarebatchid, raavareid;
@@ -48,7 +51,8 @@ public class RaavareBatches {
 		request.getRequestDispatcher("/WEB-INF/admin/raavarebatch/showraavarebatch.jsp").forward(request, response);
 	}
 	
-	public void handleCreateRaavareBatchSubmit(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleCreateRaavareBatchSubmit(HttpServletRequest request, HttpServletResponse response, 
+			IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int raavarebatchid = 0, raavareid = 0;
 		double maengde = 0;
 		String errorMsg ="";
@@ -63,7 +67,9 @@ public class RaavareBatches {
 		if (raavarebatchid != 0 && funktionalitetsLaget.testRaavareBatchId(raavarebatchid))
 			errorMsg = "RåvareBatch ID findes i forvejen!";
 		if (raavarebatchid != 0 && errorMsg.length() == 0) {
-			funktionalitetsLaget.getRaavareBatchDAO().createRaavareBatch(new RaavareBatchDTO(raavarebatchid, raavareid, maengde));
+			funktionalitetsLaget.getRaavareBatchDAO().createRaavareBatch
+			(new RaavareBatchDTO(raavarebatchid, raavareid, maengde));
+			
 			request.setAttribute("succes", "Råvarebatch oprettet!");
 		}
 		else {

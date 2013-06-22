@@ -14,13 +14,16 @@ import dto.RaavareDTO;
 public class Raavarer {
 
 
-	public void handleAdminiVare(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException {
+	public void handleAdminiVare(HttpServletRequest request, HttpServletResponse response,
+			IFunctionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/raavare/adminivare.jsp").forward(request, response);
 	}
-	public void handleCreateVare(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException {
+	public void handleCreateVare(HttpServletRequest request, HttpServletResponse response,
+			IFunctionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/raavare/createvare.jsp").forward(request, response);
 	}
-	public void handleShowVare(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleShowVare(HttpServletRequest request, HttpServletResponse response,
+			IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		String html = "<table border=1>";
 		html += "<tr><td>ID</td><td>Navn</td><td>Leverandør</td></tr>";
 		int id;
@@ -36,7 +39,8 @@ public class Raavarer {
 		request.setAttribute("list", html);
 		request.getRequestDispatcher("/WEB-INF/admin/raavare/showvare.jsp").forward(request, response);
 	}
-	public void handleUpdateVare(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleUpdateVare(HttpServletRequest request, HttpServletResponse response,
+			IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int vareId;
 		String vareNavn;
 		List<RaavareDTO> oprList = funktionalitetsLaget.getRaavareDAO().getRaavareList();
@@ -50,7 +54,8 @@ public class Raavarer {
 		request.setAttribute("vareList", html);
 		request.getRequestDispatcher("/WEB-INF/admin/raavare/updatevare.jsp").forward(request, response);
 	}
-	public void handleCreateVareSubmit(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleCreateVareSubmit(HttpServletRequest request, HttpServletResponse response,
+			IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = 0;
 		String navn, leverandoer, errorMsg = "";
 		try {
@@ -72,7 +77,8 @@ public class Raavarer {
 		}
 		request.getRequestDispatcher("/WEB-INF/admin/raavare/createvare.jsp").forward(request, response);
 	}
-	public void handleUpdateVareSubmit(HttpServletRequest request, HttpServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
+	public void handleUpdateVareSubmit(HttpServletRequest request, HttpServletResponse response,
+			IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		String navn = request.getParameter("navn");
 		String leverandoer = request.getParameter("leverandoer");

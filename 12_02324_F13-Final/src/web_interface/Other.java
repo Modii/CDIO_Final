@@ -16,7 +16,8 @@ public class Other {
 	
 
 
-	public void handleLogIn(HttpServletRequest request, ServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException{
+	public void handleLogIn(HttpServletRequest request, ServletResponse response, 
+			IFunctionality funktionalitetsLaget) throws ServletException, IOException{
 		HttpSession session = request.getSession(true);
 		String txtID = request.getParameter("Id");
 		String pw = request.getParameter("Password");
@@ -24,9 +25,16 @@ public class Other {
 			if (funktionalitetsLaget.testId(txtID)) { // checker om ID findes i DB.
 				int id = Integer.parseInt(txtID);
 				if(funktionalitetsLaget.testPassword(id, pw)){
-					session.setAttribute("operatoerNavn", funktionalitetsLaget.getOprDAO().getOperatoer(id).getOprNavn());
-					session.setAttribute("operatoerAktoer", funktionalitetsLaget.getOprDAO().getOperatoer(id).getAktoer());
-					session.setAttribute("operatoerID", funktionalitetsLaget.getOprDAO().getOperatoer(id).getOprId());
+					
+					session.setAttribute("operatoerNavn", 
+							funktionalitetsLaget.getOprDAO().getOperatoer(id).getOprNavn());
+					
+					session.setAttribute("operatoerAktoer", 
+							funktionalitetsLaget.getOprDAO().getOperatoer(id).getAktoer());
+					
+					session.setAttribute("operatoerID", 
+							funktionalitetsLaget.getOprDAO().getOperatoer(id).getOprId());
+					
 					if(funktionalitetsLaget.getOprDAO().getOperatoer(id).getAktoer() == 1)
 						request.getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
 					else if(funktionalitetsLaget.getOprDAO().getOperatoer(id).getAktoer() == 2)
@@ -49,10 +57,12 @@ public class Other {
 			e.printStackTrace();
 		}
 	}
-	public void handleLogOff(ServletRequest request, ServletResponse response) throws ServletException, IOException{
+	public void handleLogOff(ServletRequest request, 
+			ServletResponse response) throws ServletException, IOException{
 		request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
 	}
-	public void handleGoToHovedmenu(HttpServletRequest request, ServletResponse response) throws ServletException, IOException{
+	public void handleGoToHovedmenu(HttpServletRequest request,
+			ServletResponse response) throws ServletException, IOException{
 		HttpSession session = request.getSession(true);
 		int aktoer = Integer.parseInt(String.valueOf(session.getAttribute("operatoerAktoer")));
 		if (aktoer == 1)
@@ -66,8 +76,8 @@ public class Other {
 		
 	}
 
-	public void handleChangePwSubmit(HttpServletRequest request,
-			HttpServletResponse response, IFunctionality funktionalitetsLaget) throws DALException, ServletException, IOException {
+	public void handleChangePwSubmit(HttpServletRequest request, HttpServletResponse response, 
+			IFunctionality funktionalitetsLaget) throws DALException, ServletException, IOException {
 		HttpSession session = request.getSession(true);
 		int id = Integer.parseInt(String.valueOf(session.getAttribute("operatoerID")));
 		String nytpassword1, nytpassword2, gammeltpassword, errorString = "";
