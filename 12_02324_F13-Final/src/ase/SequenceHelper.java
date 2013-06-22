@@ -13,14 +13,13 @@ import dto.ReceptKompDTO;
 
 
 public class SequenceHelper {
+	
 	private MySQLReceptKompDAO mRecKomp = new MySQLReceptKompDAO();
-
-	String dato, weightMsg, serverInput, itemName, userInput;
-	int oprID, pbID, receptID, rbID, raavareID, itemNoInput, iteNoStore;	
-	double tara, netto, brutto, bruttoCheck, tolerance, totPosTol, totNegTol;
-
-	String[] splittedInput = new String[10];
-	List<ReceptKompDTO> listen;
+	private String dato, weightMsg, serverInput, itemName, userInput;
+	private int oprID, pbID, receptID, rbID, raavareID, itemNoInput, iteNoStore;	
+	private double tara, netto, brutto, bruttoCheck, tolerance, totPosTol, totNegTol;
+	private String[] splittedInput = new String[10];
+	private List<ReceptKompDTO> listen;
 
 	String generateDato(){
 		Calendar d = Calendar.getInstance();
@@ -40,7 +39,6 @@ public class SequenceHelper {
 		String trimmed1 = trimmed.replace(',' , '.');
 		double trimmedTemp = Double.parseDouble(trimmed1);
 		return trimmedTemp;
-
 	}
 	
 	double getBrutto() {
@@ -179,19 +177,16 @@ public class SequenceHelper {
 			e.printStackTrace();
 		}
 	}
-
 	public int splitInt(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 		this.setSplittedInput(this.getServerInput().split(" "));
 		int returnSplitInt = Integer.parseInt(this.getSplittedInput()[2].replaceAll("\"",""));
 		return returnSplitInt;
 	}
-
 	public double splitDouble(BufferedReader inFromServer, DataOutputStream outToServer) throws IOException{
 		this.setSplittedInput(this.getServerInput().split(" "));
 		double returnSplitDouble = (Double.parseDouble(this.getSplittedInput()[7]));
 		return returnSplitDouble;
 	}
-
 	// Metoden tjekker hvilken type RM-kommando, der er tale om. Derefter kommer den krævede efterfulgte integerværdi og dernæst vægtbeskeden.
 	public void RMPrintOgRead(int RMType, int x1, String weightMsg, BufferedReader inFromServer, DataOutputStream outToServer) throws IOException
 	{
