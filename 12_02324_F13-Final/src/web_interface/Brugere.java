@@ -18,7 +18,8 @@ public class Brugere {
 			IFunctionality funktionalitetsLaget) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/admin/bruger/adminibruger.jsp").forward(request, response);
 	}
-	public void handleCreateOpr(ServletRequest request, ServletResponse response, IFunctionality funktionalitetsLaget) throws ServletException, IOException {
+	public void handleCreateOpr(ServletRequest request, ServletResponse response, 
+			IFunctionality funktionalitetsLaget) throws ServletException, IOException {
 	}
 	public void handleShowOpr(HttpServletRequest request, HttpServletResponse response, 
 			IFunctionality funktionalitetsLaget) throws ServletException, IOException, DALException {
